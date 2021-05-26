@@ -19,19 +19,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="微服务的本质微服务的核心是服务治理，服务治理的关键是服务划分，微服务架构的本质就是对码农的分化和治理；微服务于互联网，像流水线标准化生产之于制造业，微服务架构是互联网产业模式向传统制造业靠拢；">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你好">
-<meta property="og:url" content="http://example.com/2021/05/21/hello-world/index.html">
+<meta property="og:title" content="微服务系列三：本质">
+<meta property="og:url" content="http://example.com/2021/05/26/microServiceEssence/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="微服务的本质微服务的核心是服务治理，服务治理的关键是服务划分，微服务架构的本质就是对码农的分化和治理；微服务于互联网，像流水线标准化生产之于制造业，微服务架构是互联网产业模式向传统制造业靠拢；">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-21T07:41:42.915Z">
-<meta property="article:modified_time" content="2021-05-25T05:57:58.282Z">
+<meta property="article:published_time" content="2021-05-26T06:19:21.000Z">
+<meta property="article:modified_time" content="2021-05-26T07:49:04.083Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2021/05/21/hello-world/">
+<link rel="canonical" href="http://example.com/2021/05/26/microServiceEssence/">
 
 
 <script id="page-configurations">
@@ -44,7 +44,7 @@
   };
 </script>
 
-  <title>你好 | Hello Friend</title>
+  <title>微服务系列三：本质 | Hello Friend</title>
   
 
 
@@ -159,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/21/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/26/microServiceEssence/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -172,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          你好
+          微服务系列三：本质
         </h1>
 
         <div class="post-meta">
@@ -181,23 +181,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-05-21 15:41:42" itemprop="dateCreated datePublished" datetime="2021-05-21T15:41:42+08:00">2021-05-21</time>
+              <time title="创建时间：2021-05-26 14:19:21 / 修改时间：15:49:04" itemprop="dateCreated datePublished" datetime="2021-05-26T14:19:21+08:00">2021-05-26</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-25 13:57:58" itemprop="dateModified" datetime="2021-05-25T13:57:58+08:00">2021-05-25</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/IdentityServer4/" itemprop="url" rel="index"><span itemprop="name">IdentityServer4</span></a>
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
                 </span>
             </span>
 
@@ -212,19 +206,57 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+        <h1 id="微服务的本质"><a href="#微服务的本质" class="headerlink" title="微服务的本质"></a>微服务的本质</h1><p>微服务的核心是服务治理，服务治理的关键是服务划分，微服务架构的本质就是对码农的分化和治理；<br>微服务于互联网，像流水线标准化生产之于制造业，微服务架构是互联网产业模式向传统制造业靠拢；</p>
 <span id="more"></span>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="互联网和制造业的对比"><a href="#互联网和制造业的对比" class="headerlink" title="互联网和制造业的对比"></a>互联网和制造业的对比</h2><p>流水线最早出现在福特汽车厂，我们来对比汽车产业（制造业）和电商平台（互联网）</p>
+<table>
+<thead>
+<tr>
+<th align="left">时期</th>
+<th align="left">问题</th>
+<th align="left">电商平台</th>
+<th align="left">汽车产业</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">早期</td>
+<td align="left">-</td>
+<td align="left">单体开发模式，码农全面理解整个业务构成，随开发时间轴推进参与到各个模块的开发</td>
+<td align="left">工人工程师造发动机、变速器、车身，然后组装，所有人贯穿整个生产流程</td>
+</tr>
+<tr>
+<td align="left">发展期</td>
+<td align="left">单体服务无法满足业务量的增长，难以响应巨大访问量</td>
+<td align="left">集群模式出现——把单体同时部署再多台服务器上产生一堆节点，用Nginx这类代理工具把请求分散到不同的节点，数据库读写分离主从互备。就是单体镜像到多台，程序开发顺序并没有本质改变</td>
+<td align="left">多开几家造车厂，每家厂子，先发动机，变速器车身……</td>
+</tr>
+<tr>
+<td align="left">壮大期</td>
+<td align="left">业务庞大，单体开发批量部署难以进行有效管理</td>
+<td align="left">业务层面对原有完整系统进行分割，电商平台把系统分割为商品展示、用户管理、支付平台。各部分单独开发，独立部署，相互间用轻量的API进行数据交互</td>
+<td align="left">发动机、变速器、车身在不同工厂，同时生产研发，统一调度，总装生产</td>
+</tr>
+<tr>
+<td align="left">成熟期</td>
+<td align="left">-</td>
+<td align="left">进一步对业务进行更细粒度拆分，例如：商品展示再分为商品图片上传，图片审核，图片处理，评价查看，评价管理，评价删除，购物车查看，购物车添加，购物车清零。每一个服务都由独立的团队开发维护</td>
+<td align="left">汽车工业进一步把发动机，车身，车轴三大工厂拆分为曲轴，活塞，缸体，轴承，轮毂，车架，车门，玻璃等等小工厂，各个工厂负责一项零部件的研发生产，然后再通过逐级流水线装配形成汽车</td>
+</tr>
+<tr>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">每个微服务实例可以同时多个节点部署，比如电商平台的评价系统可以同时部署在多台服务器上，而每个服务器上又部署多个实例。这样一两台服务器出现宕机不会影响整个电商平台集团业务的运转。而每个服务实例也可以用不同语言不同框架编写只要他们对外暴露同样的接口</td>
+<td align="left">每个零件通常都有多个供应商，多个供应商也可能会拥有数条生产线，每个供应商或生产线虽然生产同样规格标准的零件但也可以通过不同的设备不同的工艺达成</td>
+</tr>
+<tr>
+<td align="left">-</td>
+<td align="left">-</td>
+<td align="left">互联网巨头都在搞云计算，云平台也提供了大量符合微服务概念的服务计量出售，比如现在可以在腾讯云阿里云买到短信验证，对象存储，视频点播直播等大量成熟基础服务</td>
+<td align="left">零件标准化带来通用化，汽车厂都会采购同一个工厂的同一种零件，单个零件产量越大成本越低技术越成熟</td>
+</tr>
+</tbody></table>
+<h2 id="微服务带来的影响"><a href="#微服务带来的影响" class="headerlink" title="微服务带来的影响"></a>微服务带来的影响</h2><p>1.同样服务实例可以由不同语言不同框架实现并同时上线，可以对整个系统运行中对服务进行无需停机的热升级，系统升级的代价几乎可以忽略不计；<br>2.微服务架构对整体业务解耦和拆分，极大降低了大型互联网系统的开发和管理难度。每一个服务实例都可以通过多个团队的竞争选取最优，也方便进行外包；<br>3.越来越多常用业务功能，以各种形式被互联网巨头做到白菜价，以标准品出售；</p>
+<h2 id="对码农的影响"><a href="#对码农的影响" class="headerlink" title="对码农的影响"></a>对码农的影响</h2><p>1.同一个服务可以由多个技术团队分别实现，新手码农无需了解整个系统架构和体系就可以快速参与到系统开发升级中；<br>2.新的服务实例可以渐进取代旧团队开发的既有实例，一旦有问题可以迅速回退补救。当新团队的实例在使用中经受住了测试再把新团队的实例负载比例提高到50%以上，然后就可以把旧团队的薪资过高老人优化掉，在维持平稳的前提下为公司降低薪资支出优化技术人员结构；<br>|互联网|制造业|<br>|:—–|:—–|<br>|20年前，码农需要了解全业务|150年前，汽车工程师需要了解整车|<br>|今天，码农分化为支付领域，直播平台领域，电商领域等|100年前，汽车工程师需要掌握发动机或变速器里一个大部件|<br>|将来……|今天，汽车工程师，可能只了解曲轴或活塞这样的单一部件|<br>|码农把工作范围缩小到部分服务，竞争指标细化，码农的互换性和可替代性快速提高|制造业的零件标准化后，工程师的可替代性和互换性快速提高，制造业工程师的薪资议价权越来越弱|<br>|每个服务就是一个工位，大部分码农只能在长期在同一个工位上干一些随时可以被取代也毫无技术含量的活|富士康流水线上的工人……|</p>
 
     </div>
 
@@ -259,11 +291,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/05/21/123/" rel="next" title="123">
-      123 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/05/26/microServiceSolution/" rel="prev" title="微服务系列二：解决方案">
+      <i class="fa fa-chevron-left"></i> 微服务系列二：解决方案
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -322,7 +354,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-text">微服务的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E5%92%8C%E5%88%B6%E9%80%A0%E4%B8%9A%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-text">互联网和制造业的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-text">微服务带来的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%A0%81%E5%86%9C%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-text">对码农的影响</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

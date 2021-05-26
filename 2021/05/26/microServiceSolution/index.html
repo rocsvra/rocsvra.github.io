@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="微服务产生的问题1.微服务架构整个应用分散成多个服务，定位故障点非常困难；2.系统稳定性下降，服务数量变多导致其中一个服务出现故障的概率增大，并且在微服务架构中，一个服务故障可能会产生雪崩效用，导致整个系统故障。事实上，在大访问量的生产场景下，故障是不可避免的；3.服务数量多，部署、管理的工作量；4.开发：各个服务在持续开发的情况下仍然保持协同合作；5.测试：单体测试变为服务间调用的测试；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务系列二：解决方案">
+<meta property="og:url" content="http://example.com/2021/05/26/microServiceSolution/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="微服务产生的问题1.微服务架构整个应用分散成多个服务，定位故障点非常困难；2.系统稳定性下降，服务数量变多导致其中一个服务出现故障的概率增大，并且在微服务架构中，一个服务故障可能会产生雪崩效用，导致整个系统故障。事实上，在大访问量的生产场景下，故障是不可避免的；3.服务数量多，部署、管理的工作量；4.开发：各个服务在持续开发的情况下仍然保持协同合作；5.测试：单体测试变为服务间调用的测试；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/1.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/2.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/3.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/4.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/5.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/6.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/7.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/8.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/9.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/10.png">
+<meta property="og:image" content="http://example.com/2021/05/26/microServiceSolution/11.png">
+<meta property="article:published_time" content="2021-05-26T03:05:37.000Z">
+<meta property="article:modified_time" content="2021-05-26T06:11:45.035Z">
+<meta property="article:author" content="姜海鹏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/05/26/microServiceSolution/1.png">
+
+<link rel="canonical" href="http://example.com/2021/05/26/microServiceSolution/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>微服务系列二：解决方案 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/26/microServiceSolution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微服务系列二：解决方案
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-26 11:05:37 / 修改时间：14:11:45" itemprop="dateCreated datePublished" datetime="2021-05-26T11:05:37+08:00">2021-05-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="微服务产生的问题"><a href="#微服务产生的问题" class="headerlink" title="微服务产生的问题"></a>微服务产生的问题</h1><p>1.微服务架构整个应用分散成多个服务，定位故障点非常困难；<br>2.系统稳定性下降，服务数量变多导致其中一个服务出现故障的概率增大，并且在微服务架构中，一个服务故障可能会产生雪崩效用，导致整个系统故障。事实上，在大访问量的生产场景下，故障是不可避免的；<br>3.服务数量多，部署、管理的工作量；<br>4.开发：各个服务在持续开发的情况下仍然保持协同合作；<br>5.测试：单体测试变为服务间调用的测试；</p>
+<span id="more"></span>
+<h1 id="微服务解决方案"><a href="#微服务解决方案" class="headerlink" title="微服务解决方案"></a>微服务解决方案</h1><p><img src="/2021/05/26/microServiceSolution/1.png" alt="1"></p>
+<h2 id="微服务监控系统"><a href="#微服务监控系统" class="headerlink" title="微服务监控系统"></a>微服务监控系统</h2><p>1.高并发场景，雪崩式故障爆发，必须完善监控体系，发现前兆；<br>2.微服务架构中组件繁多，监控的指标不一。比如，Redis：占用内存值、网络流量。数据库：连接数、磁盘空间、业务服务监控并发数、响应延迟、错误率。<br>3.不可能让监控系统监控各个组件，一般做法是各组件提供报告自己当前状态的接口，输出的数据格式一致（metrics接口）；<br>4.需要部署一个指标采集器组件，定时从这些接口获取并保持组件状态；<br>5.需要提供查询服务（UI），从指标采集器查询各项指标，绘制监控界面或者根据阈值发出告警；<br><img src="/2021/05/26/microServiceSolution/2.png" alt="2"><br>1.大部分组件都不需要自己动手开发，网络上有开源组件；<br>2.RedisExporter和MySQLExporter，这两个组件分别提供了Redis缓存和MySQL数据库的指标接口；<br>3.指标采集器：Prometheus；<br>4.配置监控界面和邮件告警：Grafana；</p>
+<h2 id="链路跟踪-定位问题"><a href="#链路跟踪-定位问题" class="headerlink" title="链路跟踪 - 定位问题"></a>链路跟踪 - 定位问题</h2><p>1.微服务架构下，一个用户的请求往往涉及多个内部服务调用；<br>2.为了定位问题，需要能够记录每个用户请求时，微服务内部产生了多少服务调用，及其调用关系；<br><img src="/2021/05/26/microServiceSolution/3.png" alt="3"><br>以上是Istio文档里的链路跟踪<br>1.这是一个用户访问productpage页面的请求；<br>2.在请求过程中，productpage服务顺序调用了details和reviews服务的接口；<br>3.reviews服务在响应过程中又调用了ratings的接口；</p>
+<h3 id="链路跟踪记录树"><a href="#链路跟踪记录树" class="headerlink" title="链路跟踪记录树"></a>链路跟踪记录树</h3><p><img src="/2021/05/26/microServiceSolution/4.png" alt="4"><br>每次服务调用会在HTTP的HEADERS中记录至少记录四项数据：<br>1.traceId：标识用户请求的调用链路。相同traceId属于同一条链路；<br>2.spanId：标识一次服务调用的ID，即链路跟踪的节点ID；<br>3.parentId：父节点的spanId；<br>4.requestTime &amp; responseTime：请求时间和响应时间；<br><img src="/2021/05/26/microServiceSolution/5.png" alt="5"></p>
+<h3 id="链路跟踪实现"><a href="#链路跟踪实现" class="headerlink" title="链路跟踪实现"></a>链路跟踪实现</h3><p>1.链路跟踪的理论依据详见Google的Dapper；<br>2.Zipkin是Dapper的一个开源实现；<br>3.HTTP请求拦截器作用：每次请求时生成链路跟踪数据注入到headers中，并异步发送调用日志到Zipkin的日志收集器中；<br>4.HTTP请求拦截器，可以在微服务代码中实现，也可以用网络代理组件实现；<br>5.也有人讲，Skywalking比Zipkin更香，而且是CNCF的一员；</p>
+<h2 id="日志分析-分析问题"><a href="#日志分析-分析问题" class="headerlink" title="日志分析 - 分析问题"></a>日志分析 - 分析问题</h2><p>链路跟踪只能定位到哪个服务出现问题，不能提供具体的错误信息，查找具体的错误信息的能力则需要由日志分析组件来提供。<br>###ELK<br>1.Elasticsearch：搜索引擎，同时也是日志的存储；<br>2.Logstash：日志采集器，它接收日志输入，对日志进行一些预处理，然后输出到Elasticsearch；<br>3.Kibana：UI组件，通过Elasticsearch的API查找数据并展示给用户；<br>4.日志发送到Logstash，可以输出的时候直接调用，也可以输出到文件，每个服务部署代理扫描日志文件输出给Logstash；<br>5.K8S中，Logstash被fluentd替代；<br><img src="/2021/05/26/microServiceSolution/6.png" alt="6"></p>
+<h2 id="网关-权限控制-服务治理"><a href="#网关-权限控制-服务治理" class="headerlink" title="网关 - 权限控制+服务治理"></a>网关 - 权限控制+服务治理</h2><p>一般网关平台提供了服务接口文档，和权限校验功能</p>
+<h3 id="网关粗粒度方案："><a href="#网关粗粒度方案：" class="headerlink" title="网关粗粒度方案："></a>网关粗粒度方案：</h3><p>1.整个微服务一个网关，微服务外部通过网关访问微服务，微服务内部则直接调用；<br>2.所有调用，不管是微服务内部或者外部调用，必须通过网关；<br>3.按照业务领域将微服务分成几个区，区内直接调用，区间通过网关调用；<br><img src="/2021/05/26/microServiceSolution/7.png" alt="7"></p>
+<h2 id="服务注册与发现-动态扩容"><a href="#服务注册与发现-动态扩容" class="headerlink" title="服务注册与发现 - 动态扩容"></a>服务注册与发现 - 动态扩容</h2><h3 id="冗余策略"><a href="#冗余策略" class="headerlink" title="冗余策略"></a>冗余策略</h3><p>1.一般来说，一个服务都会部署多个实例，这是最粗暴最常用方式；<br>2.能够分担压力提高性能；<br>3.即使一个实例挂了其他实例还能响应；<br>4.冗余数量不是固定值，比如平时活4个实例，双11需要40个；</p>
+<h3 id="新增实例问题"><a href="#新增实例问题" class="headerlink" title="新增实例问题"></a>新增实例问题</h3><p>1.先部署再注册到负载均衡或DNS上；<br>2.手动新增40个实例，手动输入40个IP……</p>
+<h3 id="服务注册和发现"><a href="#服务注册和发现" class="headerlink" title="服务注册和发现"></a>服务注册和发现</h3><p>1.服务发现服务，提供所有已注册服务的地址信息；<br>2.应用服务在启动时自动将自己注册到服务发现服务上；<br>3.应用服务启动后会实时(定期)从服务发现服务同步各个应用服务的地址列表到本地；<br>4.服务发现服务会定期检查应用服务的健康状态，去掉不健康的实例地址；<br>5.新增实例时只需要部署新实例，实例下线时直接关停服务，服务发现会自动检查服务实例的增减；<br><img src="/2021/05/26/microServiceSolution/8.png" alt="8"><br>1.服务发现会跟客户端负载均衡配合使用；<br>2.应用服务已经同步服务地址列表在本地了，访问微服务时，可以自己决定负载策略；<br>3.甚至可以在服务注册时加入一些元数据（服务版本等信息），客户端负载则根据这些元数据进行流量控制，实现A/B测试、蓝绿发布等功能；<br>4.可选择服务发现组件：Zookeeper 、Eureka、Consul、Etcd等；</p>
+<h2 id="熔断-–-服务降级-–-限流"><a href="#熔断-–-服务降级-–-限流" class="headerlink" title="熔断 – 服务降级 – 限流"></a>熔断 – 服务降级 – 限流</h2><h3 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h3><p>1.一个服务因为各种原因停止响应时，调用方通常会等待一段时间，然后超时或者收到错误返回；<br>2.如果调用链路比较长，可能会导致请求堆积，整条链路占用大量资源一直在等待下游响应；<br>3.当多次访问一个服务失败时，应熔断，标记该服务已停止工作，直接返回错误；<br>4.该服务恢复正常后再重新建立连接；<br><img src="/2021/05/26/microServiceSolution/9.png" alt="9"></p>
+<h3 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h3><p>下游服务停止工作后，如果该服务并非核心业务，则上游服务应该降级，以保证核心业务不中断。比如网上超市下单界面有一个推荐商品凑单的功能，当推荐模块挂了后，下单功能不能一起挂掉，只需要暂时关闭推荐功能即可；</p>
+<h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><p>1.限流原因：一个服务挂掉后，上游服务或者用户一般会习惯性地重试访问。这导致一旦服务恢复正常，很可能因为瞬间网络流量过大又立刻挂掉，在棺材里重复着仰卧起坐；<br>2.限流策略：比如当单位时间内请求数过多时，丢弃多余的请求。也可以考虑分区限流，仅拒绝来自产生大量请求的服务的请求。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>1.端到端测试：覆盖整个系统，一般在用户界面机型测试；<br>2.服务测试：针对服务接口进行测试；<br>3.单元测试：针对代码单元进行测试；<br><img src="/2021/05/26/microServiceSolution/10.png" alt="10"><br>Mock Server：服务会经常依赖一些其他服务<br><img src="/2021/05/26/microServiceSolution/11.png" alt="11"></p>
+<h2 id="微服务框架"><a href="#微服务框架" class="headerlink" title="微服务框架"></a>微服务框架</h2><p>一些大厂提供了微服务的框架</p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>1.微服务框架可以实现很多自定义功能；<br>2.甚至可以将程序调用堆栈信息注入到链路跟踪，实现代码级别的链路跟踪；<br>3.或者输出线程池、连接池的状态信息，实时监控服务底层状态；</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>1.框架更新成本很高，每次框架升级，都需要所有应用服务配合升级；<br>2.一般会使用兼容方案，留出一段并行时间等待所有应用服务升级；<br>3.如果应用服务非常多时，升级时间可能会非常漫长；<br>4.有一些很稳定几乎不更新的应用服务，负责人可能会拒绝升级；</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>微服务组件繁多，比如配置中心，携程的Apllo、阿里的Nacos都很出名，不一一介绍，以上内容不是微服务的全部，微服务也不是架构演变的终点，还有Serverless、FaaS等方向，也有人在重新发现单体架构。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    支持一下
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="姜海鹏 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="姜海鹏 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/25/microServiceProfile/" rel="prev" title="微服务系列一：简介">
+      <i class="fa fa-chevron-left"></i> 微服务系列一：简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/26/microServiceEssence/" rel="next" title="微服务系列三：本质">
+      微服务系列三：本质 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BA%A7%E7%94%9F%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">微服务产生的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">微服务解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F"><span class="nav-text">微服务监控系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E8%B7%9F%E8%B8%AA-%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98"><span class="nav-text">链路跟踪 - 定位问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E8%B7%9F%E8%B8%AA%E8%AE%B0%E5%BD%95%E6%A0%91"><span class="nav-text">链路跟踪记录树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E8%B7%9F%E8%B8%AA%E5%AE%9E%E7%8E%B0"><span class="nav-text">链路跟踪实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90-%E5%88%86%E6%9E%90%E9%97%AE%E9%A2%98"><span class="nav-text">日志分析 - 分析问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%85%B3-%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6-%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86"><span class="nav-text">网关 - 权限控制+服务治理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%B2%97%E7%B2%92%E5%BA%A6%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="nav-text">网关粗粒度方案：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0-%E5%8A%A8%E6%80%81%E6%89%A9%E5%AE%B9"><span class="nav-text">服务注册与发现 - 动态扩容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%97%E4%BD%99%E7%AD%96%E7%95%A5"><span class="nav-text">冗余策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E5%AE%9E%E4%BE%8B%E9%97%AE%E9%A2%98"><span class="nav-text">新增实例问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%92%8C%E5%8F%91%E7%8E%B0"><span class="nav-text">服务注册和发现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%86%94%E6%96%AD-%E2%80%93-%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7-%E2%80%93-%E9%99%90%E6%B5%81"><span class="nav-text">熔断 – 服务降级 – 限流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%86%94%E6%96%AD"><span class="nav-text">熔断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7"><span class="nav-text">服务降级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E6%B5%81"><span class="nav-text">限流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6"><span class="nav-text">微服务框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-text">结语</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
