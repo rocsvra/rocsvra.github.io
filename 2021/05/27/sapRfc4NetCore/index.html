@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="老外对此做了一个很好的封装，代码上对元数据的处理非常值得借鉴，地址如下：https:&#x2F;&#x2F;github.com&#x2F;huysentruitw&#x2F;SapNwRfc简单介绍一下SAP NetWeaver RFC类库，并对此做一些简单的二次封装，地址如下：https:&#x2F;&#x2F;github.com&#x2F;rocsvra&#x2F;AdunTech.Common提供了需要的SDK lib和一个示例Demo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sap系列二：RFC通信（.net core版）">
+<meta property="og:url" content="http://example.com/2021/05/27/sapRfc4NetCore/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="老外对此做了一个很好的封装，代码上对元数据的处理非常值得借鉴，地址如下：https:&#x2F;&#x2F;github.com&#x2F;huysentruitw&#x2F;SapNwRfc简单介绍一下SAP NetWeaver RFC类库，并对此做一些简单的二次封装，地址如下：https:&#x2F;&#x2F;github.com&#x2F;rocsvra&#x2F;AdunTech.Common提供了需要的SDK lib和一个示例Demo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-27T14:27:18.000Z">
+<meta property="article:modified_time" content="2021-05-31T06:35:11.632Z">
+<meta property="article:author" content="姜海鹏">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/05/27/sapRfc4NetCore/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Sap系列二：RFC通信（.net core版） | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/27/sapRfc4NetCore/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Sap系列二：RFC通信（.net core版）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-27 22:27:18" itemprop="dateCreated datePublished" datetime="2021-05-27T22:27:18+08:00">2021-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-31 14:35:11" itemprop="dateModified" datetime="2021-05-31T14:35:11+08:00">2021-05-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sap/" itemprop="url" rel="index"><span itemprop="name">Sap</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>老外对此做了一个很好的封装，代码上对元数据的处理非常值得借鉴，地址如下：<br><a target="_blank" rel="noopener" href="https://github.com/huysentruitw/SapNwRfc">https://github.com/huysentruitw/SapNwRfc</a><br>简单介绍一下SAP NetWeaver RFC类库，并对此做一些简单的二次封装，地址如下：<br><a target="_blank" rel="noopener" href="https://github.com/rocsvra/AdunTech.Common">https://github.com/rocsvra/AdunTech.Common</a><br>提供了需要的SDK lib和一个示例Demo</p>
+<span id="more"></span>
+<h1 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h1><p>1.需要SAP提供的SDK，解压缩SDK到一个文件目录，并添加该路径至环境变量Path<br>2.拷贝icudt50.dll、icuin50.dll、icuuc50.dll、sapnwrfc.dll、sapnwrfc.lib、sapnwrfc.pdb，这6个文件到运行目录</p>
+<h1 id="连接串"><a href="#连接串" class="headerlink" title="连接串"></a>连接串</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;AppServerHost=MY_SERVER_HOST; SystemNumber=00; User=MY_SAP_USER; Password=SECRET; Client=100; Language=EN; PoolSize=5; Trace=3&quot;;</span><br></pre></td></tr></table></figure>
+<details><summary>点击查看对应的连接串字段</summary>
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">SAP Field</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">AppServerHost</td>
+<td align="left">ASHOST</td>
+</tr>
+<tr>
+<td align="left">SncLibraryPath</td>
+<td align="left">SNC_LIB</td>
+</tr>
+<tr>
+<td align="left">SncQop</td>
+<td align="left">SNC_QOP</td>
+</tr>
+<tr>
+<td align="left">Trace</td>
+<td align="left">TRACE</td>
+</tr>
+<tr>
+<td align="left">SapRouter</td>
+<td align="left">SAPROUTER</td>
+</tr>
+<tr>
+<td align="left">NoCompression</td>
+<td align="left">NO_COMPRESSION</td>
+</tr>
+<tr>
+<td align="left">OnCharacterConversionError</td>
+<td align="left">ON_CCE</td>
+</tr>
+<tr>
+<td align="left">CharacterFaultIndicatorToken</td>
+<td align="left">CFIT</td>
+</tr>
+<tr>
+<td align="left">MaxPoolSize</td>
+<td align="left">MAX_POOL_SIZE</td>
+</tr>
+<tr>
+<td align="left">PoolSize</td>
+<td align="left">POOL_SIZE</td>
+</tr>
+<tr>
+<td align="left">SncPartnerNames</td>
+<td align="left">SNC_PARTNER_NAMES</td>
+</tr>
+<tr>
+<td align="left">IdleTimeout</td>
+<td align="left">IDLE_TIMEOUT</td>
+</tr>
+<tr>
+<td align="left">MaxPoolWaitTime</td>
+<td align="left">MAX_POOL_WAIT_TIME</td>
+</tr>
+<tr>
+<td align="left">RegistrationCount</td>
+<td align="left">REG_COUNT</td>
+</tr>
+<tr>
+<td align="left">PasswordChangeEnforced</td>
+<td align="left">PASSWORD_CHANGE_ENFORCED</td>
+</tr>
+<tr>
+<td align="left">Name</td>
+<td align="left">NAME</td>
+</tr>
+<tr>
+<td align="left">RepositoryDestination</td>
+<td align="left">REPOSITORY_DESTINATION</td>
+</tr>
+<tr>
+<td align="left">RepositoryUser</td>
+<td align="left">REPOSITORY_USER</td>
+</tr>
+<tr>
+<td align="left">RepositoryPassword</td>
+<td align="left">REPOSITORY_PASSWD</td>
+</tr>
+<tr>
+<td align="left">RepositorySncMyName</td>
+<td align="left">REPOSITORY_SNC_MYNAME</td>
+</tr>
+<tr>
+<td align="left">RepositoryX509Certificate</td>
+<td align="left">REPOSITORY_X509CERT</td>
+</tr>
+<tr>
+<td align="left">IdleCheckTime</td>
+<td align="left">IDLE_CHECK_TIME</td>
+</tr>
+<tr>
+<td align="left">SncMyName</td>
+<td align="left">SNC_MYNAME</td>
+</tr>
+<tr>
+<td align="left">SncPartnerName</td>
+<td align="left">SNC_PARTNERNAME</td>
+</tr>
+<tr>
+<td align="left">ProgramId</td>
+<td align="left">PROGRAM_ID</td>
+</tr>
+<tr>
+<td align="left">AppServerService</td>
+<td align="left">ASSERV</td>
+</tr>
+<tr>
+<td align="left">MessageServerHost</td>
+<td align="left">MSHOST</td>
+</tr>
+<tr>
+<td align="left">MessageServerService</td>
+<td align="left">MSSERV</td>
+</tr>
+<tr>
+<td align="left">R3Name</td>
+<td align="left">R3NAME</td>
+</tr>
+<tr>
+<td align="left">LogonGroup</td>
+<td align="left">GROUP</td>
+</tr>
+<tr>
+<td align="left">GatewayHost</td>
+<td align="left">GWHOST</td>
+</tr>
+<tr>
+<td align="left">GatewayService</td>
+<td align="left">GWSERV</td>
+</tr>
+<tr>
+<td align="left">SystemNumber</td>
+<td align="left">SYSNR</td>
+</tr>
+<tr>
+<td align="left">User</td>
+<td align="left">USER</td>
+</tr>
+<tr>
+<td align="left">AliasUser</td>
+<td align="left">ALIAS_USER</td>
+</tr>
+<tr>
+<td align="left">SncMode</td>
+<td align="left">SNC_MODE</td>
+</tr>
+<tr>
+<td align="left">Client</td>
+<td align="left">CLIENT</td>
+</tr>
+<tr>
+<td align="left">Password</td>
+<td align="left">PASSWD</td>
+</tr>
+<tr>
+<td align="left">Codepage</td>
+<td align="left">CODEPAGE</td>
+</tr>
+<tr>
+<td align="left">PartnerCharSize</td>
+<td align="left">PCS</td>
+</tr>
+<tr>
+<td align="left">SystemId</td>
+<td align="left">SYSID</td>
+</tr>
+<tr>
+<td align="left">SystemIds</td>
+<td align="left">SYS_IDS</td>
+</tr>
+<tr>
+<td align="left">X509Certificate</td>
+<td align="left">X509CERT</td>
+</tr>
+<tr>
+<td align="left">SapSso2Ticket</td>
+<td align="left">MYSAPSSO2</td>
+</tr>
+<tr>
+<td align="left">UseSapGui</td>
+<td align="left">USE_SAPGUI</td>
+</tr>
+<tr>
+<td align="left">AbapDebug</td>
+<td align="left">ABAP_DEBUG</td>
+</tr>
+<tr>
+<td align="left">LogonCheck</td>
+<td align="left">LCHECK</td>
+</tr>
+<tr>
+<td align="left">Language</td>
+<td align="left">LANG</td>
+</tr>
+</tbody></table>
+</details>
+
+<h1 id="实体字段映射"><a href="#实体字段映射" class="headerlink" title="实体字段映射"></a>实体字段映射</h1><table>
+<thead>
+<tr>
+<th align="left">C#</th>
+<th align="left">SAP RFC</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">int</td>
+<td align="left">RFCTYPE_INT</td>
+</tr>
+<tr>
+<td align="left">long</td>
+<td align="left">RFCTYPE_INT8</td>
+</tr>
+<tr>
+<td align="left">double</td>
+<td align="left">RFCTYPE_FLOAT</td>
+</tr>
+<tr>
+<td align="left">decimal</td>
+<td align="left">RFCTYPE_BCD</td>
+</tr>
+<tr>
+<td align="left">string</td>
+<td align="left">RFCTYPE_STRING / RFCTYPE_CHAR / …</td>
+</tr>
+<tr>
+<td align="left">byte[]</td>
+<td align="left">RFCTYPE_BYTE</td>
+</tr>
+<tr>
+<td align="left">char[]</td>
+<td align="left">RFCTYPE_CHAR</td>
+</tr>
+<tr>
+<td align="left">DateTime?</td>
+<td align="left">RFCTYPE_DATE</td>
+</tr>
+<tr>
+<td align="left">TimeSpan?</td>
+<td align="left">RFCTYPE_TIME</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">RFCTYPE_STRUCTURE</td>
+</tr>
+<tr>
+<td align="left">Array<T></T></td>
+<td align="left">RFCTYPE_TABLE</td>
+</tr>
+</tbody></table>
+<h1 id="在ASP-NET-Core应用中的使用"><a href="#在ASP-NET-Core应用中的使用" class="headerlink" title="在ASP.NET Core应用中的使用"></a>在ASP.NET Core应用中的使用</h1><p>1.在Startup.cs ConfigureServices方法中添加：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//单例注册连接池</span></span><br><span class="line">services.AddSingleton&lt;ISapConnectionPool&gt;(_ =&gt; <span class="keyword">new</span> SapConnectionPool(Configuration.GetConnectionString(<span class="string">&quot;Bull_SAP&quot;</span>)));</span><br><span class="line"><span class="comment">//注册连接</span></span><br><span class="line">services.AddScoped&lt;ISapPooledConnection, SapPooledConnection&gt;();</span><br><span class="line">services.AddScoped&lt;ISapRfcClient, SapRfcClient&gt;();</span><br></pre></td></tr></table></figure>
+<p>2.控制器中的注入客户端：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> ISapRfcClient _sapClient;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">TestController</span>(<span class="params">ISapRfcClient sapClient</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _sapClient = sapClient;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3.实体定义：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ZHRI043A</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> PERNR &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MONTH &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">decimal</span> STDAZ &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">decimal</span> STDAZ_A &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">decimal</span> ABZHL &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ZBNUM &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ZFLAG &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ZHRI043B</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> PERNR &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> DATE &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> WOTNR &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ETEXT &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BEGTM &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ENDTM &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ZHRI043_Input</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> IM_PERNR &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> IM_MONTH &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ZHRI043_Output</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MESSAGE &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MSGTYPE &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> ZHRI043A[] ZHRI043A &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> ZHRI043B[] ZHRI043B &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4.查询：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> input = <span class="keyword">new</span> ZHRI043_Input &#123; IM_PERNR = <span class="string">&quot;00228028&quot;</span>, IM_MONTH = <span class="string">&quot;202011&quot;</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> output = _sapClient.Execute&lt;ZHRI043_Output, ZHRI043_Input&gt;(input, <span class="string">&quot;ZHRI043&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>5.回写：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//input是一个实体数组</span></span><br><span class="line">_sapClient.Execute&lt;ZZT0185_Input&gt;(input, <span class="string">&quot;ZHRI044&quot;</span>);</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    支持一下
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="姜海鹏 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="姜海鹏 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/27/sapRfc4Framework/" rel="prev" title="Sap系列一：RFC通信（.net framework版）">
+      <i class="fa fa-chevron-left"></i> Sap系列一：RFC通信（.net framework版）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83"><span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E4%B8%B2"><span class="nav-text">连接串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E4%BD%93%E5%AD%97%E6%AE%B5%E6%98%A0%E5%B0%84"><span class="nav-text">实体字段映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8ASP-NET-Core%E5%BA%94%E7%94%A8%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">在ASP.NET Core应用中的使用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

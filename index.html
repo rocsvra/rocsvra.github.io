@@ -154,6 +154,168 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/27/sapRfc4NetCore/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/27/sapRfc4NetCore/" class="post-title-link" itemprop="url">Sap系列二：RFC通信（.net core版）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-27 22:27:18" itemprop="dateCreated datePublished" datetime="2021-05-27T22:27:18+08:00">2021-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-31 14:35:11" itemprop="dateModified" datetime="2021-05-31T14:35:11+08:00">2021-05-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sap/" itemprop="url" rel="index"><span itemprop="name">Sap</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>老外对此做了一个很好的封装，代码上对元数据的处理非常值得借鉴，地址如下：<br><a target="_blank" rel="noopener" href="https://github.com/huysentruitw/SapNwRfc">https://github.com/huysentruitw/SapNwRfc</a><br>简单介绍一下SAP NetWeaver RFC类库，并对此做一些简单的二次封装，地址如下：<br><a target="_blank" rel="noopener" href="https://github.com/rocsvra/AdunTech.Common">https://github.com/rocsvra/AdunTech.Common</a><br>提供了需要的SDK lib和一个示例Demo</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/05/27/sapRfc4NetCore/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/27/sapRfc4Framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/27/sapRfc4Framework/" class="post-title-link" itemprop="url">Sap系列一：RFC通信（.net framework版）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-27 22:17:10" itemprop="dateCreated datePublished" datetime="2021-05-27T22:17:10+08:00">2021-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-31 13:25:33" itemprop="dateModified" datetime="2021-05-31T13:25:33+08:00">2021-05-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sap/" itemprop="url" rel="index"><span itemprop="name">Sap</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Sap系统通过RFC（远程函数调用），向外部提供通信接口。<br>以Framework 4.5.2版本为例，.net码农大都引用了sapnco.dll和sapnco_utils.dll这两个类库。<br>在此基础上做了一些简单的封装，希望能方便到大家。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/05/27/sapRfc4Framework/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/26/microServiceEssence/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -177,10 +339,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-05-26 14:19:21 / 修改时间：15:49:04" itemprop="dateCreated datePublished" datetime="2021-05-26T14:19:21+08:00">2021-05-26</time>
+              <time title="创建时间：2021-05-26 22:19:21" itemprop="dateCreated datePublished" datetime="2021-05-26T22:19:21+08:00">2021-05-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-28 09:17:35" itemprop="dateModified" datetime="2021-05-28T09:17:35+08:00">2021-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -252,10 +420,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-05-26 11:05:37 / 修改时间：14:11:45" itemprop="dateCreated datePublished" datetime="2021-05-26T11:05:37+08:00">2021-05-26</time>
+              <time title="创建时间：2021-05-26 22:05:37" itemprop="dateCreated datePublished" datetime="2021-05-26T22:05:37+08:00">2021-05-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-28 09:17:53" itemprop="dateModified" datetime="2021-05-28T09:17:53+08:00">2021-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -328,14 +502,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-05-25 17:19:05" itemprop="dateCreated datePublished" datetime="2021-05-25T17:19:05+08:00">2021-05-25</time>
+              <time title="创建时间：2021-05-25 22:19:05" itemprop="dateCreated datePublished" datetime="2021-05-25T22:19:05+08:00">2021-05-25</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-26 11:27:16" itemprop="dateModified" datetime="2021-05-26T11:27:16+08:00">2021-05-26</time>
+                <time title="修改时间：2021-05-28 09:17:45" itemprop="dateModified" datetime="2021-05-28T09:17:45+08:00">2021-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
