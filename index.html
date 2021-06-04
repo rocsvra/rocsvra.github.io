@@ -154,7 +154,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/01/yaml/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/02/yaml/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -168,7 +168,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/06/01/yaml/" class="post-title-link" itemprop="url">配置系列一：yaml语言</a>
+            <a href="/2021/06/02/yaml/" class="post-title-link" itemprop="url">配置系列一：yaml</a>
         </h2>
 
         <div class="post-meta">
@@ -178,14 +178,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-06-01 14:33:48" itemprop="dateCreated datePublished" datetime="2021-06-01T14:33:48+08:00">2021-06-01</time>
+              <time title="创建时间：2021-06-02 11:43:02" itemprop="dateCreated datePublished" datetime="2021-06-02T11:43:02+08:00">2021-06-02</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-02 10:03:51" itemprop="dateModified" datetime="2021-06-02T10:03:51+08:00">2021-06-02</time>
+                <time title="修改时间：2021-06-04 08:35:08" itemprop="dateModified" datetime="2021-06-04T08:35:08+08:00">2021-06-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,10 +208,162 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>yaml语言专门用来写配置文件，比json更简洁。</p>
-<h1 id="基本语法规则hexo"><a href="#基本语法规则hexo" class="headerlink" title="基本语法规则hexo"></a>基本语法规则hexo</h1><blockquote>
-<p>大小写敏感<br>使用缩进表示层级关系<br>缩进时不允许使用Tab键，只允许使用空格<br>缩进的空格数目不重要，只要相同层级的元素左侧对齐即可</p>
+          <p>yaml是专门用来写配置文件的语言，简洁强大，比json更为方便。</p>
+<h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><blockquote>
+<p>大小写敏感<br>使用缩进表示层级关系<br>缩进时不允许使用Tab键，只允许使用空格<br>缩进的空格数目不重要，只要相同层级的元素左侧对齐即可<br>“#”表示注释，从这个字符一直到行尾，都会被解析器忽略</p>
 </blockquote>
+<h1 id="支持的数据结构"><a href="#支持的数据结构" class="headerlink" title="支持的数据结构"></a>支持的数据结构</h1><blockquote>
+<p>对象：键值对的集合，又称为映射（mapping）/ 哈希（hashes） / 字典（dictionary）<br>数组：一组按次序排列的值，又称为序列（sequence）/ 列表（list）<br>纯量（scalars）：单个的、不可再分的值</p>
+</blockquote>
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><table>
+<thead>
+<tr>
+<th align="left">Yaml</th>
+<th align="left">JavaScript</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">animal: pets</td>
+<td align="left">{ animal: ‘pets’ }</td>
+</tr>
+<tr>
+<td align="left">hash: { name: Steve, foo: bar }</td>
+<td align="left">{ hash: { name: ‘Steve’, foo: ‘bar’ } }</td>
+</tr>
+</tbody></table>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><table>
+<thead>
+<tr>
+<th align="left">Yaml</th>
+<th align="left">JavaScript</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">- Cat<br>- Dog<br>- Goldfish</td>
+<td align="left">[ ‘Cat’, ‘Dog’, ‘Goldfish’ ]</td>
+</tr>
+<tr>
+<td align="left">-<br> &nbsp;&nbsp;- Cat<br> &nbsp;&nbsp;- Dog<br> &nbsp;&nbsp;- Goldfish<br></td>
+<td align="left">[ [ ‘Cat’, ‘Dog’, ‘Goldfish’ ] ]</td>
+</tr>
+<tr>
+<td align="left">animal: [Cat, Dog]</td>
+<td align="left">{ animal: [ ‘Cat’, ‘Dog’ ] }</td>
+</tr>
+<tr>
+<td align="left">languages:<br> &nbsp;&nbsp;- Ruby<br> &nbsp;&nbsp;- Perl<br> &nbsp;&nbsp;- Python<br>websites:<br> &nbsp;&nbsp;YAML: yaml.org<br>  &nbsp;&nbsp;Ruby: ruby-lang.org<br>  &nbsp;&nbsp;Python: python.org<br> &nbsp;&nbsp;Perl:use.perl.org<br></td>
+<td align="left">{ <br>languages: [ ‘Ruby’, ‘Perl’, ‘Python’ ],<br>websites:{ <br>YAML: ‘yaml.org’,<br>Ruby: ‘ruby-lang.org’,<br>Python: ‘python.org’,<br>Perl: ‘use.perl.org’ } }</td>
+</tr>
+</tbody></table>
+<h2 id="纯量"><a href="#纯量" class="headerlink" title="纯量"></a>纯量</h2><p>最基本、不可分割的值。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">Yaml</th>
+<th align="left">JavaScript</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">数值</td>
+<td align="left">number: 12.30</td>
+<td align="left">{ number: 12.30 }</td>
+</tr>
+<tr>
+<td align="left">布尔</td>
+<td align="left">isSet: true</td>
+<td align="left">{ isSet: true }</td>
+</tr>
+<tr>
+<td align="left">null</td>
+<td align="left">parent: ~</td>
+<td align="left">{ parent: null }</td>
+</tr>
+<tr>
+<td align="left">时间</td>
+<td align="left">iso8601: 2001-12-14t21:59:43.10-05:00</td>
+<td align="left">{ iso8601: new Date(‘2001-12-14t21:59:43.10-05:00’) }</td>
+</tr>
+<tr>
+<td align="left">日期</td>
+<td align="left">date: 1976-07-31</td>
+<td align="left">{ date: new Date(‘1976-07-31’) }</td>
+</tr>
+</tbody></table>
+<h3 id="类型强转"><a href="#类型强转" class="headerlink" title="类型强转"></a>类型强转</h3><table>
+<thead>
+<tr>
+<th align="left">Yaml</th>
+<th align="left">JavaScript</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">e: !!str 123<br>f: !!str true</td>
+<td align="left">{ e: ‘123’, f: ‘true’ }</td>
+</tr>
+</tbody></table>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><table>
+<thead>
+<tr>
+<th align="left">Yaml</th>
+<th align="left">JavaScript</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">str: 这是字符串</td>
+<td align="left">{ str: ‘这是字符串’ }</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">str: ‘内容： 字符串\n’</td>
+<td align="left">{ str: ‘内容: 字符串\n’ }</td>
+<td align="left">包含特殊字符</td>
+</tr>
+<tr>
+<td align="left">str: ‘labor’’s day’</td>
+<td align="left">{ str: ‘labor&#39;s day’ }</td>
+<td align="left">两个单引号转义</td>
+</tr>
+<tr>
+<td align="left">str: 这是一段<br>&nbsp;多行<br>&nbsp;字符串</td>
+<td align="left">{ str: ‘这是一段 多行 字符串’ }</td>
+<td align="left">多行字符串，第二行开始单空格缩进，<br>换行符会被转为空格</td>
+</tr>
+<tr>
+<td align="left">this: &#124;<br>&nbsp;Foo<br>&nbsp;Bar<br>that:&gt;<br>&nbsp;Foo<br>&nbsp;Bar</td>
+<td align="left">{ this: ‘Foo\nBar\n’, that: ‘Foo Bar\n’ }</td>
+<td align="left">多行字符串,<br> “&#124;”保留换行符,<br> “&gt;”折叠换行</td>
+</tr>
+<tr>
+<td align="left">s1: &#124;+<br>&nbsp;Foo<br><br> s2: &#124;-<br> &nbsp;Foo</td>
+<td align="left">{ s1: ‘Foo\n\n’, s2: ‘Foo’ }</td>
+<td align="left">“+”:保留文字块末尾的换行，<br>“-“:删除字符串末尾的换行</td>
+</tr>
+<tr>
+<td align="left">message:&#124;<br>&lt;p&gt;<br>段落<br>&lt;/p&gt;</td>
+<td align="left">{ message: ‘\n&lt;p&gt;\n  段落\n&lt;/p&gt;\n’ }</td>
+<td align="left">可以插入 HTML 标记</td>
+</tr>
+</tbody></table>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>锚点”&amp;”和别名”*”，可以用来引用。</p>
+<table>
+<thead>
+<tr>
+<th align="left">&amp;用来建立锚点（defaults）<br>&lt;&lt;表示合并到当前数据<br>*用来引用锚点</th>
+<th align="left">等价代码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><img src="/2021/06/02/yaml/1.png" alt="1"></td>
+<td align="left"><img src="/2021/06/02/yaml/2.png" alt="2"></td>
+</tr>
+<tr>
+<td align="left">- &amp;showell Steve<br>- Clark<br>- Brian<br>- Oren<br>- *showell</td>
+<td align="left">[ ‘Steve’, ‘Clark’, ‘Brian’, ‘Oren’, ‘Steve’ ]</td>
+</tr>
+</tbody></table>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://yaml.org/spec/1.2/spec.html">YAML 1.2 规格</a><br><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/YAML">YAML from Wikipedia</a><br><a target="_blank" rel="noopener" href="http://yaml.org/YAML_for_ruby.html">YAML for Ruby</a></p>
 
       
     </div>
