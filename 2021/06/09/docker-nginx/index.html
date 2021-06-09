@@ -19,24 +19,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="以电商平台为例，介绍微服务。">
+  <meta name="description" content="简单示例如下——">
 <meta property="og:type" content="article">
-<meta property="og:title" content="微服务简介（1）">
-<meta property="og:url" content="http://example.com/2021/05/25/microServiceProfile/index.html">
+<meta property="og:title" content="Docker部署Nginx">
+<meta property="og:url" content="http://example.com/2021/06/09/docker-nginx/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="以电商平台为例，介绍微服务。">
+<meta property="og:description" content="简单示例如下——">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/05/25/microServiceProfile/1.png">
-<meta property="og:image" content="http://example.com/2021/05/25/microServiceProfile/2.png">
-<meta property="og:image" content="http://example.com/2021/05/25/microServiceProfile/3.png">
-<meta property="og:image" content="http://example.com/2021/05/25/microServiceProfile/4.png">
-<meta property="article:published_time" content="2021-05-25T14:19:05.000Z">
-<meta property="article:modified_time" content="2021-06-09T08:06:24.975Z">
+<meta property="og:image" content="http://example.com/2021/06/09/docker-nginx/3.png">
+<meta property="article:published_time" content="2021-06-09T05:51:43.000Z">
+<meta property="article:modified_time" content="2021-06-09T08:57:20.647Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/05/25/microServiceProfile/1.png">
+<meta name="twitter:image" content="http://example.com/2021/06/09/docker-nginx/3.png">
 
-<link rel="canonical" href="http://example.com/2021/05/25/microServiceProfile/">
+<link rel="canonical" href="http://example.com/2021/06/09/docker-nginx/">
 
 
 <script id="page-configurations">
@@ -49,7 +46,7 @@
   };
 </script>
 
-  <title>微服务简介（1） | Hello Friend</title>
+  <title>Docker部署Nginx | Hello Friend</title>
   
 
 
@@ -164,7 +161,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/25/microServiceProfile/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/09/docker-nginx/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -177,7 +174,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          微服务简介（1）
+          Docker部署Nginx
         </h1>
 
         <div class="post-meta">
@@ -186,23 +183,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-05-25 22:19:05" itemprop="dateCreated datePublished" datetime="2021-05-25T22:19:05+08:00">2021-05-25</time>
+              <time title="创建时间：2021-06-09 13:51:43 / 修改时间：16:57:20" itemprop="dateCreated datePublished" datetime="2021-06-09T13:51:43+08:00">2021-06-09</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-09 16:06:24" itemprop="dateModified" datetime="2021-06-09T16:06:24+08:00">2021-06-09</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
                 </span>
             </span>
 
@@ -217,16 +208,40 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>以电商平台为例，介绍微服务。</p>
+        <p>简单示例如下——</p>
 <span id="more"></span>
-<h1 id="第一阶段（简单需求）"><a href="#第一阶段（简单需求）" class="headerlink" title="第一阶段（简单需求）"></a>第一阶段（简单需求）</h1><p>出于安全考虑，分离应用网站和后台管理；<br><img src="/2021/05/25/microServiceProfile/1.png" alt="1"></p>
-<h1 id="第二阶段（复杂需求）"><a href="#第二阶段（复杂需求）" class="headerlink" title="第二阶段（复杂需求）"></a>第二阶段（复杂需求）</h1><p>1.增加促销活动；<br>2.拓展应用渠道，移动App、微信小程序；<br>3.增加大数据分析，进行精准营销，提供个性化服务；<br>4.需求随着市场突发，时间紧迫，需要先上线后迭代；<br><img src="/2021/05/25/microServiceProfile/2.png" alt="2"></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>1.业务逻辑雷同，代码重复；<br>2.数据获取混乱，或数据库，或接口；<br>3.接口调用关系混乱，应用边界模糊；<br>4.功能归属混乱，单个应用为了给其他应用提供接口，越改越大，包含许多不属于自己的逻辑；<br>5.数据库表结构被多个应用依赖，无法重构优化；<br>6.单个数据库出现性能瓶颈，特别是数据分析，性能急剧下降；<br>7.开发、测试、部署、维护困难，小改动就要发布整个应用，有时候会带上未测试的代码，或者改了一个功能，另一个意想不到的地方出错，应用发布都在凌晨，发布后为验证应用正常运行，盯到第二天白天用户高峰期；<br>8.团队出现推诿扯皮，比如公用的功能在那个应用上建设，结果是大家干脆各做各的，或者随便放个地方，大家都不维护；</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>1.迫于繁重的任务，陷入短视思维，做出妥协决策；<br>2.架构中，每个人只关注自己的一亩三分地，缺乏全局、长远的设计；<br>3.系统建设越来越困难，甚至陷入不断推翻、重建的循环；<br>4.虽然问题很多，但快速根据业务变化建设了系统；</p>
-<h1 id="第三阶段（面向服务）"><a href="#第三阶段（面向服务）" class="headerlink" title="第三阶段（面向服务）"></a>第三阶段（面向服务）</h1><p>1.产生公共服务；<br>2.删除大量冗余代码；<br>3.控制层和前端非常轻薄；<br><img src="/2021/05/25/microServiceProfile/3.png" alt="3"></p>
-<h2 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h2><p>1.数据库性能瓶颈，单点故障；<br>2.数据库管理混乱，就算初期模块化设计良好，随着时间推移，总会有一个服务直接从数据库抽取另一个服务的数据；<br>3.数据库表被多个服务依赖，牵一发动全身，难以调整；</p>
-<h1 id="第四阶段（微服务）"><a href="#第四阶段（微服务）" class="headerlink" title="第四阶段（微服务）"></a>第四阶段（微服务）</h1><p>1.拆分数据库，持久化层相互隔离；<br>2.加入消息队列，提高实时性；<br>3.各个服务为自己负责，比如，数据分析可以使用数据仓库，可以高效做一些统计计算，访问频率高的加入缓存机制；<br><img src="/2021/05/25/microServiceProfile/4.png" alt="4"></p>
-<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>1.分工明确，责任清晰，大家各背各的锅，每个人专心负责为他人提供更好的服务；<br>2.对比单体时代，公共业务功能没有明确归属，要么各做各，要么一个好人做到他负责的应用里，额外还要负责给别人提供这些公共功能，也负责莫名其妙背锅。结果大家都不愿意当这样子的人，大家各自为政，不再关心全局架构；<br>3.微服务架构会改变现实中码农的组织架构，微服务的改造没有上头的支持是不太可能实现的；<br>4.有人建议把公共逻辑做成公共框架库，这样可以减少服务调用的性能损耗，但是也会带来管理成本，比如如何保证所有应用的版本一致性；<br>5.数据库拆分也会带来问题，比如跨库级的级联需求，通过服务查询数据颗粒度粗细的问题等等，但总体来说，这些可以通过合理设计来解决，拆分数据库利大于弊；</p>
+<h1 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h1><blockquote>
+<p>查找Docker Hub上Nginx镜像<br>拉取官方Nginx镜像<br>本地镜像列表里查找 repository 为 nginx 的镜像</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker search nginx</span><br><span class="line">docker pull nginx</span><br><span class="line">docker images nginx</span><br></pre></td></tr></table></figure>
+<h1 id="启动镜像实例"><a href="#启动镜像实例" class="headerlink" title="启动镜像实例"></a>启动镜像实例</h1><blockquote>
+<p>–rm：容器终止运行后，自动删除容器文件<br>–name nginx-test：自定义容器名字<br>-p: 容器端口映射,本地8080端口 -&gt; 容器内部80端口<br>-d: 设置容器启动后，在后台运行</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --name nginx-test -p 8080:80 -d nginx</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>查看启动的docker容器</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ps</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>浏览器中效果：<a target="_blank" rel="noopener" href="http://xx.xxx.xxx.xxx:8080/">http://xx.xxx.xxx.xxx:8080/</a><br><img src="/2021/06/09/docker-nginx/3.png" alt="3"></p>
+</blockquote>
+<h1 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h1><p>1.新建目录，存放相关文件，映射nginx容器 </p>
+<blockquote>
+<p>www -&gt; nginx 容器配置的虚拟目录<br>logs -&gt; nginx 容器的日志目录<br>conf -&gt; nginx 容器的配置文件</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/nginx/www /home/nginx/logs /home/nginx/conf</span><br></pre></td></tr></table></figure>
+<p>2.查看启动的容器，获取容器ID：774080b8799b</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<p>3.拷贝容器内默认配置文件到新建的conf目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp 774080b8799b:/etc/nginx/nginx.conf /home/nginx/conf/</span><br></pre></td></tr></table></figure>
+<p>4.部署命令</p>
+<blockquote>
+<p>将自己创建的目录挂载到容器上</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -d -p 8081:80 --name nginx-test-web \</span><br><span class="line">-v /home/nginx/www:/usr/share/nginx/html \</span><br><span class="line">-v /home/nginx/conf/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /home/nginx/logs:/var/log/nginx \</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>自定义的www目录中放一个测试的index.html文件<br>浏览器中可以查看效果：<a target="_blank" rel="noopener" href="http://xx.xxx.xxx.xxx:8081/">http://xx.xxx.xxx.xxx:8081/</a></p>
+</blockquote>
 
     </div>
 
@@ -261,11 +276,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/05/26/microServiceSolution/" rel="next" title="微服务简介（2）">
-      微服务简介（2） <i class="fa fa-chevron-right"></i>
+    <a href="/2021/06/09/exceptionless-1/" rel="prev" title="Exceptionless简介（未完）">
+      <i class="fa fa-chevron-left"></i> Exceptionless简介（未完）
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -324,7 +339,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%88%E7%AE%80%E5%8D%95%E9%9C%80%E6%B1%82%EF%BC%89"><span class="nav-text">第一阶段（简单需求）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%88%E5%A4%8D%E6%9D%82%E9%9C%80%E6%B1%82%EF%BC%89"><span class="nav-text">第二阶段（复杂需求）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%88%E9%9D%A2%E5%90%91%E6%9C%8D%E5%8A%A1%EF%BC%89"><span class="nav-text">第三阶段（面向服务）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%98%B6%E6%AE%B5%EF%BC%88%E5%BE%AE%E6%9C%8D%E5%8A%A1%EF%BC%89"><span class="nav-text">第四阶段（微服务）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-text">总结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%95%9C%E5%83%8F%E5%AE%9E%E4%BE%8B"><span class="nav-text">启动镜像实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2"><span class="nav-text">服务部署</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
