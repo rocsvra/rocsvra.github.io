@@ -19,24 +19,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="以阿里云centos 7.9版本为例演示——">
+  <meta name="description" content="Docker分CE（社区版）和EE（企业版）——">
 <meta property="og:type" content="article">
-<meta property="og:title" content="centos初探一：安装sqlserver">
-<meta property="og:url" content="http://example.com/2021/06/08/centos-1/index.html">
+<meta property="og:title" content="Docker系列一：centos7.9安装Docker">
+<meta property="og:url" content="http://example.com/2021/06/08/centos-docker/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="以阿里云centos 7.9版本为例演示——">
+<meta property="og:description" content="Docker分CE（社区版）和EE（企业版）——">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-1/1.png">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-1/2.png">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-1/3.png">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-1/4.png">
-<meta property="article:published_time" content="2021-06-08T01:51:12.000Z">
-<meta property="article:modified_time" content="2021-06-08T08:27:26.233Z">
+<meta property="og:image" content="http://example.com/2021/06/08/centos-docker/1.png">
+<meta property="og:image" content="http://example.com/2021/06/08/centos-docker/2.png">
+<meta property="og:image" content="http://example.com/2021/06/08/centos-docker/3.png">
+<meta property="article:published_time" content="2021-06-08T07:50:33.000Z">
+<meta property="article:modified_time" content="2021-06-09T02:40:29.752Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/08/centos-1/1.png">
+<meta name="twitter:image" content="http://example.com/2021/06/08/centos-docker/1.png">
 
-<link rel="canonical" href="http://example.com/2021/06/08/centos-1/">
+<link rel="canonical" href="http://example.com/2021/06/08/centos-docker/">
 
 
 <script id="page-configurations">
@@ -49,7 +48,7 @@
   };
 </script>
 
-  <title>centos初探一：安装sqlserver | Hello Friend</title>
+  <title>Docker系列一：centos7.9安装Docker | Hello Friend</title>
   
 
 
@@ -164,7 +163,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/08/centos-1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/08/centos-docker/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -177,7 +176,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          centos初探一：安装sqlserver
+          Docker系列一：centos7.9安装Docker
         </h1>
 
         <div class="post-meta">
@@ -186,17 +185,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-06-08 09:51:12 / 修改时间：16:27:26" itemprop="dateCreated datePublished" datetime="2021-06-08T09:51:12+08:00">2021-06-08</time>
+              <time title="创建时间：2021-06-08 15:50:33" itemprop="dateCreated datePublished" datetime="2021-06-08T15:50:33+08:00">2021-06-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-09 10:40:29" itemprop="dateModified" datetime="2021-06-09T10:40:29+08:00">2021-06-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/centos-7-x%E7%89%88%E6%9C%AC/" itemprop="url" rel="index"><span itemprop="name">centos(7.x版本)</span></a>
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
                 </span>
             </span>
 
@@ -211,33 +216,44 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>以阿里云centos 7.9版本为例演示——</p>
+        <p>Docker分CE（社区版）和EE（企业版）——</p>
 <span id="more"></span>
-<h1 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h1><blockquote>
-<p>下载阿里云在线yum源到本地<br>下载微软官方的sqlserver源到本地<br>安装mssql-server</p>
+<h1 id="系统版本"><a href="#系统版本" class="headerlink" title="系统版本"></a>系统版本</h1><blockquote>
+<p>Docker 要求 CentOS 系统的内核版本高于 3.10 </p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line">wget -O /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo</span><br><span class="line">yum install -y mssql-server</span><br></pre></td></tr></table></figure>
-<h1 id="安装设置"><a href="#安装设置" class="headerlink" title="安装设置"></a>安装设置</h1><p>1.选版本-&gt;接受许可条款-&gt;输sa密码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/mssql/bin/mssql-conf setup</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/06/08/centos-1/1.png" alt="1"><br>2.检查sqlserver状态</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status mssql-server</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/06/08/centos-1/2.png" alt="2"><br>3.设置防火墙，开启远程连接</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=1433/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-<p>如果提示防火墙未开启，可跳过防火墙设置。</p>
-<h1 id="安装sqlserver命令行工具"><a href="#安装sqlserver命令行工具" class="headerlink" title="安装sqlserver命令行工具"></a>安装sqlserver命令行工具</h1><p>1.下载微软官方的软件包yum源</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O  /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo</span><br></pre></td></tr></table></figure>
-<p>2.删除旧版UnixODBC软件包，如果以前安装过mssql</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove unixODBC-utf16 unixODBC-utf16-devel </span><br></pre></td></tr></table></figure>
-<p>3.安装mssql工具包和UnixODBC开发人员软件包</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y mssql-tools unixODBC-devel </span><br></pre></td></tr></table></figure>
-<p>4.添加环境变量</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;export PATH=$PATH:/opt/mssql-tools/bin&quot; &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
-<p>5.使用sqlcmd命令连接本地sqlserver</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlcmd -S localhost -U SA -p</span><br></pre></td></tr></table></figure>
-<p>输sa密码，成功登陆<br><img src="/2021/06/08/centos-1/3.png" alt="3"><br>测试sql</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE [Test]</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/06/08/centos-1/4.png" alt="4"><br>6.本地SSMS连接<br>阿里云服务器，需要配置安全组规则，开放1433端口</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sql/linux/sql-server-linux-setup?view=sql-server-ver15">微软文档</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/centos-release</span><br><span class="line">uname -a</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/06/08/centos-docker/1.png" alt="1"></p>
+<blockquote>
+<p>root权限更新yum包</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br></pre></td></tr></table></figure>
+<h1 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h1><blockquote>
+<p>卸载旧版本<br>安装软件包（yum-util 提供yum-config-manager功能，另两个是devicemapper驱动依赖）<br>设置yum源<br>查看仓库中所有Docker版本<br>安装最新稳定版</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker  docker-common docker-selinux docker-engine</span><br><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">yum list docker-ce --showduplicates | sort -r</span><br><span class="line">yum install docker-ce </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安装Docker特定版</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install &lt;FQPN&gt;  # ，如：yum install docker-ce-17.12.0.ce</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>启动</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>开机启动</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
+<h1 id="验证安装是否成功"><a href="#验证安装是否成功" class="headerlink" title="验证安装是否成功"></a>验证安装是否成功</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/06/08/centos-docker/2.png" alt="2"></p>
+<h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y remove docker-engine</span><br></pre></td></tr></table></figure>
+<h1 id="配置阿里云的镜像加速器"><a href="#配置阿里云的镜像加速器" class="headerlink" title="配置阿里云的镜像加速器"></a>配置阿里云的镜像加速器</h1><p>具体查看<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">阿里云说明</a></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>1.用docker启动nginx</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker search nginx</span><br><span class="line">docker pull nginx:latest</span><br><span class="line">docker images</span><br><span class="line">docker run --name nginx-docker -p 8080:80 -d nginx</span><br><span class="line">ps aux | grep nginx</span><br></pre></td></tr></table></figure>
+<p>2.说明</p>
+<blockquote>
+<p>–name nginx-docker：容器名称<br>-p 8080:80： 容器端口映射<br>-d nginx： 设置容器在后台一直运行</p>
+</blockquote>
+<p>3.查看<a target="_blank" rel="noopener" href="http://xx.xxx.xxx.xxx:8080/">http://xx.xxx.xxx.xxx:8080/</a><br><img src="/2021/06/08/centos-docker/3.png" alt="3"></p>
 
     </div>
 
@@ -273,13 +289,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/06/07/HangFire-1/" rel="prev" title="HangFire系列一：简介">
-      <i class="fa fa-chevron-left"></i> HangFire系列一：简介
+    <a href="/2021/06/08/centos-1/" rel="prev" title="centos初探一：安装sqlserver">
+      <i class="fa fa-chevron-left"></i> centos初探一：安装sqlserver
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/06/08/centos-docker/" rel="next" title="Docker系列一：centos7.9安装Docker">
-      Docker系列一：centos7.9安装Docker <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -338,7 +351,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-text">安装包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%AE%BE%E7%BD%AE"><span class="nav-text">安装设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85sqlserver%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7"><span class="nav-text">安装sqlserver命令行工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC"><span class="nav-text">系统版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85"><span class="nav-text">Docker安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="nav-text">验证安装是否成功</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD"><span class="nav-text">卸载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E4%BA%91%E7%9A%84%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F%E5%99%A8"><span class="nav-text">配置阿里云的镜像加速器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-text">测试</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
