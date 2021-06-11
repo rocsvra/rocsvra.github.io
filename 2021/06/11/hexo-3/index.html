@@ -19,21 +19,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="简单示例如下——">
+  <meta name="description" content="Hexo系列3——">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker部署Nginx">
-<meta property="og:url" content="http://example.com/2021/06/09/docker-nginx/index.html">
+<meta property="og:title" content="Hexo(3)：Next主题">
+<meta property="og:url" content="http://example.com/2021/06/11/hexo-3/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="简单示例如下——">
+<meta property="og:description" content="Hexo系列3——">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/06/09/docker-nginx/3.png">
-<meta property="article:published_time" content="2021-06-09T05:51:43.000Z">
-<meta property="article:modified_time" content="2021-06-11T00:54:53.904Z">
+<meta property="article:published_time" content="2021-06-11T06:59:10.000Z">
+<meta property="article:modified_time" content="2021-06-11T08:22:39.852Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/09/docker-nginx/3.png">
 
-<link rel="canonical" href="http://example.com/2021/06/09/docker-nginx/">
+<link rel="canonical" href="http://example.com/2021/06/11/hexo-3/">
 
 
 <script id="page-configurations">
@@ -46,7 +44,7 @@
   };
 </script>
 
-  <title>Docker部署Nginx | Hello Friend</title>
+  <title>Hexo(3)：Next主题 | Hello Friend</title>
   
 
 
@@ -161,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/09/docker-nginx/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/11/hexo-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -174,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Docker部署Nginx
+          Hexo(3)：Next主题
         </h1>
 
         <div class="post-meta">
@@ -183,24 +181,9 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-06-09 13:51:43" itemprop="dateCreated datePublished" datetime="2021-06-09T13:51:43+08:00">2021-06-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-11 08:54:53" itemprop="dateModified" datetime="2021-06-11T08:54:53+08:00">2021-06-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-                </span>
+              <time title="创建时间：2021-06-11 14:59:10 / 修改时间：16:22:39" itemprop="dateCreated datePublished" datetime="2021-06-11T14:59:10+08:00">2021-06-11</time>
             </span>
 
           
@@ -214,40 +197,66 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>简单示例如下——</p>
+        <p>Hexo系列3——</p>
 <span id="more"></span>
-<h1 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h1><blockquote>
-<p>查找Docker Hub上Nginx镜像<br>拉取官方Nginx镜像<br>本地镜像列表里查找 repository 为 nginx 的镜像</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker search nginx</span><br><span class="line">docker pull nginx</span><br><span class="line">docker images nginx</span><br></pre></td></tr></table></figure>
-<h1 id="启动镜像实例"><a href="#启动镜像实例" class="headerlink" title="启动镜像实例"></a>启动镜像实例</h1><blockquote>
-<p>–rm：容器终止运行后，自动删除容器文件<br>–name nginx-test：自定义容器名字<br>-p: 容器端口映射,本地8080端口 -&gt; 容器内部80端口<br>-d: 设置容器启动后，在后台运行</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --name nginx-test -p 8080:80 -d nginx</span><br></pre></td></tr></table></figure>
+<h1 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h1><p>根目录下_config.yml</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">title</td>
+<td align="left">标题</td>
+</tr>
+<tr>
+<td align="left">subtitle</td>
+<td align="left">子标题</td>
+</tr>
+<tr>
+<td align="left">description</td>
+<td align="left">描述，主要用于SEO，通常放置网站关键词</td>
+</tr>
+<tr>
+<td align="left">author</td>
+<td align="left">作者本人</td>
+</tr>
+<tr>
+<td align="left">language</td>
+<td align="left">中文 zh-CN</td>
+</tr>
+<tr>
+<td align="left">timezone</td>
+<td align="left">‘Asia/Shanghai’</td>
+</tr>
+</tbody></table>
+<h1 id="主题安装"><a href="#主题安装" class="headerlink" title="主题安装"></a>主题安装</h1><p>1.将主题克隆到themes目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd [博客目录]</span><br><span class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+<p>2.修改修改根目录下的_config.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
+<h1 id="主题配置"><a href="#主题配置" class="headerlink" title="主题配置"></a>主题配置</h1><p>1.官方文档：<a target="_blank" rel="noopener" href="http://theme-next.iissnan.com/theme-settings.html">next主题配置官方文档</a><br>2.主题配置文件：</p>
 <blockquote>
-<p>查看启动的docker容器</p>
+<p>next目录下的_config.yml<br>next/languages/{language}.yml  #显示文本</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ps</span><br></pre></td></tr></table></figure>
+<p>3.菜单设置</p>
 <blockquote>
-<p>浏览器中效果：<a target="_blank" rel="noopener" href="http://xx.xxx.xxx.xxx:8080/">http://xx.xxx.xxx.xxx:8080/</a><br><img src="/2021/06/09/docker-nginx/3.png" alt="3"></p>
+<p>菜单项和图标配置：next目录下的_config.yml<br>菜单显示文本配置：next/languages/{language}.yml</p>
 </blockquote>
-<h1 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h1><p>1.新建目录，存放相关文件，映射nginx容器 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: / || home                          #首页</span><br><span class="line">  archives: /archives/ || archive          #归档</span><br><span class="line">  categories: /categories/ || th           #分类</span><br><span class="line">  tags: /tags/ || tags                     #标签</span><br></pre></td></tr></table></figure>
+<p>“||”之前表示标题，之后表示图标</p>
+<p>4.标签模块（categories、 about 同理）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>www -&gt; nginx 容器配置的虚拟目录<br>logs -&gt; nginx 容器的日志目录<br>conf -&gt; nginx 容器的配置文件</p>
+<p>修改source/tags/index.md</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/nginx/www /home/nginx/logs /home/nginx/conf</span><br></pre></td></tr></table></figure>
-<p>2.查看启动的容器，获取容器ID：774080b8799b</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
-<p>3.拷贝容器内默认配置文件到新建的conf目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp 774080b8799b:/etc/nginx/nginx.conf /home/nginx/conf/</span><br></pre></td></tr></table></figure>
-<p>4.部署命令</p>
-<blockquote>
-<p>将自己创建的目录挂载到容器上</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -d -p 8081:80 --name nginx-test-web \</span><br><span class="line">-v /home/nginx/www:/usr/share/nginx/html \</span><br><span class="line">-v /home/nginx/conf/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /home/nginx/logs:/var/log/nginx \</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>自定义的www目录中放一个测试的index.html文件<br>浏览器中可以查看效果：<a target="_blank" rel="noopener" href="http://xx.xxx.xxx.xxx:8081/">http://xx.xxx.xxx.xxx:8081/</a></p>
-</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">date: 2017-07-10 16:36:26</span><br><span class="line">type: tags</span><br><span class="line">comments: false</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>5.主题风格</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Schemes</span><br><span class="line"># scheme: Muse</span><br><span class="line"># scheme: Mist</span><br><span class="line"># scheme: Pisces</span><br><span class="line">scheme: Gemini</span><br></pre></td></tr></table></figure>
+<p>6.站点统计（不蒜子）<br>修改 themes/next/layout/_partial/footer.swig，添加以下代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_container_site_pv&quot;</span> <span class="attr">style</span>=<span class="string">&#x27;display:none&#x27;</span>&gt;</span></span><br><span class="line">    本站总访问量 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span> 次</span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;post-meta-divider&quot;</span>&gt;</span>|<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_container_site_uv&quot;</span> <span class="attr">style</span>=<span class="string">&#x27;display:none&#x27;</span>&gt;</span></span><br><span class="line">    有<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>人看过我的博客啦</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>7.侧栏设置 sidebar<br>8.头像设置 Sidebar Avatar<br>9.网站缩略图设置 favicon</p>
 
     </div>
 
@@ -283,12 +292,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/06/09/exceptionless-1/" rel="prev" title="Exceptionless(1)">
-      <i class="fa fa-chevron-left"></i> Exceptionless(1)
+    <a href="/2021/06/11/hexo-2/" rel="prev" title="Hexo(2)：利用GitHub Pages托管博客">
+      <i class="fa fa-chevron-left"></i> Hexo(2)：利用GitHub Pages托管博客
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/06/11/centos-docker-compose/" rel="next" title="CentOS7.9安装Docker Compose">
-      CentOS7.9安装Docker Compose <i class="fa fa-chevron-right"></i>
+    <a href="/2021/06/11/hexo-4/" rel="next" title="Hexo(4)：图片插件">
+      Hexo(4)：图片插件 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -348,7 +357,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%95%9C%E5%83%8F%E5%AE%9E%E4%BE%8B"><span class="nav-text">启动镜像实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2"><span class="nav-text">服务部署</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-text">基本配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E5%AE%89%E8%A3%85"><span class="nav-text">主题安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE"><span class="nav-text">主题配置</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
