@@ -22,21 +22,21 @@
   <meta name="description" content="以阿里云centos 7.9版本为例演示——">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS7.9安装SqlServer">
-<meta property="og:url" content="http://example.com/2021/06/08/centos-sqlserver/index.html">
+<meta property="og:url" content="http://example.com/2021/06/09/centos-sqlserver/index.html">
 <meta property="og:site_name" content="Hello Friend">
 <meta property="og:description" content="以阿里云centos 7.9版本为例演示——">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-sqlserver/1.png">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-sqlserver/2.png">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-sqlserver/3.png">
-<meta property="og:image" content="http://example.com/2021/06/08/centos-sqlserver/4.png">
-<meta property="article:published_time" content="2021-06-08T01:51:12.000Z">
-<meta property="article:modified_time" content="2021-06-15T13:05:09.399Z">
+<meta property="og:image" content="http://example.com/2021/06/09/centos-sqlserver/1.png">
+<meta property="og:image" content="http://example.com/2021/06/09/centos-sqlserver/2.png">
+<meta property="og:image" content="http://example.com/2021/06/09/centos-sqlserver/3.png">
+<meta property="og:image" content="http://example.com/2021/06/09/centos-sqlserver/4.png">
+<meta property="article:published_time" content="2021-06-09T01:51:12.000Z">
+<meta property="article:modified_time" content="2021-06-15T13:14:10.960Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/08/centos-sqlserver/1.png">
+<meta name="twitter:image" content="http://example.com/2021/06/09/centos-sqlserver/1.png">
 
-<link rel="canonical" href="http://example.com/2021/06/08/centos-sqlserver/">
+<link rel="canonical" href="http://example.com/2021/06/09/centos-sqlserver/">
 
 
 <script id="page-configurations">
@@ -164,7 +164,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/08/centos-sqlserver/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/09/centos-sqlserver/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -187,14 +187,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-06-08 09:51:12" itemprop="dateCreated datePublished" datetime="2021-06-08T09:51:12+08:00">2021-06-08</time>
+              <time title="创建时间：2021-06-09 09:51:12" itemprop="dateCreated datePublished" datetime="2021-06-09T09:51:12+08:00">2021-06-09</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-15 21:05:09" itemprop="dateModified" datetime="2021-06-15T21:05:09+08:00">2021-06-15</time>
+                <time title="修改时间：2021-06-15 21:14:10" itemprop="dateModified" datetime="2021-06-15T21:14:10+08:00">2021-06-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -202,7 +202,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/centos/" itemprop="url" rel="index"><span itemprop="name">centos</span></a>
+                  <a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
                 </span>
             </span>
 
@@ -225,9 +225,9 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line">wget -O /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo</span><br><span class="line">yum install -y mssql-server</span><br></pre></td></tr></table></figure>
 <h1 id="安装设置"><a href="#安装设置" class="headerlink" title="安装设置"></a>安装设置</h1><p>1.选版本-&gt;接受许可条款-&gt;输sa密码</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/mssql/bin/mssql-conf setup</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/06/08/centos-sqlserver/1.png" alt="1"><br>2.检查sqlserver状态</p>
+<p><img src="/2021/06/09/centos-sqlserver/1.png" alt="1"><br>2.检查sqlserver状态</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status mssql-server</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/06/08/centos-sqlserver/2.png" alt="2"><br>3.设置防火墙，开启远程连接</p>
+<p><img src="/2021/06/09/centos-sqlserver/2.png" alt="2"><br>3.设置防火墙，开启远程连接</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=1433/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
 <p>如果提示防火墙未开启，可跳过防火墙设置。</p>
 <h1 id="安装sqlserver命令行工具"><a href="#安装sqlserver命令行工具" class="headerlink" title="安装sqlserver命令行工具"></a>安装sqlserver命令行工具</h1><p>1.下载微软官方的软件包yum源</p>
@@ -240,9 +240,9 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;export PATH=$PATH:/opt/mssql-tools/bin&quot; &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
 <p>5.使用sqlcmd命令连接本地sqlserver</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlcmd -S localhost -U SA -p</span><br></pre></td></tr></table></figure>
-<p>输sa密码，成功登陆<br><img src="/2021/06/08/centos-sqlserver/3.png" alt="3"><br>测试sql</p>
+<p>输sa密码，成功登陆<br><img src="/2021/06/09/centos-sqlserver/3.png" alt="3"><br>测试sql</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE [Test]</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
-<p><img src="/2021/06/08/centos-sqlserver/4.png" alt="4"><br>6.本地SSMS连接<br>阿里云服务器，需要配置安全组规则，开放1433端口</p>
+<p><img src="/2021/06/09/centos-sqlserver/4.png" alt="4"><br>6.本地SSMS连接<br>阿里云服务器，需要配置安全组规则，开放1433端口</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/sql/linux/sql-server-linux-setup?view=sql-server-ver15">微软文档</a></p>
 
     </div>
