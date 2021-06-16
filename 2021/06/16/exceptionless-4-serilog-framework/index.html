@@ -19,22 +19,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="以.Net5 WebApi为例——">
+  <meta name="description" content="以.Net Framework 4.6.2 WebApi项目为例——">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Exceptionless(3)：配合Serilog使用（.net core版）">
-<meta property="og:url" content="http://example.com/2021/06/16/exceptionless-3-serilog-netcore/index.html">
+<meta property="og:title" content="Exceptionless(4)：配合Serilog使用（.net framework版）">
+<meta property="og:url" content="http://example.com/2021/06/16/exceptionless-4-serilog-framework/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="以.Net5 WebApi为例——">
+<meta property="og:description" content="以.Net Framework 4.6.2 WebApi项目为例——">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/06/16/exceptionless-3-serilog-netcore/1.png">
-<meta property="og:image" content="http://example.com/2021/06/16/exceptionless-3-serilog-netcore/2.png">
-<meta property="article:published_time" content="2021-06-16T06:09:31.000Z">
-<meta property="article:modified_time" content="2021-06-16T06:57:21.864Z">
+<meta property="article:published_time" content="2021-06-16T06:47:57.000Z">
+<meta property="article:modified_time" content="2021-06-16T07:05:03.885Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/16/exceptionless-3-serilog-netcore/1.png">
 
-<link rel="canonical" href="http://example.com/2021/06/16/exceptionless-3-serilog-netcore/">
+<link rel="canonical" href="http://example.com/2021/06/16/exceptionless-4-serilog-framework/">
 
 
 <script id="page-configurations">
@@ -47,7 +44,7 @@
   };
 </script>
 
-  <title>Exceptionless(3)：配合Serilog使用（.net core版） | Hello Friend</title>
+  <title>Exceptionless(4)：配合Serilog使用（.net framework版） | Hello Friend</title>
   
 
 
@@ -162,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/16/exceptionless-3-serilog-netcore/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/16/exceptionless-4-serilog-framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -175,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Exceptionless(3)：配合Serilog使用（.net core版）
+          Exceptionless(4)：配合Serilog使用（.net framework版）
         </h1>
 
         <div class="post-meta">
@@ -186,7 +183,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-06-16 14:09:31 / 修改时间：14:57:21" itemprop="dateCreated datePublished" datetime="2021-06-16T14:09:31+08:00">2021-06-16</time>
+              <time title="创建时间：2021-06-16 14:47:57 / 修改时间：15:05:03" itemprop="dateCreated datePublished" datetime="2021-06-16T14:47:57+08:00">2021-06-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,21 +206,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>以.Net5 WebApi为例——</p>
+        <p>以.Net Framework 4.6.2 WebApi项目为例——</p>
 <span id="more"></span>
 <p>1.引用包</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Serilog</span><br><span class="line">Serilog.Extensions.Hosting</span><br><span class="line">Serilog.Settings.Configuration</span><br><span class="line">Serilog.Sinks.Console</span><br><span class="line">Serilog.Sinks.Exceptionless</span><br></pre></td></tr></table></figure>
-<p>2.修改appsettings.json，添加serilog配置</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;Serilog&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;MinimumLevel&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;Default&quot;</span>: <span class="string">&quot;Warning&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;Override&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;Microsoft&quot;</span>: <span class="string">&quot;Warning&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;System&quot;</span>: <span class="string">&quot;Warning&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;LogTestDemo&quot;</span>: <span class="string">&quot;Debug&quot;</span> <span class="comment">//重写本项目的最小输出级别</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;WriteTo&quot;</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;Exceptionless&quot;</span>, <span class="comment">//输出到Exceptionless，生产环境用</span></span><br><span class="line">        <span class="attr">&quot;Args&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;apiKey&quot;</span>: <span class="string">&quot;2otdH7uN0dCPvrbqe2CK6FB1mdbaS1ahEqx5QZqI&quot;</span>,</span><br><span class="line">          <span class="attr">&quot;serverUrl&quot;</span>: <span class="string">&quot;http://xx.xxx.xxx.xxx:5000&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;Console&quot;</span> <span class="comment">//输出到控制台，开发环境用</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>3.修改Program.cs，初始化serilog</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">    Host.CreateDefaultBuilder(args)</span><br><span class="line">        .ConfigureWebHostDefaults(webBuilder =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            webBuilder.UseStartup&lt;Startup&gt;();</span><br><span class="line">        &#125;).UseSerilog((hostingContext, loggerCfg) =&gt; loggerCfg</span><br><span class="line">            .ReadFrom.Configuration(hostingContext.Configuration)</span><br><span class="line">            .Enrich.WithProperty(<span class="string">&quot;ApplicationName&quot;</span>, hostingContext.HostingEnvironment.ApplicationName)</span><br><span class="line">            .Enrich.FromLogContext()</span><br><span class="line">        );</span><br></pre></td></tr></table></figure>
-<p>4.控制器中添加测试代码</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger&lt;TestController&gt; _logger;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestController</span>(<span class="params">ILogger&lt;TestController&gt; logger</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">Get</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.LogDebug(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        _logger.LogInformation(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        _logger.LogWarning(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        _logger.LogError(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        _logger.LogCritical(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Ok();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>5.执行结果</p>
-<blockquote>
-<p>控制台输出<br><img src="/2021/06/16/exceptionless-3-serilog-netcore/1.png" alt="1"><br>Exceptionless仪表盘输出<br><img src="/2021/06/16/exceptionless-3-serilog-netcore/2.png" alt="2"></p>
-</blockquote>
-
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Serilog</span><br><span class="line">Serilog.Sinks.Exceptionless</span><br></pre></td></tr></table></figure>
+<p>2.修改WebApiConfig.cs，初始化Logger</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">WebApiConfig</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Register</span>(<span class="params">HttpConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Web API 配置和服务</span></span><br><span class="line">        CreateLogger();</span><br><span class="line">        <span class="comment">// Web API 路由</span></span><br><span class="line">        config.MapHttpAttributeRoutes();</span><br><span class="line"></span><br><span class="line">        config.Routes.MapHttpRoute(</span><br><span class="line">            name: <span class="string">&quot;DefaultApi&quot;</span>,</span><br><span class="line">            routeTemplate: <span class="string">&quot;api/&#123;controller&#125;/&#123;id&#125;&quot;</span>,</span><br><span class="line">            defaults: <span class="keyword">new</span> &#123; id = RouteParameter.Optional &#125;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CreateLogger</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Log.Logger = <span class="keyword">new</span> LoggerConfiguration()</span><br><span class="line">                .WriteTo.Exceptionless(apiKey: <span class="string">&quot;v3IYcxwbph5EHiATHkfPW6g9yNnneiAyn3KUt21c&quot;</span>,</span><br><span class="line">                                        serverUrl: <span class="string">&quot;http://172.16.2.32:5000&quot;</span>,</span><br><span class="line">                                        additionalOperation: b =&gt; b.AddTags(<span class="string">&quot;Crm.ThirdPartApi&quot;</span>),</span><br><span class="line">                                        restrictedToMinimumLevel: LogEventLevel.Information)</span><br><span class="line">                .Enrich.FromLogContext()</span><br><span class="line">                .CreateLogger();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3.添加测试代码</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestController</span> : <span class="title">ApiController</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger logger = Log.ForContext&lt;TestController&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 日志测试</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IHttpActionResult <span class="title">Serilog</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        logger.Debug(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        logger.Information(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        logger.Warning(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        logger.Error(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        logger.Fatal(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Ok();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -258,13 +248,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/06/16/exceptionless-2-install/" rel="prev" title="Exceptionless(2)：本地部署">
-      <i class="fa fa-chevron-left"></i> Exceptionless(2)：本地部署
+    <a href="/2021/06/16/exceptionless-3-serilog-netcore/" rel="prev" title="Exceptionless(3)：配合Serilog使用（.net core版）">
+      <i class="fa fa-chevron-left"></i> Exceptionless(3)：配合Serilog使用（.net core版）
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/06/16/exceptionless-4-serilog-framework/" rel="next" title="Exceptionless(4)：配合Serilog使用（.net framework版）">
-      Exceptionless(4)：配合Serilog使用（.net framework版） <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
