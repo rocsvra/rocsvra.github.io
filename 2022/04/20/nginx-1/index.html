@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Http反向代理">
+<meta property="og:url" content="http://example.com/2022/04/20/nginx-1/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/1.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/2.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/3.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/4.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/5.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/6.png">
+<meta property="article:published_time" content="2022-04-20T03:38:02.000Z">
+<meta property="article:modified_time" content="2022-04-21T02:38:37.095Z">
+<meta property="article:author" content="姜海鹏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/04/20/nginx-1/1.png">
+
+<link rel="canonical" href="http://example.com/2022/04/20/nginx-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Http反向代理 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/20/nginx-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Http反向代理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-20 11:38:02" itemprop="dateCreated datePublished" datetime="2022-04-20T11:38:02+08:00">2022-04-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-21 10:38:37" itemprop="dateModified" datetime="2022-04-21T10:38:37+08:00">2022-04-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Http/" itemprop="url" rel="index"><span itemprop="name">Http</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。</p>
+<span id="more"></span>
+<h1 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h1><p>浏览小网站最常用的方式就是“直接访问”，浏览器的请求直接到应用服务器，中间没有经过任何http代理服务器。</p>
+<h1 id="正向代理（forward-proxy）"><a href="#正向代理（forward-proxy）" class="headerlink" title="正向代理（forward proxy）"></a>正向代理（forward proxy）</h1><p>正向代理通常直接称为代理（proxy），无须强调是正向的。<br>正向代理服务器没有直接响应请求的能力，它不过是把请求转发到应用服务器上，再把后者的响应转发给请求者（浏览器）。<br>需要注意的是，代理服务器是需要配置的，需要主动告诉浏览器，代理服务器在哪里，以win11为例——<br><img src="/2022/04/20/nginx-1/1.png" alt="1"><br><img src="/2022/04/20/nginx-1/2.png" alt="2"></p>
+<h2 id="为什么使用正向代理"><a href="#为什么使用正向代理" class="headerlink" title="为什么使用正向代理"></a>为什么使用正向代理</h2><p>一般是出于安全审计和控制考虑。比如有些组织，web相关端口（如80，443端口）是被禁封的，无法直接上网。如果想要访问外部网站，只能配置组织指定的一台内网代理服务器，这台代理服务器没有被限制访问外部网络。如此一来，所有请求都要经过代理服务器，组织就可以对此进行审计，如：</p>
+<blockquote>
+<p>阻止向外网上传内部资料；<br>拦截访问不安全网站；<br>阻止访问与工作无关的网站；</p>
+</blockquote>
+<p>还有一些原因是出于加速或节省带宽考虑，因为代理服务器不仅能转发，还能对网页以及其他一些资源（如：图片、js、css）进行缓存。缓存有一个失效期问题，至于多久更新缓存，可以配置具体的缓存策略。</p>
+<p>再有一个原因，国外有些技术网站被墙，我们又想去查阅资料解决bug，翻墙就需要通过代理来绕过防火墙的限制。一些高级的代理插件还允许你配置具体的规则, 可以配置哪些地址走代理, 哪些不走代理, 通常还会带一些预定义规则, 各种白名单、黑名单, 还可以自己添加新的规则。</p>
+<p>总之, 代理就是这么个中间角色, 通过它间接访问到了所需资源, 而浏览器也是知道这么个角色的存在, 需要主动为浏览器去配置并启用。</p>
+<h1 id="反向代理（reverse-proxy）"><a href="#反向代理（reverse-proxy）" class="headerlink" title="反向代理（reverse proxy）"></a>反向代理（reverse proxy）</h1><p>正向代理主动配置走代理, 反向代理则是”被代理”。反向代理又称为”透明代理”, 意思是浏览器都不知道自己被代理了, 浏览器以为发给它响应的就是最终的网页服务器, 其实不过是个”代理”。反向代理不需要客户端（浏览器）做什么配置。</p>
+<p>比如访问一个网站，F12查看网络信息：<br><img src="/2022/04/20/nginx-1/3.png" alt="3"><br>这个主页请求的是一台Nginx Server，从外部（浏览器）角度看，请求直接发给了Nginx Server，响应也从Nginx Server回来，中间没有任何代理。实际上，Nginx是没有能力去响应的，它只不过在内部把它代理给了另一个应用服务器。</p>
+<h2 id="为什么使用反向代理"><a href="#为什么使用反向代理" class="headerlink" title="为什么使用反向代理"></a>为什么使用反向代理</h2><p><img src="/2022/04/20/nginx-1/4.png" alt="4"><br>请求处理流程如下：</p>
+<blockquote>
+<p>请求: browser – [http] –&gt; nginx – [http] –&gt; tomcat<br>响应: browser &lt;– [http] – nginx &lt;– [http] – tomcat</p>
+</blockquote>
+<p>如果是这种情况，反向代理似乎不太必要，增加了一个环节，响应速度反而慢了。</p>
+<p>但利用反向代理可以作为内部负载均衡（load balance）的手段。可以让 Nginx作为一个前置的反向代理, 监听在80端口上，应用服务可以使用其他端口（8080、8081），让Nginx 转发请求给它处理。<br><img src="/2022/04/20/nginx-1/5.png" alt="5"><br>如果此时涌入很多请求, Nginx 会把一半的请求交给 8080 端口上的 tomcat, 另一半的请求交给 8081 端口上的 tomcat。<br>对外来看, 所有请求还是 Nginx 来处理, 用户不需要去做选择, 也不需要知道什么 8080, 8081 端口上应用的存在, 他们还是继续访问原来的网址。<br><img src="/2022/04/20/nginx-1/6.png" alt="6"><br>如果有多台云主机，可以组成一个内网， tomcat 部署在不同的主机上，形成负载均衡，如果主机配置不同，可以调整负责权重，让性能强的主机多承担一些请求。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    支持一下
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="姜海鹏 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="姜海鹏 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/16/ngrok-1/" rel="prev" title="自建ngrok服务实现内网穿透">
+      <i class="fa fa-chevron-left"></i> 自建ngrok服务实现内网穿透
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE"><span class="nav-text">直接访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%EF%BC%88forward-proxy%EF%BC%89"><span class="nav-text">正向代理（forward proxy）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">为什么使用正向代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%EF%BC%88reverse-proxy%EF%BC%89"><span class="nav-text">反向代理（reverse proxy）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">为什么使用反向代理</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
