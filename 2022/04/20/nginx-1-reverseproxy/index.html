@@ -19,25 +19,26 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="服务器环境：CentOS 7.9  安装golang12yum install golang -y &#x2F;&#x2F;安装go version &#x2F;&#x2F;查看版本 配置系统变量12345vim &#x2F;etc&#x2F;profile&#x2F;&#x2F;添加export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;goexport PATH&#x3D;$PATH:$GOROOT&#x2F;binsource &#x2F;etc&#x2F;profile  开发公众号的时候 内网穿透即 NAT 穿">
+  <meta name="description" content="本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="自建ngrok服务实现内网穿透">
-<meta property="og:url" content="http://example.com/2022/03/16/ngrok-1/index.html">
+<meta property="og:title" content="nginx系列1：Http反向代理">
+<meta property="og:url" content="http://example.com/2022/04/20/nginx-1-reverseproxy/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="服务器环境：CentOS 7.9  安装golang12yum install golang -y &#x2F;&#x2F;安装go version &#x2F;&#x2F;查看版本 配置系统变量12345vim &#x2F;etc&#x2F;profile&#x2F;&#x2F;添加export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;goexport PATH&#x3D;$PATH:$GOROOT&#x2F;binsource &#x2F;etc&#x2F;profile  开发公众号的时候 内网穿透即 NAT 穿">
+<meta property="og:description" content="本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.png">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.jpg">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.png">
-<meta property="article:published_time" content="2022-03-16T02:32:20.000Z">
-<meta property="article:modified_time" content="2022-03-30T02:49:14.864Z">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/1.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/2.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/3.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/4.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/5.png">
+<meta property="og:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/6.png">
+<meta property="article:published_time" content="2022-04-20T03:38:02.000Z">
+<meta property="article:modified_time" content="2022-04-21T06:55:53.439Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
+<meta name="twitter:image" content="http://example.com/2022/04/20/nginx-1-reverseproxy/1.png">
 
-<link rel="canonical" href="http://example.com/2022/03/16/ngrok-1/">
+<link rel="canonical" href="http://example.com/2022/04/20/nginx-1-reverseproxy/">
 
 
 <script id="page-configurations">
@@ -50,7 +51,7 @@
   };
 </script>
 
-  <title>自建ngrok服务实现内网穿透 | Hello Friend</title>
+  <title>nginx系列1：Http反向代理 | Hello Friend</title>
   
 
 
@@ -165,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/16/ngrok-1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/20/nginx-1-reverseproxy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -178,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          自建ngrok服务实现内网穿透
+          nginx系列1：Http反向代理
         </h1>
 
         <div class="post-meta">
@@ -188,14 +189,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-03-16 10:32:20" itemprop="dateCreated datePublished" datetime="2022-03-16T10:32:20+08:00">2022-03-16</time>
+              <time title="创建时间：2022-04-20 11:38:02" itemprop="dateCreated datePublished" datetime="2022-04-20T11:38:02+08:00">2022-04-20</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-30 10:49:14" itemprop="dateModified" datetime="2022-03-30T10:49:14+08:00">2022-03-30</time>
+                <time title="修改时间：2022-04-21 14:55:53" itemprop="dateModified" datetime="2022-04-21T14:55:53+08:00">2022-04-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -203,7 +204,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">微信开发</span></a>
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
                 </span>
             </span>
 
@@ -218,43 +219,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>服务器环境：CentOS 7.9</p>
-<ol>
-<li>安装golang<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install golang -y //安装</span><br><span class="line">go version //查看版本</span><br></pre></td></tr></table></figure></li>
-<li>配置系统变量<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">//添加</span><br><span class="line">export GOROOT=/usr/local/go</span><br><span class="line">export PATH=$PATH:$GOROOT/bin</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>开发公众号的时候</p>
-<h1 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h1><p>即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。<br>通常实现内网穿透，是通过路由器上端口映射来实现的。但是路由器通常不是每个人都有权限可以访问和设置，而且可能存在多级路由器较为复杂的网络结构。端口映射也无法实现。<br>这时候ngrok就出现了。</p>
+        <p>本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。</p>
 <span id="more"></span>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p><img src="/2022/03/16/ngrok-1/1.webp" alt="1"></p>
+<h1 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h1><p>浏览小网站最常用的方式就是“直接访问”，浏览器的请求直接到应用服务器，中间没有经过任何http代理服务器。</p>
+<h1 id="正向代理（forward-proxy）"><a href="#正向代理（forward-proxy）" class="headerlink" title="正向代理（forward proxy）"></a>正向代理（forward proxy）</h1><p>正向代理通常直接称为代理（proxy），无须强调是正向的。<br>正向代理服务器没有直接响应请求的能力，它不过是把请求转发到应用服务器上，再把后者的响应转发给请求者（浏览器）。<br>需要注意的是，代理服务器是需要配置的，需要主动告诉浏览器，代理服务器在哪里，以win11为例——<br><img src="/2022/04/20/nginx-1-reverseproxy/1.png" alt="1"><br><img src="/2022/04/20/nginx-1-reverseproxy/2.png" alt="2"></p>
+<h2 id="为什么使用正向代理"><a href="#为什么使用正向代理" class="headerlink" title="为什么使用正向代理"></a>为什么使用正向代理</h2><p>一般是出于安全审计和控制考虑。比如有些组织，web相关端口（如80，443端口）是被禁封的，无法直接上网。如果想要访问外部网站，只能配置组织指定的一台内网代理服务器，这台代理服务器没有被限制访问外部网络。如此一来，所有请求都要经过代理服务器，组织就可以对此进行审计，如：</p>
 <blockquote>
-<p>ngrok 建立一个隧道，将主机A的http请求传递给主机B，从而实现内网穿透<br>ngrok 分客户端（ngrok）和服务端（ngrokd）</p>
+<p>阻止向外网上传内部资料；<br>拦截访问不安全网站；<br>阻止访问与工作无关的网站；</p>
 </blockquote>
-<p><img src="/2022/03/16/ngrok-1/2.webp" alt="2"></p>
+<p>还有一些原因是出于加速或节省带宽考虑，因为代理服务器不仅能转发，还能对网页以及其他一些资源（如：图片、js、css）进行缓存。缓存有一个失效期问题，至于多久更新缓存，可以配置具体的缓存策略。</p>
+<p>再有一个原因，国外有些技术网站被墙，我们又想去查阅资料解决bug，翻墙就需要通过代理来绕过防火墙的限制。一些高级的代理插件还允许你配置具体的规则, 可以配置哪些地址走代理, 哪些不走代理, 通常还会带一些预定义规则, 各种白名单、黑名单, 还可以自己添加新的规则。</p>
+<p>总之, 代理就是这么个中间角色, 通过它间接访问到了所需资源, 而浏览器也是知道这么个角色的存在, 需要主动为浏览器去配置并启用。</p>
+<h1 id="反向代理（reverse-proxy）"><a href="#反向代理（reverse-proxy）" class="headerlink" title="反向代理（reverse proxy）"></a>反向代理（reverse proxy）</h1><p>正向代理主动配置走代理, 反向代理则是”被代理”。反向代理又称为”透明代理”, 意思是浏览器都不知道自己被代理了, 浏览器以为发给它响应的就是最终的网页服务器, 其实不过是个”代理”。反向代理不需要客户端（浏览器）做什么配置。</p>
+<p>比如访问一个网站，F12查看网络信息：<br><img src="/2022/04/20/nginx-1-reverseproxy/3.png" alt="3"><br>这个主页请求的是一台Nginx Server，从外部（浏览器）角度看，请求直接发给了Nginx Server，响应也从Nginx Server回来，中间没有任何代理。实际上，Nginx是没有能力去响应的，它只不过在内部把它代理给了另一个应用服务器。</p>
+<h2 id="为什么使用反向代理"><a href="#为什么使用反向代理" class="headerlink" title="为什么使用反向代理"></a>为什么使用反向代理</h2><p><img src="/2022/04/20/nginx-1-reverseproxy/4.png" alt="4"><br>请求处理流程如下：</p>
 <blockquote>
-<p>内网主机安装客户端，公网主机安装服务端</p>
+<p>请求: browser – [http] –&gt; nginx – [http] –&gt; tomcat<br>响应: browser &lt;– [http] – nginx &lt;– [http] – tomcat</p>
 </blockquote>
-<h1 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h1><ol>
-<li><a target="_blank" rel="noopener" href="https://ngrok.com/download">下载地址</a></li>
-<li>启动命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngrok http 4444</span><br></pre></td></tr></table></figure>
-<img src="/2022/03/16/ngrok-1/1.png" alt="1"></li>
-</ol>
-<h1 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h1><ol>
-<li>准备一台云服务器，以阿里云ECS为例</li>
-<li>准备一个个人域名（国内域名需要备案）</li>
-<li>云解析DNS，配置两条记录，ngrok.xxxx.com 和 *.ngrok.xxxx.com 指向自己的ECS </li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/1.jpg" alt="1"></p>
-<ol start="4">
-<li>ECS配置安全组，开放3个端口<blockquote>
-<p>4443：ngrok自身通信<br>4444：tcp端口转发<br>4443：http请求转发</p>
-</blockquote>
-</li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/2.png" alt="2"></p>
-<ol start="5">
-<li>用docker镜像建立服务端</li>
-</ol>
+<p>如果是这种情况，反向代理似乎不太必要，增加了一个环节，响应速度反而慢了。</p>
+<p>但利用反向代理可以作为内部负载均衡（load balance）的手段。可以让 Nginx作为一个前置的反向代理, 监听在80端口上，应用服务可以使用其他端口（8080、8081），让Nginx 转发请求给它处理。<br><img src="/2022/04/20/nginx-1-reverseproxy/5.png" alt="5"><br>如果此时涌入很多请求, Nginx 会把一半的请求交给 8080 端口上的 tomcat, 另一半的请求交给 8081 端口上的 tomcat。<br>对外来看, 所有请求还是 Nginx 来处理, 用户不需要去做选择, 也不需要知道什么 8080, 8081 端口上应用的存在, 他们还是继续访问原来的网址。<br><img src="/2022/04/20/nginx-1-reverseproxy/6.png" alt="6"><br>如果有多台云主机，可以组成一个内网， tomcat 部署在不同的主机上，形成负载均衡，如果主机配置不同，可以调整负责权重，让性能强的主机多承担一些请求。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>正向代理隐藏真实客户端，反向代理隐藏真实服务端。</p>
 
     </div>
 
@@ -290,12 +274,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/02/22/netcore-docker/" rel="prev" title=".net core中使用docker">
-      <i class="fa fa-chevron-left"></i> .net core中使用docker
+    <a href="/2022/03/16/ngrok-1/" rel="prev" title="自建ngrok服务实现内网穿透">
+      <i class="fa fa-chevron-left"></i> 自建ngrok服务实现内网穿透
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/04/20/nginx-1-reverseproxy/" rel="next" title="nginx系列1：Http反向代理">
-      nginx系列1：Http反向代理 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/04/21/nginx-2-base/" rel="next" title="nginx系列2：简介">
+      nginx系列2：简介 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -355,7 +339,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="nav-text">内网穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-text">服务端</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE"><span class="nav-text">直接访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%EF%BC%88forward-proxy%EF%BC%89"><span class="nav-text">正向代理（forward proxy）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">为什么使用正向代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%EF%BC%88reverse-proxy%EF%BC%89"><span class="nav-text">反向代理（reverse proxy）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">为什么使用反向代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

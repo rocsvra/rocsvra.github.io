@@ -19,26 +19,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。">
+  <meta name="description" content="nginx的负载均衡策略有4种，轮询、权重、least_conn和ip_hash——">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Http反向代理">
-<meta property="og:url" content="http://example.com/2022/04/20/nginx-1/index.html">
+<meta property="og:title" content="nginx系列4：负载均衡">
+<meta property="og:url" content="http://example.com/2022/04/24/nginx-4-loadbalance/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。">
+<meta property="og:description" content="nginx的负载均衡策略有4种，轮询、权重、least_conn和ip_hash——">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/1.png">
-<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/2.png">
-<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/3.png">
-<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/4.png">
-<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/5.png">
-<meta property="og:image" content="http://example.com/2022/04/20/nginx-1/6.png">
-<meta property="article:published_time" content="2022-04-20T03:38:02.000Z">
-<meta property="article:modified_time" content="2022-04-21T02:38:37.095Z">
+<meta property="article:published_time" content="2022-04-24T01:53:08.000Z">
+<meta property="article:modified_time" content="2022-04-24T03:22:17.288Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/04/20/nginx-1/1.png">
 
-<link rel="canonical" href="http://example.com/2022/04/20/nginx-1/">
+<link rel="canonical" href="http://example.com/2022/04/24/nginx-4-loadbalance/">
 
 
 <script id="page-configurations">
@@ -51,7 +44,7 @@
   };
 </script>
 
-  <title>Http反向代理 | Hello Friend</title>
+  <title>nginx系列4：负载均衡 | Hello Friend</title>
   
 
 
@@ -166,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/20/nginx-1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/24/nginx-4-loadbalance/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -179,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Http反向代理
+          nginx系列4：负载均衡
         </h1>
 
         <div class="post-meta">
@@ -188,23 +181,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-04-20 11:38:02" itemprop="dateCreated datePublished" datetime="2022-04-20T11:38:02+08:00">2022-04-20</time>
+              <time title="创建时间：2022-04-24 09:53:08 / 修改时间：11:22:17" itemprop="dateCreated datePublished" datetime="2022-04-24T09:53:08+08:00">2022-04-24</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-21 10:38:37" itemprop="dateModified" datetime="2022-04-21T10:38:37+08:00">2022-04-21</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Http/" itemprop="url" rel="index"><span itemprop="name">Http</span></a>
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
                 </span>
             </span>
 
@@ -219,25 +206,54 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文提及的反向代理仅指http反向代理，不讨论其他类型（如：tcp）的反向代理。</p>
+        <p>nginx的负载均衡策略有4种，轮询、权重、least_conn和ip_hash——</p>
 <span id="more"></span>
-<h1 id="直接访问"><a href="#直接访问" class="headerlink" title="直接访问"></a>直接访问</h1><p>浏览小网站最常用的方式就是“直接访问”，浏览器的请求直接到应用服务器，中间没有经过任何http代理服务器。</p>
-<h1 id="正向代理（forward-proxy）"><a href="#正向代理（forward-proxy）" class="headerlink" title="正向代理（forward proxy）"></a>正向代理（forward proxy）</h1><p>正向代理通常直接称为代理（proxy），无须强调是正向的。<br>正向代理服务器没有直接响应请求的能力，它不过是把请求转发到应用服务器上，再把后者的响应转发给请求者（浏览器）。<br>需要注意的是，代理服务器是需要配置的，需要主动告诉浏览器，代理服务器在哪里，以win11为例——<br><img src="/2022/04/20/nginx-1/1.png" alt="1"><br><img src="/2022/04/20/nginx-1/2.png" alt="2"></p>
-<h2 id="为什么使用正向代理"><a href="#为什么使用正向代理" class="headerlink" title="为什么使用正向代理"></a>为什么使用正向代理</h2><p>一般是出于安全审计和控制考虑。比如有些组织，web相关端口（如80，443端口）是被禁封的，无法直接上网。如果想要访问外部网站，只能配置组织指定的一台内网代理服务器，这台代理服务器没有被限制访问外部网络。如此一来，所有请求都要经过代理服务器，组织就可以对此进行审计，如：</p>
+<h1 id="轮询（默认）"><a href="#轮询（默认）" class="headerlink" title="轮询（默认）"></a>轮询（默认）</h1><p>upstream的默认策略，每个请求会按时间顺序逐一分配到不同的后端服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">http &#123; </span><br><span class="line">    <span class="comment">#ip_hash动态服务器组</span></span><br><span class="line">    upstream userserviceurl &#123;</span><br><span class="line">        ip_hash;</span><br><span class="line">        server localhost:8092 weight=2;</span><br><span class="line">        <span class="comment">#server localhost:8094 max_fails=3 fail_timeout=20s;</span></span><br><span class="line">        server localhost:8094;</span><br><span class="line">        <span class="comment">#server localhost:8096 backup; ip_hash策略时不支持用backup </span></span><br><span class="line">        server localhost:8095 down;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    server &#123; </span><br><span class="line">        listen 80;</span><br><span class="line">        server_name localhost;  </span><br><span class="line">        location / &#123;</span><br><span class="line">            root html;</span><br><span class="line">            index index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">        location /pms/ &#123;</span><br><span class="line">            proxy_pass http://userserviceurl;</span><br><span class="line">        &#125;  </span><br><span class="line">        error_page 500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">fail_timeout</td>
+<td align="left">与max_fails结合使用</td>
+</tr>
+<tr>
+<td align="left">max_fails</td>
+<td align="left">fail_timeout参数设置的时间内最大失败次数，超过这个次数，则认为该服务器停机</td>
+</tr>
+<tr>
+<td align="left">fail_time</td>
+<td align="left">服务器会被认为停机的时间长度,默认为10s</td>
+</tr>
+<tr>
+<td align="left">backup</td>
+<td align="left">标记该服务器为备用服务器。当主服务器停止时，请求会被发送到它这里。</td>
+</tr>
+<tr>
+<td align="left">down</td>
+<td align="left">标记服务器永久停机</td>
+</tr>
+</tbody></table>
 <blockquote>
-<p>阻止向外网上传内部资料；<br>拦截访问不安全网站；<br>阻止访问与工作无关的网站；</p>
+<p>轮询中，服务器宕掉，就会被自动剔除<br>轮询是默认的缺省配置，适合服务器配置相当，无状态且短平快的服务</p>
 </blockquote>
-<p>还有一些原因是出于加速或节省带宽考虑，因为代理服务器不仅能转发，还能对网页以及其他一些资源（如：图片、js、css）进行缓存。缓存有一个失效期问题，至于多久更新缓存，可以配置具体的缓存策略。</p>
-<p>再有一个原因，国外有些技术网站被墙，我们又想去查阅资料解决bug，翻墙就需要通过代理来绕过防火墙的限制。一些高级的代理插件还允许你配置具体的规则, 可以配置哪些地址走代理, 哪些不走代理, 通常还会带一些预定义规则, 各种白名单、黑名单, 还可以自己添加新的规则。</p>
-<p>总之, 代理就是这么个中间角色, 通过它间接访问到了所需资源, 而浏览器也是知道这么个角色的存在, 需要主动为浏览器去配置并启用。</p>
-<h1 id="反向代理（reverse-proxy）"><a href="#反向代理（reverse-proxy）" class="headerlink" title="反向代理（reverse proxy）"></a>反向代理（reverse proxy）</h1><p>正向代理主动配置走代理, 反向代理则是”被代理”。反向代理又称为”透明代理”, 意思是浏览器都不知道自己被代理了, 浏览器以为发给它响应的就是最终的网页服务器, 其实不过是个”代理”。反向代理不需要客户端（浏览器）做什么配置。</p>
-<p>比如访问一个网站，F12查看网络信息：<br><img src="/2022/04/20/nginx-1/3.png" alt="3"><br>这个主页请求的是一台Nginx Server，从外部（浏览器）角度看，请求直接发给了Nginx Server，响应也从Nginx Server回来，中间没有任何代理。实际上，Nginx是没有能力去响应的，它只不过在内部把它代理给了另一个应用服务器。</p>
-<h2 id="为什么使用反向代理"><a href="#为什么使用反向代理" class="headerlink" title="为什么使用反向代理"></a>为什么使用反向代理</h2><p><img src="/2022/04/20/nginx-1/4.png" alt="4"><br>请求处理流程如下：</p>
+<h1 id="权重"><a href="#权重" class="headerlink" title="权重"></a>权重</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">upstream foo &#123;</span><br><span class="line">    server localhost:8001 weight=2;</span><br><span class="line">    server localhost:8002;</span><br><span class="line">    server localhost:8003 backup;</span><br><span class="line">    server localhost:8004 max_fails=3 fail_timeout=20s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>请求: browser – [http] –&gt; nginx – [http] –&gt; tomcat<br>响应: browser &lt;– [http] – nginx &lt;– [http] – tomcat</p>
+<p>weight默认值为1，weight的数值和被访问的几率成正比；<br>可以与least_conn和ip_hash结合使用；<br>适合服务器的硬件配置差别比较大的情况；</p>
 </blockquote>
-<p>如果是这种情况，反向代理似乎不太必要，增加了一个环节，响应速度反而慢了。</p>
-<p>但利用反向代理可以作为内部负载均衡（load balance）的手段。可以让 Nginx作为一个前置的反向代理, 监听在80端口上，应用服务可以使用其他端口（8080、8081），让Nginx 转发请求给它处理。<br><img src="/2022/04/20/nginx-1/5.png" alt="5"><br>如果此时涌入很多请求, Nginx 会把一半的请求交给 8080 端口上的 tomcat, 另一半的请求交给 8081 端口上的 tomcat。<br>对外来看, 所有请求还是 Nginx 来处理, 用户不需要去做选择, 也不需要知道什么 8080, 8081 端口上应用的存在, 他们还是继续访问原来的网址。<br><img src="/2022/04/20/nginx-1/6.png" alt="6"><br>如果有多台云主机，可以组成一个内网， tomcat 部署在不同的主机上，形成负载均衡，如果主机配置不同，可以调整负责权重，让性能强的主机多承担一些请求。</p>
+<h1 id="ip-hash"><a href="#ip-hash" class="headerlink" title="ip_hash"></a>ip_hash</h1><p>使用访问者IP地址作为密钥来确定应选择哪个主机来为请求提供服务，这允许访问者每次被定向到同一服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">upstream foo &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server localhost:8001 weight=2;</span><br><span class="line">    server localhost:8002;</span><br><span class="line">    server localhost:8003 down;</span><br><span class="line">    server localhost:8004 max_fails=3 fail_timeout=20s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>nginx版本1.3.1之前，不能在ip_hash中使用权重；<br>ip_hash不能与backup同时使用；<br>服务器需要剔除，必须手动down;<br>适合有状态服务，比如session；</p>
+</blockquote>
+<h1 id="least-conn"><a href="#least-conn" class="headerlink" title="least_conn"></a>least_conn</h1><p>把请求转发给连接数较少的后端服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">upstream foo &#123;</span><br><span class="line">    least_conn;</span><br><span class="line">    server localhost:8001 weight=2;</span><br><span class="line">    server localhost:8002;</span><br><span class="line">    server localhost:8003 backup;</span><br><span class="line">    server localhost:8004 max_fails=3 fail_timeout=20s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>轮询算法是把请求平均的转发给各个后端，使它们的负载大致相同；但是，有些请求占用的时间很长，会导致其所在的后端负载较高。这种情况下，least_conn这种方式就可以达到更好的负载均衡效果。</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>在实际应用中，需要根据不同的场景选择不同的策略，大多是多种策略结合使用以达到实际需求的性能。<br>除了上面这些调度策略之后，还有一些第三方的调度策略可以集成到nginx中。</p>
 
     </div>
 
@@ -273,8 +289,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/03/16/ngrok-1/" rel="prev" title="自建ngrok服务实现内网穿透">
-      <i class="fa fa-chevron-left"></i> 自建ngrok服务实现内网穿透
+    <a href="/2022/04/24/nginx-3-config/" rel="prev" title="nginx系列3：配置文件">
+      <i class="fa fa-chevron-left"></i> nginx系列3：配置文件
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -335,7 +351,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE"><span class="nav-text">直接访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%EF%BC%88forward-proxy%EF%BC%89"><span class="nav-text">正向代理（forward proxy）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">为什么使用正向代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%EF%BC%88reverse-proxy%EF%BC%89"><span class="nav-text">反向代理（reverse proxy）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">为什么使用反向代理</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AE%E8%AF%A2%EF%BC%88%E9%BB%98%E8%AE%A4%EF%BC%89"><span class="nav-text">轮询（默认）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%83%E9%87%8D"><span class="nav-text">权重</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ip-hash"><span class="nav-text">ip_hash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#least-conn"><span class="nav-text">least_conn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-text">后记</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

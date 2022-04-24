@@ -19,25 +19,25 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="服务器环境：CentOS 7.9  安装golang12yum install golang -y &#x2F;&#x2F;安装go version &#x2F;&#x2F;查看版本 配置系统变量12345vim &#x2F;etc&#x2F;profile&#x2F;&#x2F;添加export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;goexport PATH&#x3D;$PATH:$GOROOT&#x2F;binsource &#x2F;etc&#x2F;profile  开发公众号的时候 内网穿透即 NAT 穿">
+  <meta name="description" content="Nginx是一款轻量级的Web服务器，经常用于反向代理、负载均衡和http缓存等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="自建ngrok服务实现内网穿透">
-<meta property="og:url" content="http://example.com/2022/03/16/ngrok-1/index.html">
+<meta property="og:title" content="nginx系列2：简介">
+<meta property="og:url" content="http://example.com/2022/04/21/nginx-2-base/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="服务器环境：CentOS 7.9  安装golang12yum install golang -y &#x2F;&#x2F;安装go version &#x2F;&#x2F;查看版本 配置系统变量12345vim &#x2F;etc&#x2F;profile&#x2F;&#x2F;添加export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;goexport PATH&#x3D;$PATH:$GOROOT&#x2F;binsource &#x2F;etc&#x2F;profile  开发公众号的时候 内网穿透即 NAT 穿">
+<meta property="og:description" content="Nginx是一款轻量级的Web服务器，经常用于反向代理、负载均衡和http缓存等。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.png">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.jpg">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.png">
-<meta property="article:published_time" content="2022-03-16T02:32:20.000Z">
-<meta property="article:modified_time" content="2022-03-30T02:49:14.864Z">
+<meta property="og:image" content="http://example.com/2022/04/21/nginx-2-base/2.png">
+<meta property="og:image" content="http://example.com/2022/04/21/nginx-2-base/3.png">
+<meta property="og:image" content="http://example.com/2022/04/21/nginx-2-base/1.png">
+<meta property="og:image" content="http://example.com/2022/04/21/nginx-2-base/4.png">
+<meta property="og:image" content="http://example.com/2022/04/21/nginx-2-base/5.png">
+<meta property="article:published_time" content="2022-04-21T03:02:13.000Z">
+<meta property="article:modified_time" content="2022-04-24T01:20:02.167Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
+<meta name="twitter:image" content="http://example.com/2022/04/21/nginx-2-base/2.png">
 
-<link rel="canonical" href="http://example.com/2022/03/16/ngrok-1/">
+<link rel="canonical" href="http://example.com/2022/04/21/nginx-2-base/">
 
 
 <script id="page-configurations">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>自建ngrok服务实现内网穿透 | Hello Friend</title>
+  <title>nginx系列2：简介 | Hello Friend</title>
   
 
 
@@ -165,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/16/ngrok-1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/21/nginx-2-base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -178,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          自建ngrok服务实现内网穿透
+          nginx系列2：简介
         </h1>
 
         <div class="post-meta">
@@ -188,14 +188,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-03-16 10:32:20" itemprop="dateCreated datePublished" datetime="2022-03-16T10:32:20+08:00">2022-03-16</time>
+              <time title="创建时间：2022-04-21 11:02:13" itemprop="dateCreated datePublished" datetime="2022-04-21T11:02:13+08:00">2022-04-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-30 10:49:14" itemprop="dateModified" datetime="2022-03-30T10:49:14+08:00">2022-03-30</time>
+                <time title="修改时间：2022-04-24 09:20:02" itemprop="dateModified" datetime="2022-04-24T09:20:02+08:00">2022-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -203,7 +203,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">微信开发</span></a>
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
                 </span>
             </span>
 
@@ -218,43 +218,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>服务器环境：CentOS 7.9</p>
-<ol>
-<li>安装golang<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install golang -y //安装</span><br><span class="line">go version //查看版本</span><br></pre></td></tr></table></figure></li>
-<li>配置系统变量<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">//添加</span><br><span class="line">export GOROOT=/usr/local/go</span><br><span class="line">export PATH=$PATH:$GOROOT/bin</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>开发公众号的时候</p>
-<h1 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h1><p>即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。<br>通常实现内网穿透，是通过路由器上端口映射来实现的。但是路由器通常不是每个人都有权限可以访问和设置，而且可能存在多级路由器较为复杂的网络结构。端口映射也无法实现。<br>这时候ngrok就出现了。</p>
+        <p>Nginx是一款轻量级的Web服务器，经常用于反向代理、负载均衡和http缓存等。</p>
 <span id="more"></span>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p><img src="/2022/03/16/ngrok-1/1.webp" alt="1"></p>
+<h1 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su root                 <span class="comment">#进入root</span></span><br><span class="line">yum -y install nginx    <span class="comment">#安装nginx</span></span><br><span class="line">nginx -V                <span class="comment">#查看版本</span></span><br></pre></td></tr></table></figure>
+<h1 id="启动-关闭nginx"><a href="#启动-关闭nginx" class="headerlink" title="启动/关闭nginx"></a>启动/关闭nginx</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/sbin</span><br><span class="line">./nginx             <span class="comment">#启动</span></span><br><span class="line">./nginx -s quit     <span class="comment">#进程处理任务完毕停止</span></span><br><span class="line">./nginx -s stop     <span class="comment">#先查出nginx进程id再使用kill命令强制杀掉进程</span></span><br></pre></td></tr></table></figure>
+<h1 id="查看nginx的运行状态"><a href="#查看nginx的运行状态" class="headerlink" title="查看nginx的运行状态"></a>查看nginx的运行状态</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep nginx </span><br></pre></td></tr></table></figure>
+<p><img src="/2022/04/21/nginx-2-base/2.png" alt="2"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /run</span><br><span class="line">cat nginx.pid</span><br></pre></td></tr></table></figure>
+<p><img src="/2022/04/21/nginx-2-base/3.png" alt="3"></p>
+<h1 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/nginx/nginx.conf </span><br></pre></td></tr></table></figure>
+<p>打开配置文件nginx.conf，如下图所示——<br><img src="/2022/04/21/nginx-2-base/1.png" alt="1"></p>
 <blockquote>
-<p>ngrok 建立一个隧道，将主机A的http请求传递给主机B，从而实现内网穿透<br>ngrok 分客户端（ngrok）和服务端（ngrokd）</p>
+<p>这个文件中引用了 conf.d 下的所有配置文件</p>
 </blockquote>
-<p><img src="/2022/03/16/ngrok-1/2.webp" alt="2"></p>
-<blockquote>
-<p>内网主机安装客户端，公网主机安装服务端</p>
-</blockquote>
-<h1 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h1><ol>
-<li><a target="_blank" rel="noopener" href="https://ngrok.com/download">下载地址</a></li>
-<li>启动命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngrok http 4444</span><br></pre></td></tr></table></figure>
-<img src="/2022/03/16/ngrok-1/1.png" alt="1"></li>
-</ol>
-<h1 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h1><ol>
-<li>准备一台云服务器，以阿里云ECS为例</li>
-<li>准备一个个人域名（国内域名需要备案）</li>
-<li>云解析DNS，配置两条记录，ngrok.xxxx.com 和 *.ngrok.xxxx.com 指向自己的ECS </li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/1.jpg" alt="1"></p>
-<ol start="4">
-<li>ECS配置安全组，开放3个端口<blockquote>
-<p>4443：ngrok自身通信<br>4444：tcp端口转发<br>4443：http请求转发</p>
-</blockquote>
-</li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/2.png" alt="2"></p>
-<ol start="5">
-<li>用docker镜像建立服务端</li>
-</ol>
+<p>在 conf.d 中添加 default.conf 配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name localhost;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#charset koi8-r;</span></span><br><span class="line">    <span class="comment">#access_log  /var/log/nginx/host.access.log  main;</span></span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root /usr/share/nginx/html;</span><br><span class="line">        index index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#代理配置</span></span><br><span class="line">    location /test1 &#123;</span><br><span class="line">        proxy_pass http://xx.xxx.xxx.xxx:8848; <span class="comment">#nacos</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#代理配置</span></span><br><span class="line">    location /test2 &#123;</span><br><span class="line">        proxy_pass http://xx.xxx.xxx.xxx:5000;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="重新加载配置文件"><a href="#重新加载配置文件" class="headerlink" title="重新加载配置文件"></a>重新加载配置文件</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+<h1 id="查看运行效果"><a href="#查看运行效果" class="headerlink" title="查看运行效果"></a>查看运行效果</h1><p>以阿里云为例，云解析DNS，将域名（aduntech.cn）解析至刚安装了nginx的ECS的ip，访问效果如下——</p>
+<p><img src="/2022/04/21/nginx-2-base/4.png" alt="4"><br><img src="/2022/04/21/nginx-2-base/5.png" alt="5"></p>
 
     </div>
 
@@ -290,12 +271,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/02/22/netcore-docker/" rel="prev" title=".net core中使用docker">
-      <i class="fa fa-chevron-left"></i> .net core中使用docker
+    <a href="/2022/04/20/nginx-1-reverseproxy/" rel="prev" title="nginx系列1：Http反向代理">
+      <i class="fa fa-chevron-left"></i> nginx系列1：Http反向代理
     </a></div>
       <div class="post-nav-item">
-    <a href="/2022/04/20/nginx-1-reverseproxy/" rel="next" title="nginx系列1：Http反向代理">
-      nginx系列1：Http反向代理 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/04/24/nginx-3-config/" rel="next" title="nginx系列3：配置文件">
+      nginx系列3：配置文件 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -355,7 +336,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="nav-text">内网穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-text">服务端</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85nginx"><span class="nav-text">安装nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-%E5%85%B3%E9%97%ADnginx"><span class="nav-text">启动&#x2F;关闭nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bnginx%E7%9A%84%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="nav-text">查看nginx的运行状态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEnginx"><span class="nav-text">配置nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-text">重新加载配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C"><span class="nav-text">查看运行效果</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
