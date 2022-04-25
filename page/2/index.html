@@ -154,6 +154,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/18/netcore-HttpPipelining/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/18/netcore-HttpPipelining/" class="post-title-link" itemprop="url">了解下.net core 中的http管道</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-18 15:43:22" itemprop="dateCreated datePublished" datetime="2022-01-18T15:43:22+08:00">2022-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-21 10:25:50" itemprop="dateModified" datetime="2022-04-21T10:25:50+08:00">2022-04-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Net-Core/" itemprop="url" rel="index"><span itemprop="name">.Net Core</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>大部分中间件依赖于HTTP管道和HttpAbstractions提供的上下文，本文简单介绍一下.net core在管道里都封装了些什么，先介绍几个管道对象，然后了解下这些对象之间的关系，再用一个流程图说明对象之间的调用关系，以及如何向管道注册中间件。</p>
+<blockquote>
+<p>IApplicationBuilder<br>RequestDelegate<br>HttpContext<br>HttpRequest<br>HttpResponse<br>FeatureCollection</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/18/netcore-HttpPipelining/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/17/algorithm-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -853,87 +937,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/09/29/miniapps-2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/28/miniapps-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
-      <meta itemprop="name" content="姜海鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hello Friend">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/28/miniapps-1/" class="post-title-link" itemprop="url">小程序(1)：简介</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-28 10:00:52" itemprop="dateCreated datePublished" datetime="2021-09-28T10:00:52+08:00">2021-09-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-29 07:57:48" itemprop="dateModified" datetime="2021-09-29T07:57:48+08:00">2021-09-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" itemprop="url" rel="index"><span itemprop="name">小程序</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>小程序可以看做只能用微信打开和浏览的网站。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/28/miniapps-1/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

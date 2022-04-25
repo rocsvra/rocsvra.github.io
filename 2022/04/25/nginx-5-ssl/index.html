@@ -19,25 +19,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="内网穿透即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。">
+  <meta name="description" content="SSL证书是一种配置在服务器上的数字证书，遵守 SSL协议，由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，具有服务器身份验证和数据传输加密功能。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="自建ngrok服务实现内网穿透">
-<meta property="og:url" content="http://example.com/2022/03/16/ngrok-1/index.html">
+<meta property="og:title" content="nginx(5)：SSL证书">
+<meta property="og:url" content="http://example.com/2022/04/25/nginx-5-ssl/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="内网穿透即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。">
+<meta property="og:description" content="SSL证书是一种配置在服务器上的数字证书，遵守 SSL协议，由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，具有服务器身份验证和数据传输加密功能。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.png">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.jpg">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.png">
-<meta property="article:published_time" content="2022-03-16T02:32:20.000Z">
-<meta property="article:modified_time" content="2022-04-25T06:56:42.026Z">
+<meta property="og:image" content="http://example.com/2022/04/25/nginx-5-ssl/1.png">
+<meta property="og:image" content="http://example.com/2022/04/25/nginx-5-ssl/2.png">
+<meta property="article:published_time" content="2022-04-25T06:57:40.000Z">
+<meta property="article:modified_time" content="2022-04-25T08:21:07.792Z">
 <meta property="article:author" content="姜海鹏">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
+<meta name="twitter:image" content="http://example.com/2022/04/25/nginx-5-ssl/1.png">
 
-<link rel="canonical" href="http://example.com/2022/03/16/ngrok-1/">
+<link rel="canonical" href="http://example.com/2022/04/25/nginx-5-ssl/">
 
 
 <script id="page-configurations">
@@ -50,7 +47,7 @@
   };
 </script>
 
-  <title>自建ngrok服务实现内网穿透 | Hello Friend</title>
+  <title>nginx(5)：SSL证书 | Hello Friend</title>
   
 
 
@@ -165,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/16/ngrok-1/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/25/nginx-5-ssl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -178,7 +175,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          自建ngrok服务实现内网穿透
+          nginx(5)：SSL证书
         </h1>
 
         <div class="post-meta">
@@ -187,23 +184,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-03-16 10:32:20" itemprop="dateCreated datePublished" datetime="2022-03-16T10:32:20+08:00">2022-03-16</time>
+              <time title="创建时间：2022-04-25 14:57:40 / 修改时间：16:21:07" itemprop="dateCreated datePublished" datetime="2022-04-25T14:57:40+08:00">2022-04-25</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-25 14:56:42" itemprop="dateModified" datetime="2022-04-25T14:56:42+08:00">2022-04-25</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">微信开发</span></a>
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
                 </span>
             </span>
 
@@ -218,43 +209,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h1><p>即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。</p>
+        <p>SSL证书是一种配置在服务器上的数字证书，遵守 SSL协议，由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，具有服务器身份验证和数据传输加密功能。</p>
 <span id="more"></span>
-<p>通常实现内网穿透，是通过路由器上端口映射来实现的，可路由器通常不是每个人都有权限可以访问和设置，而且可能存在多级路由器较为复杂的网络结构，端口映射也无法实现，但通过ngrok可以。</p>
-<h1 id="ngrok原理"><a href="#ngrok原理" class="headerlink" title="ngrok原理"></a>ngrok原理</h1><p><img src="/2022/03/16/ngrok-1/1.webp" alt="1"></p>
 <blockquote>
-<p>ngrok分客户端（ngrok）和服务端（ngrokd），ngrok建立了一个隧道来实现内网穿透</p>
+<p>在阿里云SSL证书模块中，申请一个免费的SSL证书，并下载nginx版的证书，得到一个 .key 文件和 一个 .pem 文件；</p>
 </blockquote>
-<p><img src="/2022/03/16/ngrok-1/2.webp" alt="2"></p>
+<p><img src="/2022/04/25/nginx-5-ssl/1.png" alt="1"></p>
 <blockquote>
-<p>内网主机安装客户端，公网主机安装服务端；</p>
+<p>阿里云服务器上新建一个安放证书的文件夹，并使用xftp，将两个文件上传至证书该文件夹；</p>
 </blockquote>
-<p>通过ngrok，我们可以在开发微信公众号的时候，便捷地进行本地调试。</p>
-<h1 id="搭建流程"><a href="#搭建流程" class="headerlink" title="搭建流程"></a>搭建流程</h1><p>服务器环境：CentOS 7.9</p>
-<ol>
-<li>安装golang<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install golang -y   <span class="comment">#安装</span></span><br><span class="line">go version              <span class="comment">#查看版本</span></span><br></pre></td></tr></table></figure></li>
-<li>配置系统变量<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="comment"># 添加以下内容</span></span><br><span class="line"><span class="built_in">export</span> GOROOT=/usr/<span class="built_in">local</span>/go</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$GOROOT</span>/bin</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></li>
-<li><a target="_blank" rel="noopener" href="https://ngrok.com/download">下载ngrok客户端</a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngrok http 4444  <span class="comment">#启动命令</span></span><br></pre></td></tr></table></figure>
-效果如下——<br><img src="/2022/03/16/ngrok-1/1.png" alt="1"></li>
-</ol>
-<h1 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h1><ol>
-<li>准备一台云服务器（阿里云ECS）和一个个人域名（aduntech.cn）；</li>
-<li>云解析DNS，配置一条记录，将 ngrok.aduntech.cn 指向阿里云ECS；</li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/1.jpg" alt="1"></p>
-<ol start="3">
-<li>拉取ngrok镜像，并编译<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull hteen/ngrok <span class="comment">#拉取镜像</span></span><br><span class="line"><span class="comment">#执行编译命令，编译服务端和客户端</span></span><br><span class="line">docker run --rm -it -e DOMAIN=<span class="string">&quot;ngrok.aduntech.cn&quot;</span> -v /data/ngrok:/myfiles hteen/ngrok sh /build.sh</span><br><span class="line">docker run --rm -it -e DOMAIN=<span class="string">&quot;ngrok.aduntech.cn&quot;</span> -v /data/ngrok:/myfiles hteen/ngrok /bin/sh /build.sh</span><br></pre></td></tr></table></figure></li>
-</ol>
-<ol start="4">
-<li>ECS配置安全组，开放3个端口<blockquote>
-<p>4443：ngrok自身通信<br>4444：tcp端口转发<br>4443：http请求转发</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -t                <span class="comment">#查看配置文件路径</span></span><br><span class="line">mkdir /etc/nginx/cert   <span class="comment">#创建证书文件夹</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>更新conf.d 中 default.conf 配置文件，把80端口的http的域名请求转成https且转发到443端口；</p>
 </blockquote>
-</li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/2.png" alt="2"></p>
-<ol start="5">
-<li>用docker镜像建立服务端</li>
-</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl; </span><br><span class="line">    server_name aduntech.cn;</span><br><span class="line">    ssl_certificate  /etc/nginx/cert/7669895_aduntech.cn.pem;</span><br><span class="line">    ssl_certificate_key /etc/nginx/cert/7669895_aduntech.cn.key;</span><br><span class="line">    ssl_session_timeout 5m;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root /usr/share/nginx/html;</span><br><span class="line">        index index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#代理配置</span></span><br><span class="line">    location /test1 &#123;</span><br><span class="line">        proxy_pass http://39.103.194.165:8848/nacos;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#代理配置</span></span><br><span class="line">    location /test2 &#123;</span><br><span class="line">        proxy_pass http://39.103.194.165:5000;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name aduntech.cn;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#把http的域名请求转成https且转发到443端口</span></span><br><span class="line">    rewrite ^(.*)$ https://<span class="variable">$host</span>:443<span class="variable">$1</span> permanent;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#charset koi8-r;</span></span><br><span class="line">    <span class="comment">#access_log  /var/log/nginx/host.access.log  main;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload     <span class="comment">#重新加载配置文件</span></span><br></pre></td></tr></table></figure>
+<p>重新访问网站——<br><img src="/2022/04/25/nginx-5-ssl/2.png" alt="2"></p>
 
     </div>
 
@@ -290,13 +260,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/02/22/netcore-docker/" rel="prev" title=".net core中使用docker">
-      <i class="fa fa-chevron-left"></i> .net core中使用docker
+    <a href="/2022/04/24/nginx-4-loadbalance/" rel="prev" title="nginx(4)：负载均衡">
+      <i class="fa fa-chevron-left"></i> nginx(4)：负载均衡
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/04/20/nginx-1-reverseproxy/" rel="next" title="nginx(1)：Http反向代理">
-      nginx(1)：Http反向代理 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -355,7 +322,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="nav-text">内网穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ngrok%E5%8E%9F%E7%90%86"><span class="nav-text">ngrok原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="nav-text">搭建流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-text">服务端</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
