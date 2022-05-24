@@ -16,24 +16,25 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="内网穿透即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。">
+  <meta name="description" content="开发微信公众号时，往往需要通过内网穿透，便捷地进行本地调试。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自建ngrok服务实现内网穿透">
 <meta property="og:url" content="http://example.com/2022/03/16/ngrok-1/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="内网穿透即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。">
+<meta property="og:description" content="开发微信公众号时，往往需要通过内网穿透，便捷地进行本地调试。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
 <meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.webp">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.png">
 <meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.jpg">
-<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/2.png">
+<meta property="og:image" content="http://example.com/2022/03/16/ngrok-1/1.png">
 <meta property="article:published_time" content="2022-03-16T02:32:20.000Z">
-<meta property="article:modified_time" content="2022-05-05T09:17:06.682Z">
+<meta property="article:modified_time" content="2022-05-24T05:53:42.062Z">
 <meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="ngrok">
+<meta property="article:tag" content="内网穿透">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/03/16/ngrok-1/1.webp">
 
@@ -132,6 +133,11 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
         <li class="menu-item menu-item-about">
 
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
@@ -195,7 +201,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-05 17:17:06" itemprop="dateModified" datetime="2022-05-05T17:17:06+08:00">2022-05-05</time>
+                <time title="修改时间：2022-05-24 13:53:42" itemprop="dateModified" datetime="2022-05-24T13:53:42+08:00">2022-05-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -203,7 +209,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">微信开发</span></a>
+                  <a href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%85%AC%E4%BC%97%E5%8F%B7/" itemprop="url" rel="index"><span itemprop="name">小程序/公众号</span></a>
                 </span>
             </span>
 
@@ -218,47 +224,47 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h1><p>即 NAT 穿透，为了使具有某一个特定源 IP 地址和源端口号的数据包不被 NAT 设备屏蔽而正确路由到内网主机。</p>
+        <p>开发微信公众号时，往往需要通过内网穿透，便捷地进行本地调试。</p>
 <span id="more"></span>
-<p>通常实现内网穿透，是通过路由器上端口映射来实现的，可路由器通常不是每个人都有权限可以访问和设置，而且可能存在多级路由器较为复杂的网络结构，端口映射也无法实现，但通过ngrok可以。</p>
-<h1 id="ngrok原理"><a href="#ngrok原理" class="headerlink" title="ngrok原理"></a>ngrok原理</h1><p><img src="/2022/03/16/ngrok-1/1.webp" alt="1"></p>
+<h1 id="ngrok简介"><a href="#ngrok简介" class="headerlink" title="ngrok简介"></a>ngrok简介</h1><blockquote>
+<p>开源项目ngrok：<a target="_blank" rel="noopener" href="https://github.com/inconshreveable/ngrok">github传送门</a></p>
+</blockquote>
+<p><img src="/2022/03/16/ngrok-1/1.webp" alt="1"></p>
 <blockquote>
-<p>ngrok分客户端（ngrok）和服务端（ngrokd），ngrok建立了一个隧道来实现内网穿透</p>
+<p>ngrok分客户端（ngrok）和服务端（ngrokd），建立了一个隧道来实现内网穿透</p>
 </blockquote>
 <p><img src="/2022/03/16/ngrok-1/2.webp" alt="2"></p>
 <blockquote>
 <p>内网主机安装客户端，公网主机安装服务端；</p>
 </blockquote>
-<p>通过ngrok，我们可以在开发微信公众号的时候，便捷地进行本地调试。</p>
-<h1 id="搭建流程"><a href="#搭建流程" class="headerlink" title="搭建流程"></a>搭建流程</h1><p>服务器环境：CentOS 7.9</p>
-<ol>
-<li>安装golang<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install golang -y   <span class="comment">#安装</span></span><br><span class="line">go version              <span class="comment">#查看版本</span></span><br></pre></td></tr></table></figure></li>
-<li>配置系统变量<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="comment"># 添加以下内容</span></span><br><span class="line"><span class="built_in">export</span> GOROOT=/usr/<span class="built_in">local</span>/go</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$GOROOT</span>/bin</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></li>
-<li><a target="_blank" rel="noopener" href="https://ngrok.com/download">下载ngrok客户端</a><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngrok http 4444  <span class="comment">#启动命令</span></span><br></pre></td></tr></table></figure>
-效果如下——<br><img src="/2022/03/16/ngrok-1/1.png" alt="1"></li>
-</ol>
-<h1 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h1><ol>
+<h1 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h1><ol>
 <li>准备一台云服务器（阿里云ECS）和一个个人域名（aduntech.cn）；</li>
-<li>云解析DNS，配置一条记录，将 ngrok.aduntech.cn 指向阿里云ECS；</li>
+<li>云解析DNS，配置2条记录，将 ngrok.aduntech.cn 和 *.ngrok.aduntech.cn 指向阿里云ECS；</li>
 </ol>
 <p><img src="/2022/03/16/ngrok-1/1.jpg" alt="1"></p>
-<ol start="3">
-<li>拉取ngrok镜像，并编译<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker pull hteen/ngrok <span class="comment">#拉取镜像</span></span><br><span class="line"><span class="comment">#执行编译命令，编译服务端和客户端</span></span><br><span class="line">docker run --rm -it -e DOMAIN=<span class="string">&quot;ngrok.aduntech.cn&quot;</span> -v /data/ngrok:/myfiles hteen/ngrok sh /build.sh</span><br><span class="line">docker run --rm -it -e DOMAIN=<span class="string">&quot;ngrok.aduntech.cn&quot;</span> -v /data/ngrok:/myfiles hteen/ngrok /bin/sh /build.sh</span><br></pre></td></tr></table></figure></li>
+<h1 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h1><p>服务器环境：CentOS 7.9</p>
+<ol>
+<li>安装git<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc gcc-c++ git zlib-devel openssl-devel perl</span><br><span class="line">git --version   <span class="comment"># &gt;=1.7</span></span><br></pre></td></tr></table></figure></li>
+<li>安装golang，并修改环境变量<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意版本，某些版本后续编译会出现tls证书错误</span></span><br><span class="line">wget https://golang.google.cn/dl/go1.9.2.linux-amd64.tar.gz</span><br><span class="line">tar -C /usr/<span class="built_in">local</span>/ -zxvf go1.9.2.linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改环境变量</span></span><br><span class="line">vim /etc/profile</span><br><span class="line"><span class="comment"># 添加以下内容</span></span><br><span class="line"><span class="built_in">export</span> GOROOT=/usr/<span class="built_in">local</span>/go</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$GOROOT</span>/bin</span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /etc/profile     <span class="comment">#更新环境变量让配置生效</span></span><br><span class="line">go version              <span class="comment">#查看版本</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install git</span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
-
-
-
-
-<ol start="4">
-<li>ECS配置安全组，开放3个端口<blockquote>
-<p>4443：ngrok自身通信<br>4444：tcp端口转发<br>4443：http请求转发</p>
+<h1 id="编译客户端（ngrok）和服务端（ngrokd）"><a href="#编译客户端（ngrok）和服务端（ngrokd）" class="headerlink" title="编译客户端（ngrok）和服务端（ngrokd）"></a>编译客户端（ngrok）和服务端（ngrokd）</h1><ol>
+<li>下载ngrok源码<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/  </span><br><span class="line"><span class="comment"># 源码地址，依赖较多，可能会下载失败，需要重复下载</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/inconshreveable/ngrok.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 好心人处理好的ngrok和相关依赖</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/haungjianli/ngrok</span><br><span class="line">tar -xvf ./ngrok.tar.gz</span><br></pre></td></tr></table></figure></li>
+<li>为域名生成证书<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/ngrok</span><br><span class="line"></span><br><span class="line">openssl genrsa -out rootCA.key 2048</span><br><span class="line">openssl req -x509 -new -nodes -key rootCA.key -subj <span class="string">&quot;/CN=ngrok.aduntech.cn&quot;</span> -days 5000 -out rootCA.pem</span><br><span class="line">openssl genrsa -out device.key 2048</span><br><span class="line">openssl req -new -key device.key -subj <span class="string">&quot;/CN=ngrok.aduntech.cn&quot;</span> -out device.csr</span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> device.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out device.crt -days 5000</span><br></pre></td></tr></table></figure></li>
+<li>将新生成的证书，替换掉assets/client/tls下的证书<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp rootCA.pem assets/client/tls/ngrokroot.crt</span><br><span class="line">cp device.crt assets/server/tls/snakeoil.crt</span><br><span class="line">cp device.key assets/server/tls/snakeoil.key</span><br></pre></td></tr></table></figure></li>
+<li>编译代码<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端 ngrokd</span></span><br><span class="line">GOOS=linux GOARCH=amd64 make release-server     <span class="comment"># 64位linux</span></span><br><span class="line"><span class="comment"># 客户端</span></span><br><span class="line">GOOS=linux GOARCH=386 make release-client       <span class="comment"># linux32</span></span><br><span class="line">GOOS=linux GOARCH=amd64 make release-client     <span class="comment"># linux64</span></span><br><span class="line">GOOS=windows GOARCH=386 make release-client     <span class="comment"># win32</span></span><br><span class="line">GOOS=windows GOARCH=amd64 make release-client   <span class="comment"># win64</span></span><br><span class="line">GOOS=darwin GOARCH=386 make release-client      <span class="comment"># mac32</span></span><br><span class="line">GOOS=darwin GOARCH=amd64 make release-client    <span class="comment"># mac64</span></span><br></pre></td></tr></table></figure></li>
+<li>以下为国内gitee依赖镜像，可提升编译速度<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://gitee.com/mirrors/log4go.git src/github.com/alecthomas/log4go</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/ngrok-install/websocket.git src/github.com/gorilla/websocket</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/ngrok-install/go-vhost.git src/github.com/inconshreveable/go-vhost</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/ngrok-install/mousetrap.git src/github.com/inconshreveable/mousetrap</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/ngrok-install/go-bindata.git src/github.com/jteeuwen/go-bindata</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/mirrors_addons/osext.git src/github.com/kardianos/osext</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/ngrok-install/binarydist.git src/github.com/kr/binarydist</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/GoLibs/go-runewidth.git src/github.com/mattn/go-runewidth</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/ngrok-install/termbox-go.git src/github.com/nsf/termbox-go</span><br><span class="line">git <span class="built_in">clone</span> https://gitee.com/mirrors/go-metrics.git src/github.com/rcrowley/go-metrics</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="启动服务端（ngrokd）"><a href="#启动服务端（ngrokd）" class="headerlink" title="启动服务端（ngrokd）"></a>启动服务端（ngrokd）</h1><p>防火墙开放以下3个端口，端口根据实际情况修改</p>
+<blockquote>
+<p>-httpAddr http端口<br>-httpsAddr https 端口<br>-tunnerlAddr 客户端端口，连接端口</p>
 </blockquote>
-</li>
-</ol>
-<p><img src="/2022/03/16/ngrok-1/2.png" alt="2"></p>
-<ol start="5">
-<li>用docker镜像建立服务端</li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/ngrok</span><br><span class="line"></span><br><span class="line"><span class="comment"># 前台运行</span></span><br><span class="line">./bin/ngrokd -<span class="built_in">log</span>=stdout -domain=<span class="string">&quot;ngrok.aduntech.cn&quot;</span> -httpAddr=<span class="string">&quot;:80&quot;</span> -httpsAddr=<span class="string">&quot;:443&quot;</span> -tunnelAddr=<span class="string">&quot;:4443&quot;</span></span><br><span class="line"><span class="comment"># 后台运行</span></span><br><span class="line">nohup ./bin/ngrokd -domain=<span class="string">&quot;ngrok.aduntech.cn&quot;</span> -httpAddr=<span class="string">&quot;:80&quot;</span> -httpsAddr=<span class="string">&quot;:443&quot;</span> -tunnelAddr=<span class="string">&quot;:4443&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="启动客户端（ngrok）"><a href="#启动客户端（ngrok）" class="headerlink" title="启动客户端（ngrok）"></a>启动客户端（ngrok）</h1><ol>
+<li>将 bin/windows_adm64/ngrok.exe 下载到客户端上；</li>
+<li>新建配置文件ngrok.cfg；<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 端口号和-tunnerlAdder一致</span></span><br><span class="line">server_addr: <span class="string">&quot;ngrok.aduntech.cn:4443&quot;</span></span><br><span class="line">trust_host_root_certs: <span class="literal">false</span></span><br></pre></td></tr></table></figure></li>
+<li>新建批处理文件startup.bat；<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> on</span><br><span class="line"><span class="built_in">cd</span> %<span class="built_in">cd</span>%</span><br><span class="line">ngrok -config ngrok.cfg -subdomain roc 80</span><br></pre></td></tr></table></figure></li>
+<li>双击startup.bat开启连接<br><img src="/2022/03/16/ngrok-1/1.png" alt="1"></li>
 </ol>
 
     </div>
@@ -268,6 +274,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ngrok/" rel="tag"># ngrok</a>
+              <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag"># 内网穿透</a>
+          </div>
 
         
 
@@ -340,7 +350,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="nav-text">内网穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ngrok%E5%8E%9F%E7%90%86"><span class="nav-text">ngrok原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="nav-text">搭建流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-text">服务端</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ngrok%E7%AE%80%E4%BB%8B"><span class="nav-text">ngrok简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="nav-text">前期准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83"><span class="nav-text">搭建环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88ngrok%EF%BC%89%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%88ngrokd%EF%BC%89"><span class="nav-text">编译客户端（ngrok）和服务端（ngrokd）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E7%AB%AF%EF%BC%88ngrokd%EF%BC%89"><span class="nav-text">启动服务端（ngrokd）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88ngrok%EF%BC%89"><span class="nav-text">启动客户端（ngrok）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
