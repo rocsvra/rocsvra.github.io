@@ -19,28 +19,38 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hello Friend">
-<meta property="og:url" content="http://example.com/page/8/index.html">
+  <meta name="description" content="简介官方地址：github  用c语言写的一款轻量级分布式文件系统，由阿里开发并开源；功能包括：文件存储、同步、上传、下载、删除等；为互联网量身定制，解决了大容量文件存储等问题，充分考虑了冗余备份、线性扩容等机制，注重高可用、高性能；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FastDFS简介">
+<meta property="og:url" content="http://example.com/2022/06/10/FastDFS-1/index.html">
 <meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="简介官方地址：github  用c语言写的一款轻量级分布式文件系统，由阿里开发并开源；功能包括：文件存储、同步、上传、下载、删除等；为互联网量身定制，解决了大容量文件存储等问题，充分考虑了冗余备份、线性扩容等机制，注重高可用、高性能；">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/06/10/FastDFS-1/1.png">
+<meta property="og:image" content="http://example.com/2022/06/10/FastDFS-1/2.png">
+<meta property="og:image" content="http://example.com/2022/06/10/FastDFS-1/3.png">
+<meta property="article:published_time" content="2022-06-10T03:33:54.000Z">
+<meta property="article:modified_time" content="2022-06-10T06:11:40.041Z">
 <meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="FastDFS">
+<meta property="article:tag" content="文件服务">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/06/10/FastDFS-1/1.png">
 
-<link rel="canonical" href="http://example.com/page/8/">
+<link rel="canonical" href="http://example.com/2022/06/10/FastDFS-1/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Hello Friend</title>
+  <title>FastDFS简介 | Hello Friend</title>
   
 
 
@@ -153,13 +163,14 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/26/microservice-2/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/10/FastDFS-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -171,10 +182,9 @@
       <meta itemprop="name" content="Hello Friend">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/26/microservice-2/" class="post-title-link" itemprop="url">微服务简介(2)：解决方案</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          FastDFS简介
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -182,16 +192,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-05-26 22:05:37" itemprop="dateCreated datePublished" datetime="2021-05-26T22:05:37+08:00">2021-05-26</time>
+              <time title="创建时间：2022-06-10 11:33:54 / 修改时间：14:11:40" itemprop="dateCreated datePublished" datetime="2022-06-10T11:33:54+08:00">2022-06-10</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-27 09:25:33" itemprop="dateModified" datetime="2022-05-27T09:25:33+08:00">2022-05-27</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -213,115 +217,63 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="微服务产生的问题"><a href="#微服务产生的问题" class="headerlink" title="微服务产生的问题"></a>微服务产生的问题</h1><p>1.微服务架构整个应用分散成多个服务，定位故障点非常困难；<br>2.系统稳定性下降，服务数量变多导致其中一个服务出现故障的概率增大，并且在微服务架构中，一个服务故障可能会产生雪崩效用，导致整个系统故障。事实上，在大访问量的生产场景下，故障是不可避免的；<br>3.服务数量多，部署、管理的工作量；<br>4.开发：各个服务在持续开发的情况下仍然保持协同合作；<br>5.测试：单体测试变为服务间调用的测试；</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/26/microservice-2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>官方地址：<a target="_blank" rel="noopener" href="https://github.com/happyfish100/fastdfs">github</a></p>
+<blockquote>
+<p>用c语言写的一款轻量级分布式文件系统，由阿里开发并开源；<br>功能包括：文件存储、同步、上传、下载、删除等；<br>为互联网量身定制，解决了大容量文件存储等问题，充分考虑了冗余备份、线性扩容等机制，注重高可用、高性能；</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h1><p>非常适合存储图片等小文件，fastDFS不对文件进行分块，没有分块合并的开销，fastDFS采用socket进行通信，速度很快。</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><p><img src="/2022/06/10/FastDFS-1/1.png" alt="1"></p>
+<blockquote>
+<p>客户端请求 Tracker server 进行文件的上传和下载，最终由 Storage server 完成文件上传和下载。</p>
+</blockquote>
+<h2 id="Tracker-Server（追踪服务器）"><a href="#Tracker-Server（追踪服务器）" class="headerlink" title="Tracker Server（追踪服务器）"></a>Tracker Server（追踪服务器）</h2><ol>
+<li>Tracker server作用是负载均衡和调度，Tracker server可以是集群，同时提供服务，不存在单点故障；</li>
+<li>客户请求Tracker server采用轮询，如果请求的tracker无法提供服务就换另一个；</li>
+<li>Storage server会连接集群中所有的Tracker server，定时向他们报告自己的状态，包括磁盘剩余空间、文件同步 状况、文件上传下载次数等统计信息;</li>
+</ol>
+<h2 id="Storage-Server（存储服务器）"><a href="#Storage-Server（存储服务器）" class="headerlink" title="Storage Server（存储服务器）"></a>Storage Server（存储服务器）</h2><ol>
+<li>Storage Server作用是文件存储，客户端上传的文件最终都存储于Storage Server；</li>
+<li>Storage server没有实现自己的文件系统，而是使用操作系统的文件系统来管理文件；</li>
+<li>采用了分组存储，storage集群由一个或多个组构成，集群存储总容量为集群中所有组的存储容量之和；</li>
+<li>一个组由一台或多台存储服务器组成，组内的Storage server之间是平等关系，不同组的Storage server之 间不会相互通信，同组内的Storage server之间会相互连接进行文件同步，从而保证同组内每个storage上的文件完 全一致的；</li>
+<li>一个分组的存储服务器访问压力较大时，可以在该组增加存储服务器来扩充服务能力（纵向扩容）;</li>
+<li>当系统容量不足时，可以增加组来扩充存储容量（横向扩容）</li>
+</ol>
+<h1 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h1><p><img src="/2022/06/10/FastDFS-1/2.png" alt="2"><br>客户端上传文件后，Storage Server会返回文件ID给客户端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 组名/虚拟磁盘路径/数据两级目录/文件名</span></span><br><span class="line"><span class="comment"># 文件名包含：源存储服务器IP地址、文件创 建时间戳、文件大小、随机数和文件拓展名等信息</span></span><br><span class="line">group1/M00/00/00/rBEOeF5SfVeABqdKAADOcMloCIM691.jpg</span><br></pre></td></tr></table></figure>
+
+<h1 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h1><p><img src="/2022/06/10/FastDFS-1/3.png" alt="3"><br>Tracker Server可以根据文件ID快速定位存储服务器组，并选择合适的存储服务器提供客户端访问</p>
+
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/FastDFS/" rel="tag"># FastDFS</a>
+              <a href="/tags/%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1/" rel="tag"># 文件服务</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/25/microservice-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
-      <meta itemprop="name" content="姜海鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hello Friend">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/25/microservice-1/" class="post-title-link" itemprop="url">微服务简介(1)：如何产生</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-25 22:19:05" itemprop="dateCreated datePublished" datetime="2021-05-25T22:19:05+08:00">2021-05-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-27 09:02:29" itemprop="dateModified" datetime="2022-05-27T09:02:29+08:00">2022-05-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>以电商平台为例，介绍微服务。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/05/25/microservice-1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/30/Promise/" rel="prev" title="Promise简介">
+      <i class="fa fa-chevron-left"></i> Promise简介
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
-  </nav>
 
 
 
@@ -373,6 +325,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tracker-Server%EF%BC%88%E8%BF%BD%E8%B8%AA%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%89"><span class="nav-text">Tracker Server（追踪服务器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storage-Server%EF%BC%88%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%89"><span class="nav-text">Storage Server（存储服务器）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD"><span class="nav-text">文件下载</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
