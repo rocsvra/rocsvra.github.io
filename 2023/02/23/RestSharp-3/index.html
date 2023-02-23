@@ -19,15 +19,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hello Friend">
-<meta property="og:url" content="http://example.com/archives/page/5/index.html">
+  <meta name="description" content="RestSharp 包括用于基本 HTTP（授权标头）、NTLM 和基于参数的系统的鉴权">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RestSharp(3)：鉴权">
+<meta property="og:url" content="http://example.com/2023/02/23/RestSharp-3/index.html">
 <meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="RestSharp 包括用于基本 HTTP（授权标头）、NTLM 和基于参数的系统的鉴权">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-23T02:16:47.551Z">
+<meta property="article:modified_time" content="2023-02-23T02:40:26.789Z">
 <meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta property="article:tag" content="rest">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/archives/page/5/">
+<link rel="canonical" href="http://example.com/2023/02/23/RestSharp-3/">
 
 
 <script id="page-configurations">
@@ -35,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | Hello Friend</title>
+  <title>RestSharp(3)：鉴权 | Hello Friend</title>
   
 
 
@@ -153,235 +159,105 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        <span class="collection-header"> ! 共 80 篇日志。  </span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/23/RestSharp-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RestSharp(3)：鉴权
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-02-23 10:16:47 / 修改时间：10:40:26" itemprop="dateCreated datePublished" datetime="2023-02-23T10:16:47+08:00">2023-02-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NET/" itemprop="url" rel="index"><span itemprop="name">.NET</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-07-01T16:31:29+08:00"
-              content="2021-07-01">
-          07-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/07/01/vue-8/" itemprop="url">
-            <span itemprop="name">Vue(8)：axios</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-30T22:41:46+08:00"
-              content="2021-06-30">
-          06-30
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/30/vue-7/" itemprop="url">
-            <span itemprop="name">Vue(7)：vue-router</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-30T14:40:38+08:00"
-              content="2021-06-30">
-          06-30
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/30/vue-6/" itemprop="url">
-            <span itemprop="name">Vue(6)：组件</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-29T22:40:33+08:00"
-              content="2021-06-29">
-          06-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/29/vue-5/" itemprop="url">
-            <span itemprop="name">Vue(5)：生命周期</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-29T10:20:14+08:00"
-              content="2021-06-29">
-          06-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/29/vue-4/" itemprop="url">
-            <span itemprop="name">Vue(4)：Vue基础</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-27T19:00:41+08:00"
-              content="2021-06-27">
-          06-27
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/27/vue-3/" itemprop="url">
-            <span itemprop="name">Vue(3)：Js基础</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-24T16:40:42+08:00"
-              content="2021-06-24">
-          06-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/24/vue-2/" itemprop="url">
-            <span itemprop="name">Vue(2)：搭建环境</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-24T15:22:34+08:00"
-              content="2021-06-24">
-          06-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/24/vue-1/" itemprop="url">
-            <span itemprop="name">Vue(1)：MVVM浅谈</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-24T10:40:48+08:00"
-              content="2021-06-24">
-          06-24
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/24/rabbit-1-kafuka/" itemprop="url">
-            <span itemprop="name">RabbitMQ(1)：和Kafka的对比</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-23T15:07:35+08:00"
-              content="2021-06-23">
-          06-23
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/23/hangfire-3-cron/" itemprop="url">
-            <span itemprop="name">HangFire(3)：Cron表达式简介</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        <p>RestSharp 包括用于基本 HTTP（授权标头）、NTLM 和基于参数的系统的鉴权</p>
+<span id="more"></span>
+<h1 id="SimpleAuthenticator"><a href="#SimpleAuthenticator" class="headerlink" title="SimpleAuthenticator"></a>SimpleAuthenticator</h1><p>允许传递用户名/密码（API和密钥）作为请求方法Get/Post参数</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> client = <span class="keyword">new</span> RestClient(<span class="string">&quot;http://example.com&quot;</span>);</span><br><span class="line">client.Authenticator = <span class="keyword">new</span> SimpleAuthenticator(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;foo&quot;</span>, <span class="string">&quot;password&quot;</span>, <span class="string">&quot;bar&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> request = <span class="keyword">new</span> RestRequest(<span class="string">&quot;resource&quot;</span>, Method.GET);</span><br><span class="line">client.Execute(request);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>生成url  <a href="http://example.com/resource?username=foo&amp;password=bar">http://example.com/resource?username=foo&amp;password=bar</a><br>请求更改为Post/Put，值将作为编码的表单值进行发送</p>
+</blockquote>
+<h1 id="自定义鉴权"><a href="#自定义鉴权" class="headerlink" title="自定义鉴权"></a>自定义鉴权</h1><p>通过实现IAuthenticator接口，并在RestClient进行注册</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> client = <span class="keyword">new</span> RestClient();</span><br><span class="line">client.Authenticator = <span class="keyword">new</span> SuperAuthenticator(); <span class="comment">// implements IAuthenticator</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>RestClient.Execute 调用首先执行 Authenticate 方法<br>Authenticate 方法通过当前正在执行的 RestRequest 提供请求数据的每一个部分（头，参数等）的访问</p>
+</blockquote>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+              <a href="/tags/rest/" rel="tag"># rest</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/02/20/RestSharp-2/" rel="prev" title="RestSharp(2)：序列化">
+      <i class="fa fa-chevron-left"></i> RestSharp(2)：序列化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/23/RestSharp-4/" rel="next" title="RestSharp(4)：请求参数">
+      RestSharp(4)：请求参数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/archives/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/8/">8</a><a class="extend next" rel="next" href="/archives/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+  
+  
 
 
 
@@ -433,6 +309,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SimpleAuthenticator"><span class="nav-text">SimpleAuthenticator</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%89%B4%E6%9D%83"><span class="nav-text">自定义鉴权</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

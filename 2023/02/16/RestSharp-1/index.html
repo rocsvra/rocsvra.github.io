@@ -19,15 +19,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="RestSharp不依赖任何第三方组件或类库，可以通过Http调用远程资源：  处理不同类型的请求和响应；将请求正文序列化为json或xml，并反序列化响应；根据不同的参数类型（路径、查询、表单、正文）形成有效的请求Uri；">
+  <meta name="description" content="RestSharp（官方文档）不依赖任何第三方组件或类库，可以通过Http调用远程资源：  处理不同类型的请求和响应；将请求正文序列化为json或xml，并反序列化响应；根据不同的参数类型（路径、查询、表单、正文）形成有效的请求Uri；">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RestSharp(1)">
+<meta property="og:title" content="RestSharp(1)：简介">
 <meta property="og:url" content="http://example.com/2023/02/16/RestSharp-1/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="RestSharp不依赖任何第三方组件或类库，可以通过Http调用远程资源：  处理不同类型的请求和响应；将请求正文序列化为json或xml，并反序列化响应；根据不同的参数类型（路径、查询、表单、正文）形成有效的请求Uri；">
+<meta property="og:description" content="RestSharp（官方文档）不依赖任何第三方组件或类库，可以通过Http调用远程资源：  处理不同类型的请求和响应；将请求正文序列化为json或xml，并反序列化响应；根据不同的参数类型（路径、查询、表单、正文）形成有效的请求Uri；">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-16T07:06:13.199Z">
-<meta property="article:modified_time" content="2023-02-16T08:32:16.507Z">
+<meta property="article:modified_time" content="2023-02-23T06:10:52.666Z">
 <meta property="article:author" content="姜海鹏">
 <meta property="article:tag" content="http">
 <meta property="article:tag" content="rest">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>RestSharp(1) | Hello Friend</title>
+  <title>RestSharp(1)：简介 | Hello Friend</title>
   
 
 
@@ -179,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          RestSharp(1)
+          RestSharp(1)：简介
         </h1>
 
         <div class="post-meta">
@@ -188,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-02-16 15:06:13 / 修改时间：16:32:16" itemprop="dateCreated datePublished" datetime="2023-02-16T15:06:13+08:00">2023-02-16</time>
+              <time title="创建时间：2023-02-16 15:06:13" itemprop="dateCreated datePublished" datetime="2023-02-16T15:06:13+08:00">2023-02-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-23 14:10:52" itemprop="dateModified" datetime="2023-02-23T14:10:52+08:00">2023-02-23</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -213,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>RestSharp不依赖任何第三方组件或类库，可以通过Http调用远程资源：</p>
+        <p>RestSharp（<a target="_blank" rel="noopener" href="https://restsharp.dev/v107/#body-parameters">官方文档</a>）不依赖任何第三方组件或类库，可以通过Http调用远程资源：</p>
 <blockquote>
 <p>处理不同类型的请求和响应；<br>将请求正文序列化为json或xml，并反序列化响应；<br>根据不同的参数类型（路径、查询、表单、正文）形成有效的请求Uri；</p>
 </blockquote>
@@ -263,6 +269,14 @@
 <td align="left">异常信息</td>
 </tr>
 </tbody></table>
+<h1 id="推荐用法"><a href="#推荐用法" class="headerlink" title="推荐用法"></a>推荐用法</h1><p>RestSharp非常适合作为Api代理类的基础，参照<a target="_blank" rel="noopener" href="https://github.com/twilio/twilio-csharp">Twilio</a></p>
+<h1 id="文件处理"><a href="#文件处理" class="headerlink" title="文件处理"></a>文件处理</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tempFile = Path.GetTempFileName();</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">var</span> writer = File.OpenWrite(tempFile);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> client = <span class="keyword">new</span> RestClient(baseUrl);</span><br><span class="line"><span class="keyword">var</span> request = <span class="keyword">new</span> RestRequest(<span class="string">&quot;Assets/LargeFile.7z&quot;</span>);</span><br><span class="line">request.ResponseWriter = responseStream =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span> (responseStream)</span><br><span class="line">    &#123;</span><br><span class="line">        responseStream.CopyTo(writer);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> response = client.DownloadData(request);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用 Stream 来避免请求内容的内存缓冲</p>
+</blockquote>
+<h1 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h1><blockquote>
+<p>存在网络传输错误（网络关闭、DNS 查找失败等）或任何类型的服务器错误（404 除外），RestResponse.ResponseStatus 将设置为 ResponseStatus.Error，否则为 ResponseStatus.Completed;<br>如果 API 返回 404，ResponseStatus 仍将是 Completed；<br>请求失败RestSharp 不会抛出异常，除非配置RestSharp 在不同情况下抛出；<br>RestResponse.StatusCode（HTTP 状态代码）是独立于 API 异常处理的完成指示符；</p>
+</blockquote>
 
     </div>
 
@@ -347,7 +361,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B"><span class="nav-text">内容类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%8D%E5%BA%94"><span class="nav-text">响应</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B"><span class="nav-text">内容类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%8D%E5%BA%94"><span class="nav-text">响应</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E7%94%A8%E6%B3%95"><span class="nav-text">推荐用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-text">文件处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-text">异常处理</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

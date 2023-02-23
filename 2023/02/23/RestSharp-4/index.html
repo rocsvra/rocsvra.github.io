@@ -19,24 +19,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="阮一峰分享过以下七句话，希望自己也可以做到。">
+  <meta name="description" content="支持5种类型的参数（默认 IHttp 实现）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="时间管理的七句话">
-<meta property="og:url" content="http://example.com/2023/02/15/time-managment/index.html">
+<meta property="og:title" content="RestSharp(4)：请求参数">
+<meta property="og:url" content="http://example.com/2023/02/23/RestSharp-4/index.html">
 <meta property="og:site_name" content="Hello Friend">
-<meta property="og:description" content="阮一峰分享过以下七句话，希望自己也可以做到。">
+<meta property="og:description" content="支持5种类型的参数（默认 IHttp 实现）">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/02/15/time-managment/1.png">
-<meta property="og:image" content="http://example.com/2023/02/15/time-managment/2.png">
-<meta property="og:image" content="http://example.com/2023/02/15/time-managment/3.png">
-<meta property="article:published_time" content="2023-02-15T08:07:44.000Z">
-<meta property="article:modified_time" content="2023-02-15T11:21:31.291Z">
+<meta property="article:published_time" content="2023-02-23T02:41:06.856Z">
+<meta property="article:modified_time" content="2023-02-23T05:53:25.780Z">
 <meta property="article:author" content="姜海鹏">
-<meta property="article:tag" content="时间管理">
+<meta property="article:tag" content="http">
+<meta property="article:tag" content="rest">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/02/15/time-managment/1.png">
 
-<link rel="canonical" href="http://example.com/2023/02/15/time-managment/">
+<link rel="canonical" href="http://example.com/2023/02/23/RestSharp-4/">
 
 
 <script id="page-configurations">
@@ -49,7 +46,7 @@
   };
 </script>
 
-  <title>时间管理的七句话 | Hello Friend</title>
+  <title>RestSharp(4)：请求参数 | Hello Friend</title>
   
 
 
@@ -169,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/15/time-managment/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/23/RestSharp-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
@@ -182,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          时间管理的七句话
+          RestSharp(4)：请求参数
         </h1>
 
         <div class="post-meta">
@@ -193,7 +190,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-02-15 16:07:44 / 修改时间：19:21:31" itemprop="dateCreated datePublished" datetime="2023-02-15T16:07:44+08:00">2023-02-15</time>
+              <time title="创建时间：2023-02-23 10:41:06 / 修改时间：13:53:25" itemprop="dateCreated datePublished" datetime="2023-02-23T10:41:06+08:00">2023-02-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,7 +198,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
+                  <a href="/categories/NET/" itemprop="url" rel="index"><span itemprop="name">.NET</span></a>
                 </span>
             </span>
 
@@ -216,30 +213,41 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>阮一峰分享过以下七句话，希望自己也可以做到。</p>
+        <p>支持5种类型的参数（默认 IHttp 实现）</p>
 <span id="more"></span>
+<h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>将参数添加到请求的cookie列表中，cookie 名称是参数名，值是 Value.ToString()</p>
+<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>header 名称是参数名，header 值是参数值<br>注意：一些受限制的标头可能表现不同或被简单地忽略</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><ol>
+<li>GET调用，参数会以 url?name1=value1&amp;name2=value 的形式附加到 Url 中</li>
+<li>Post/Put请求，取决于是否有文件附加到请求中<blockquote>
+<p>无附加文件，参数作为请求的正文，以 name1=value1&amp;name2=value2 的形式发送；<br>此外，将作为 application/x-www-form-urlencoded 发送，名称和值都将自动进行 url 编码；<br>有文件，将发送 multipart/form-data 请求，参数将以如下形式作为此请求的一部分；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Content-Disposition: form-data; name=&quot;parameterName&quot;</span><br><span class="line"></span><br><span class="line">ParameterValue</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="Url分段"><a href="#Url分段" class="headerlink" title="Url分段"></a>Url分段</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> request = <span class="keyword">new</span> RestRequest(<span class="string">&quot;health/&#123;entity&#125;/status&quot;</span>)</span><br><span class="line">    .AddUrlSegment(<span class="string">&quot;entity&quot;</span>, <span class="string">&quot;s2&quot;</span>);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>ParameterType 替换 RequestUrl 中的占位符值;<br>结果url为 health/s2/status;</p>
+</blockquote>
+<h1 id="请求体"><a href="#请求体" class="headerlink" title="请求体"></a>请求体</h1><blockquote>
+<p>RequestBody不适用于GET或HEAD请求，它们不发送正文；<br>这个参数设置后，它的值将作为请求的正文发送，参数的名称将用作 Content-Type 请求标头；<br>不推荐使用AddParameter 携带类型 BodyParameter；<br>推荐使用AddJsonBody 或 AddXmlBody 方法，这将设置正确的请求类型，并执行序列化；</p>
+</blockquote>
+<h2 id="AddJsonBody"><a href="#AddJsonBody" class="headerlink" title="AddJsonBody"></a>AddJsonBody</h2><blockquote>
+<p>RestClient发出请求时将对象参数序列化为JSON<br>内容类型设置为application/json<br>请求正文的内部数据类型设置为 DataType.Json </p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> param = <span class="keyword">new</span> MyClass &#123; IntData = <span class="number">1</span>, StringData = <span class="string">&quot;test123&quot;</span> &#125;;</span><br><span class="line">request.AddJsonBody(param);</span><br></pre></td></tr></table></figure>
 
-<h1 id="进程切换非常昂贵，避免多任务，保持单进程"><a href="#进程切换非常昂贵，避免多任务，保持单进程" class="headerlink" title="进程切换非常昂贵，避免多任务，保持单进程"></a>进程切换非常昂贵，避免多任务，保持单进程</h1><p><img src="/2023/02/15/time-managment/1.png" alt="1"></p>
+<h2 id="AddXmlBody"><a href="#AddXmlBody" class="headerlink" title="AddXmlBody"></a>AddXmlBody</h2><blockquote>
+<p>RestClient 在发出请求时将对象参数序列化为 XML;<br>内容类型设置为 application/xml;<br>请求正文的内部数据类型设置为 DataType.Xml;</p>
+</blockquote>
+<p>注意：设置内容类型标头或将 XML 字符串发送到 AddXmlBody，这个方法将无法工作。</p>
+<h1 id="Query-String"><a href="#Query-String" class="headerlink" title="Query String"></a>Query String</h1><p>总是将参数以 url?name1=value1&amp;name2=value2 的形式附加到 url，不管请求方法如何</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> client = <span class="keyword">new</span> RestClient(<span class="string">&quot;https://search.me&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> request = <span class="keyword">new</span> RestRequest(<span class="string">&quot;search&quot;</span>)</span><br><span class="line">    .AddParameter(<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> response = <span class="keyword">await</span> client.GetAsync&lt;SearchResponse&gt;(request);</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>上图是多任务状态和单进程状态的对比，可以看到，多任务状态会花费更多的时间。<br>不要同时做多件事，结果可能都没做好，还拖长了工作时间。</p>
+<p>发送 GET 请求到 <a target="_blank" rel="noopener" href="https://search.me/search?foo=bar">https://search.me/search?foo=bar</a></p>
 </blockquote>
-<h1 id="研究表明，集中注意力、高效工作，每天最多4小时"><a href="#研究表明，集中注意力、高效工作，每天最多4小时" class="headerlink" title="研究表明，集中注意力、高效工作，每天最多4小时"></a>研究表明，集中注意力、高效工作，每天最多4小时</h1><p><img src="/2023/02/15/time-managment/2.png" alt="2"></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.AddParameter(<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>, ParameterType.QueryString);</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>上图左侧是大多数人每天的时间分配，如果你能保证4个小时都高效工作，那么完全可以变成右侧的时间分配。<br>一个人能够集中注意力的时间，是有限的。一般来说，高效工作只能持续四个小时，其余时间就都是低效工作了。</p>
-</blockquote>
-<h1 id="划分任务的优先级，不要把’急切’当作’重要’"><a href="#划分任务的优先级，不要把’急切’当作’重要’" class="headerlink" title="划分任务的优先级，不要把’急切’当作’重要’"></a>划分任务的优先级，不要把’急切’当作’重要’</h1><p><img src="/2023/02/15/time-managment/3.png" alt="3"></p>
-<blockquote>
-<p>你的时间有限，不可能做所有事。最重要的事，应该首先做。<br>一个有用的技巧是，将所有任务按照”重要性”和”紧急性”两个维度，分成四个象限。第一象限优先级最高，第四象限最低。</p>
-</blockquote>
-<h1 id="起床后，不要查看邮件和微信"><a href="#起床后，不要查看邮件和微信" class="headerlink" title="起床后，不要查看邮件和微信"></a>起床后，不要查看邮件和微信</h1><blockquote>
-<p>早晨精力最充沛，消耗在邮件和微信就太可惜了，应该用来做更重要的事。而且，邮件代表对别人优先级高，不等于对你优先级高。你的时间到底属于谁？你自己，还是某个给你写信的人？</p>
-</blockquote>
-<h1 id="避免开会，因为人类已知的最浪费时间的事情，就是开会"><a href="#避免开会，因为人类已知的最浪费时间的事情，就是开会" class="headerlink" title="避免开会，因为人类已知的最浪费时间的事情，就是开会"></a>避免开会，因为人类已知的最浪费时间的事情，就是开会</h1><blockquote>
-<p>越大的公司，越无法避免开会。但至少不要参加与你无关的会。站着开会，也许是一个缩短会议时间的好办法。</p>
-</blockquote>
-<h1 id="早晨4点起床，到了中午，你就完成了一天的任务"><a href="#早晨4点起床，到了中午，你就完成了一天的任务" class="headerlink" title="早晨4点起床，到了中午，你就完成了一天的任务"></a>早晨4点起床，到了中午，你就完成了一天的任务</h1><p>早晨4点起床开始工作，你会发现每天的时间多出了好多。有个日本人写了一本书《四点起床》，就是讲这个观点。</p>
-<h1 id="你没空时不会做的事情，有空了也不会做"><a href="#你没空时不会做的事情，有空了也不会做" class="headerlink" title="你没空时不会做的事情，有空了也不会做"></a>你没空时不会做的事情，有空了也不会做</h1><blockquote>
-<p>世上并没有拖延症，只是不想做而已。如果可能，应该尽早放弃你没有意愿去做的那些事。而那些没有时间也会去做的事，才是你应该全力以赴的人生方向。 </p>
+<p>可以明确指定查询字符串参数类型;<br>某些情况下,需要阻止 RestSharp 对查询字符串参数进行编码,需要使用 QueryStringWithoutEncode 参数类型;</p>
 </blockquote>
 
     </div>
@@ -250,7 +258,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86/" rel="tag"># 时间管理</a>
+              <a href="/tags/http/" rel="tag"># http</a>
+              <a href="/tags/rest/" rel="tag"># rest</a>
           </div>
 
         
@@ -259,13 +268,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/07/13/freeSoftwareLicenses/" rel="prev" title="开源许可协议">
-      <i class="fa fa-chevron-left"></i> 开源许可协议
+    <a href="/2023/02/23/RestSharp-3/" rel="prev" title="RestSharp(3)：鉴权">
+      <i class="fa fa-chevron-left"></i> RestSharp(3)：鉴权
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/02/16/RestSharp-1/" rel="next" title="RestSharp(1)：简介">
-      RestSharp(1)：简介 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -324,7 +330,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2%E9%9D%9E%E5%B8%B8%E6%98%82%E8%B4%B5%EF%BC%8C%E9%81%BF%E5%85%8D%E5%A4%9A%E4%BB%BB%E5%8A%A1%EF%BC%8C%E4%BF%9D%E6%8C%81%E5%8D%95%E8%BF%9B%E7%A8%8B"><span class="nav-text">进程切换非常昂贵，避免多任务，保持单进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E8%A1%A8%E6%98%8E%EF%BC%8C%E9%9B%86%E4%B8%AD%E6%B3%A8%E6%84%8F%E5%8A%9B%E3%80%81%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%EF%BC%8C%E6%AF%8F%E5%A4%A9%E6%9C%80%E5%A4%9A4%E5%B0%8F%E6%97%B6"><span class="nav-text">研究表明，集中注意力、高效工作，每天最多4小时</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%92%E5%88%86%E4%BB%BB%E5%8A%A1%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7%EF%BC%8C%E4%B8%8D%E8%A6%81%E6%8A%8A%E2%80%99%E6%80%A5%E5%88%87%E2%80%99%E5%BD%93%E4%BD%9C%E2%80%99%E9%87%8D%E8%A6%81%E2%80%99"><span class="nav-text">划分任务的优先级，不要把’急切’当作’重要’</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%B7%E5%BA%8A%E5%90%8E%EF%BC%8C%E4%B8%8D%E8%A6%81%E6%9F%A5%E7%9C%8B%E9%82%AE%E4%BB%B6%E5%92%8C%E5%BE%AE%E4%BF%A1"><span class="nav-text">起床后，不要查看邮件和微信</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E5%BC%80%E4%BC%9A%EF%BC%8C%E5%9B%A0%E4%B8%BA%E4%BA%BA%E7%B1%BB%E5%B7%B2%E7%9F%A5%E7%9A%84%E6%9C%80%E6%B5%AA%E8%B4%B9%E6%97%B6%E9%97%B4%E7%9A%84%E4%BA%8B%E6%83%85%EF%BC%8C%E5%B0%B1%E6%98%AF%E5%BC%80%E4%BC%9A"><span class="nav-text">避免开会，因为人类已知的最浪费时间的事情，就是开会</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A9%E6%99%A84%E7%82%B9%E8%B5%B7%E5%BA%8A%EF%BC%8C%E5%88%B0%E4%BA%86%E4%B8%AD%E5%8D%88%EF%BC%8C%E4%BD%A0%E5%B0%B1%E5%AE%8C%E6%88%90%E4%BA%86%E4%B8%80%E5%A4%A9%E7%9A%84%E4%BB%BB%E5%8A%A1"><span class="nav-text">早晨4点起床，到了中午，你就完成了一天的任务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%A0%E6%B2%A1%E7%A9%BA%E6%97%B6%E4%B8%8D%E4%BC%9A%E5%81%9A%E7%9A%84%E4%BA%8B%E6%83%85%EF%BC%8C%E6%9C%89%E7%A9%BA%E4%BA%86%E4%B9%9F%E4%B8%8D%E4%BC%9A%E5%81%9A"><span class="nav-text">你没空时不会做的事情，有空了也不会做</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Cookie"><span class="nav-text">Cookie</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-text">方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Url%E5%88%86%E6%AE%B5"><span class="nav-text">Url分段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E4%BD%93"><span class="nav-text">请求体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AddJsonBody"><span class="nav-text">AddJsonBody</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AddXmlBody"><span class="nav-text">AddXmlBody</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Query-String"><span class="nav-text">Query String</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
