@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="说明下redis配置文件各个配置项的含义。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis(3)：配置">
+<meta property="og:url" content="http://example.com/2023/02/28/Redis-3/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="说明下redis配置文件各个配置项的含义。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-28T02:02:33.255Z">
+<meta property="article:modified_time" content="2023-03-02T01:55:52.875Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/02/28/Redis-3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis(3)：配置 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/28/Redis-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis(3)：配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-28 10:02:33" itemprop="dateCreated datePublished" datetime="2023-02-28T10:02:33+08:00">2023-02-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-02 09:55:52" itemprop="dateModified" datetime="2023-03-02T09:55:52+08:00">2023-03-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" itemprop="url" rel="index"><span itemprop="name">分布式缓存</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>说明下redis配置文件各个配置项的含义。</p>
+<span id="more"></span>
+<p>redis官方提供配置文件redis.conf，配置文件的开头部分，明确了一些度量单位</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 1kb =&gt; 1024 bytes</span><br><span class="line"># 1m =&gt; 1000000 bytes</span><br><span class="line"># 1mb =&gt; 1024*1024 bytes</span><br><span class="line"># 1g =&gt; 1000000000 bytes</span><br><span class="line"># 1gb =&gt; 1024*1024*1024 bytes</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>单位大小写不敏感，只支持bytes，不支持bit单位</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include /path/to/other.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>支持主配置文件中引入外部配置文件</p>
+</blockquote>
+<p>redis配置文件分为几大区域：<br>1.通用（general）<br>2.快照（snapshotting）<br>3.复制（replication）<br>4.安全（security）<br>5.限制（limits)<br>6.追加模式（append only mode)<br>7.LUA脚本（lua scripting)<br>8.慢日志（slow log)<br>9.事件通知（event notification）</p>
+<h1 id="通用"><a href="#通用" class="headerlink" title="通用"></a>通用</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">daemonize no # 默认为no,改为yes，redis就会以daemon形式运行   </span><br><span class="line"></span><br><span class="line"># daemon形式运行，redis会生成一个pid文件，默认会生成在/var/run/redis.pid</span><br><span class="line">pidfile /path/to/redis.pid  # 指定pid文件生成的位置</span><br><span class="line"></span><br><span class="line"># 默认redis会响应本机所有可用网卡的连接请求</span><br><span class="line">bind 192.168.1.2 10.8.4.2   # 指定要绑定的IP</span><br><span class="line"></span><br><span class="line"># 默认服务端口是6379,可以通过配置修改,端口设置为0，redis便不会监听端口</span><br><span class="line">port 6379 </span><br><span class="line"></span><br><span class="line"># 不监听端口，redis还支持unix socket方式来接收请求</span><br><span class="line">unixsocket /tmp/redis.sock  # 指定文件路径</span><br><span class="line">unixsocketperm 755          # 指定文件权限</span><br><span class="line"></span><br><span class="line"># redis-client一直没有请求发向server，server有权主动关闭这个连接</span><br><span class="line">timeout 0   # 0表示永不关闭</span><br><span class="line"></span><br><span class="line"># TCP连接保活策略，定时向连接空闲的客户端发起一次ACK请求，无响应则关闭</span><br><span class="line">tcp-keepalive 60 # 每隔60秒发送一次，设置为0，则不会进行保活检测</span><br><span class="line"></span><br><span class="line"># 日志等级：debug、verbose、notice、warning</span><br><span class="line">loglevel notice</span><br><span class="line"></span><br><span class="line"># 设置日志文件路径</span><br><span class="line">logfile &quot;&quot;  # 设置为空字符串，redis会将日志输出到标准输出，daemon情况下，日志会被写到/dev/null中</span><br><span class="line"></span><br><span class="line">syslog-ident redis      # 日志打印到syslog中</span><br><span class="line">syslog-facility local0  # 指定syslog设备</span><br><span class="line"></span><br><span class="line"># 设置数据库数量</span><br><span class="line">databases 16  # 数据库编号：0-15，默认的数据库是编号为0</span><br></pre></td></tr></table></figure>
+
+<h1 id="快照"><a href="#快照" class="headerlink" title="快照"></a>快照</h1><p>主要涉及的是redis的RDB持久化相关的配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">save &lt;seconds&gt; &lt;changes&gt;  # 数据保存到磁盘上</span><br><span class="line"></span><br><span class="line">save 900 1      # 每15分钟且至少有1个key改变，就触发一次持久化</span><br><span class="line">save 300 10     # 每5分钟且至少有10个key改变，就触发一次持久化</span><br><span class="line">save 60 10000   # 每60秒至少有10000个key改变，就触发一次持久化</span><br><span class="line"></span><br><span class="line">save &quot;&quot;         # 不设置任何save指令，或设置空字符串，都禁用了RDB持久化的策略</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>开启RDB快照功能后，redis持久化数据到磁盘如果出现失败，redis默认停止接受所有的写请求。用户很明确知道内存中的数据和磁盘上的数据已经存在不一致。如果不顾这种不一致，继续接受写请求，可能会引起一些灾难性的后果。<br>如果下一次RDB持久化成功，redis会自动恢复接受写请求。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stop-writes-on-bgsave-error yes   # 关闭上述功能</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>快照写入失败时，确保redis继续接受新的写请求</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rdbcompression yes  # 存储到磁盘中的快照，可以设置是否进行压缩存储</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>redis采用LZF算法进行压缩，不想消耗CPU，可以关闭此功能，只是磁盘上的快照会比较大</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rdbchecksum yes       # 存储快照后，可以使用CRC64算法来进行数据校验，会增加大约10%的性能消耗</span><br><span class="line">dbfilename dump.rdb   # 设置快照文件的名称</span><br><span class="line">dir ./                # 设置快照文件存放路径，默认当前文件夹</span><br></pre></td></tr></table></figure>
+
+<h1 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h1><p>redis提供了主从同步功能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof &lt;masterip&gt; &lt;masterport&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>slaveof配置项可以控制某一个redis作为另一个redis的从服务器，通过指定IP和端口来定位到主redis的位置；<br>建议为从redis设置一个不同频率的快照持久化的周期；<br>建议为从redis配置一个不同的服务端口；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">masterauth &lt;master-password&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果主redis设置了验证密码，从redis的配置中要使用masterauth来设置校验密码，主redis会拒绝从redis的访问请求</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 当从redis失去了与主redis的连接，或者主从同步正在进行中时，redis如何处理外部的访问请求：</span><br><span class="line">slave-serve-stale-data yes  # 默认值，redis继续响应客户端的读写请求</span><br><span class="line">slave-serve-stale-data no   # redis会对客户端的请求返回“SYNC with master in progress”</span><br><span class="line"> </span><br><span class="line">slave-read-only yes  # 默认从redis只读</span><br><span class="line"></span><br><span class="line"># redis会周期性的向主redis发出PING包</span><br><span class="line">repl-ping-slave-period 10   # 默认周期10秒</span><br><span class="line"></span><br><span class="line"># 当有大规模IO传输时，同步可能超时；当数据传输或PING时，主redis可能超时；在回复从redis的PING时，从redis可能超时；</span><br><span class="line">repl-timeout 60   # 超时时限，确保这个时限比repl-ping-slave-period的值要大，不然总超时</span><br><span class="line"></span><br><span class="line">repl-disable-tcp-nodelay no # 主从同步时是否禁用TCP_NODELAY</span><br><span class="line"></span><br><span class="line">repl-backlog-size 1mb   # 同步队列长度</span><br><span class="line"></span><br><span class="line">slave-priority 100    # 优先级，编号越小，优先级越高，优先级设置为0，这个从redis永远不会被选中</span><br><span class="line"></span><br><span class="line"># 如有大于等于3个从redis的连接延迟大于10秒，那么主redis就不再接受外部的写请求</span><br><span class="line">min-slaves-to-write 3   # 默认0，该特性关闭</span><br><span class="line">min-slaves-max-lag 10</span><br></pre></td></tr></table></figure>
+
+<h1 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 要求redis客户端在向redis-server发送请求之前，先进行密码验证</span><br><span class="line">requirepass zhimakaimen # 设置密码，</span><br><span class="line"></span><br><span class="line"># 对redis指令进行更名，将一些可能有破坏力的命令重命名，避免外部直接调用</span><br><span class="line">rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52</span><br><span class="line">rename-command CONFIG &quot;&quot; # 禁用CONFIG命令</span><br></pre></td></tr></table></figure>
+
+<h1 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">maxclients 10000  # 客户端连接数</span><br><span class="line">maxmemory &lt;bytes&gt; # 可使用的内存量</span><br></pre></td></tr></table></figure>
+
+<h1 id="追加模式-AOF"><a href="#追加模式-AOF" class="headerlink" title="追加模式(AOF)"></a>追加模式(AOF)</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">appendonly no</span><br><span class="line">appendfilename &quot;appendonly.aof&quot;   # 设置aof文件的名称</span><br><span class="line">appendfsync everysec    # no,不调用fsync();always,在每次写请求后都调用fsync();everysec,每秒钟调用一次fsync()</span><br><span class="line">no-appendfsync-on-rewrite no  # 当BGSAVE或BGWRITEAOF运行时，fsync()在主进程中的调用会被阻止</span><br><span class="line"></span><br><span class="line"># 允许redis自动重写aof</span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+
+<h1 id="LUA脚本"><a href="#LUA脚本" class="headerlink" title="LUA脚本"></a>LUA脚本</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lua-time-limit 5000 # lua脚本的最大运行时间是需要被严格限制的，要注意单位是毫秒</span><br></pre></td></tr></table></figure>
+
+<h1 id="慢日志"><a href="#慢日志" class="headerlink" title="慢日志"></a>慢日志</h1><p>redis慢日志是指一个系统进行日志查询超过了指定时长。这个时长不包括IO操作，比如与客户端的交互、发送响应内容等，而仅包括实际执行查询命令的时间。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">slowlog-log-slower-than 10000   # 单位是微秒。负数禁用慢日志功能，0则强制记录每一个命令</span><br><span class="line">slowlog-max-len 128   # 慢日志最大长度</span><br></pre></td></tr></table></figure>
+
+<h1 id="事件通知"><a href="#事件通知" class="headerlink" title="事件通知"></a>事件通知</h1><p>redis可以向客户端通知某些事件的发生</p>
+<h1 id="高级配置"><a href="#高级配置" class="headerlink" title="高级配置"></a>高级配置</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># 哈希数据结构配置</span><br><span class="line">hash-max-ziplist-entries 512</span><br><span class="line">hash-max-ziplist-value 64</span><br><span class="line">activerehashing yes # 是否需要再哈希</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 列表数据结构些配置</span><br><span class="line">list-max-ziplist-entries 512</span><br><span class="line">list-max-ziplist-value 64</span><br><span class="line"></span><br><span class="line">set-max-intset-entries 512  # 集合数据结构配置</span><br><span class="line"></span><br><span class="line"># 有序集合数据结构配置</span><br><span class="line">zset-max-ziplist-entries 128</span><br><span class="line">zset-max-ziplist-value 64</span><br><span class="line"></span><br><span class="line"># 客户端输出缓冲</span><br><span class="line">client-output-buffer-limit normal 0 0 0</span><br><span class="line">client-output-buffer-limit slave 256mb 64mb 60</span><br><span class="line">client-output-buffer-limit pubsub 32mb 8mb 60</span><br><span class="line"></span><br><span class="line"># 频率</span><br><span class="line">hz 10</span><br><span class="line"></span><br><span class="line"># 重写aof</span><br><span class="line">aof-rewrite-incremental-fsync yes</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"># redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/02/28/Redis-2/" rel="prev" title="Redis(2)：数据结构">
+      <i class="fa fa-chevron-left"></i> Redis(2)：数据结构
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/28/Redis-4/" rel="next" title="Redis(4)：数据持久化">
+      Redis(4)：数据持久化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8"><span class="nav-text">通用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7"><span class="nav-text">快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6"><span class="nav-text">复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-text">安全</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%90%E5%88%B6"><span class="nav-text">限制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%BD%E5%8A%A0%E6%A8%A1%E5%BC%8F-AOF"><span class="nav-text">追加模式(AOF)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LUA%E8%84%9A%E6%9C%AC"><span class="nav-text">LUA脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%85%A2%E6%97%A5%E5%BF%97"><span class="nav-text">慢日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E9%80%9A%E7%9F%A5"><span class="nav-text">事件通知</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE"><span class="nav-text">高级配置</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

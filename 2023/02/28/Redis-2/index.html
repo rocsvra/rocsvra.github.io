@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="redis是一种高级的 Key-Value 存储系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis(2)：数据结构">
+<meta property="og:url" content="http://example.com/2023/02/28/Redis-2/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="redis是一种高级的 Key-Value 存储系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-28T01:16:22.246Z">
+<meta property="article:modified_time" content="2023-02-28T02:02:59.128Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/02/28/Redis-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis(2)：数据结构 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/28/Redis-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis(2)：数据结构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-02-28 09:16:22 / 修改时间：10:02:59" itemprop="dateCreated datePublished" datetime="2023-02-28T09:16:22+08:00">2023-02-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" itemprop="url" rel="index"><span itemprop="name">分布式缓存</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>redis是一种高级的 Key-Value 存储系统。</p>
+<span id="more"></span>
+<h1 id="key"><a href="#key" class="headerlink" title="key"></a>key</h1><p>注意点：</p>
+<blockquote>
+<p>key不要太长，不要超过1024byte，不仅耗内存，还降低查找效率；<br>key不要太短，会降低可读性；<br>最好使用统一的命名模式；</p>
+</blockquote>
+<h1 id="value"><a href="#value" class="headerlink" title="value"></a>value</h1><p>支持五种数据类型：strings、lists、sets、sorted sets、hashes</p>
+<h2 id="字符串（strings）"><a href="#字符串（strings）" class="headerlink" title="字符串（strings）"></a>字符串（strings）</h2><p>如果只使用redis中的字符串类型，不使用redis的持久化功能，那么redis和memcache非常像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//字符串类型用法</span><br><span class="line">set mystr &quot;hello world!&quot; //设置字符串类型</span><br><span class="line">get mystr //读取字符串类型</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>字符串类型用法是二进制安全的，可以存储图片文件</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set mynum &quot;2&quot;</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get mynum</span><br><span class="line">&quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; incr mynum</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; get mynum</span><br><span class="line">&quot;3&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>遇到数值操作时，redis会将字符串类型转换成数值</p>
+</blockquote>
+<h2 id="字符串列表（lists）"><a href="#字符串列表（lists）" class="headerlink" title="字符串列表（lists）"></a>字符串列表（lists）</h2><p>redis中的lists在底层实现上并不是数组，而是链表。优势是，插入新元素的时间复杂度是常数级别的；弊端是元素定位慢</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpush mylist &quot;1&quot;  //新建一个list叫做mylist，并在列表头部插入元素&quot;1&quot;</span><br><span class="line">(integer) 1                       //返回当前mylist中的元素个数</span><br><span class="line">127.0.0.1:6379&gt; rpush mylist &quot;2&quot;  //在mylist右侧插入元素&quot;2&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; lpush mylist &quot;0&quot;  //在mylist左侧插入元素&quot;0&quot;</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; lrange mylist 0 1   //列出mylist中从编号0到编号1的元素</span><br><span class="line">1) &quot;0&quot;</span><br><span class="line">2) &quot;1&quot;</span><br><span class="line">127.0.0.1:6379&gt; lrange mylist 0 -1  //列出mylist中从编号0到倒数第一个元素</span><br><span class="line">1) &quot;0&quot;</span><br><span class="line">2) &quot;1&quot;</span><br><span class="line">3) &quot;2&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>利用lists可以实现消息队列，可以确保先后顺序，不必像mysql需要通过order by进行排序；<br>利用lrange可以实现分页；</p>
+</blockquote>
+<h2 id="字符串集合（sets）"><a href="#字符串集合（sets）" class="headerlink" title="字符串集合（sets）"></a>字符串集合（sets）</h2><p>redis的集合，是无序集合，集合中元素没有先后顺序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd myset &quot;one&quot;  //向集合myset中加入一个新元素&quot;one&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; sadd myset &quot;two&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; smembers myset    //列出集合myset中的所有元素</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) &quot;two&quot;</span><br><span class="line">127.0.0.1:6379&gt; sismember myset &quot;one&quot;   //判断元素1是否在集合myset中，返回1表示存在</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; sismember myset &quot;three&quot; //判断元素3是否在集合myset中，返回0表示不存在</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; sadd yourset &quot;1&quot;      //新建一个新的集合yourset</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; sadd yourset &quot;2&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; smembers yourset</span><br><span class="line">1) &quot;1&quot;</span><br><span class="line">2) &quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; sunion myset yourset  //对两个集合求并集</span><br><span class="line">1) &quot;1&quot;</span><br><span class="line">2) &quot;one&quot;</span><br><span class="line">3) &quot;2&quot;</span><br><span class="line">4) &quot;two&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>微信好友标签功能，很适合使用redis的集合来实现，把标签都存储在一个集合中</p>
+</blockquote>
+<h2 id="有序字符串集合（sorted-sets）"><a href="#有序字符串集合（sorted-sets）" class="headerlink" title="有序字符串集合（sorted sets）"></a>有序字符串集合（sorted sets）</h2><p>有序集合中每个元素都关联一个序号（score），这是排序的依据。我们将redis中的有序集合叫做zsets，因为有序集合的操作指令都是以z开头的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; zadd myzset 1 baidu.com </span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd myzset 3 360.com     //向myzset中新增一个元素360.com，赋予它的序号是3</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd myzset 2 google.com  //向myzset中新增一个元素google.com，赋予它的序号是2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zrange myzset 0 -1 with scores  //列出myzset的所有元素，同时列出其序号，可以看出myzset已经是有序的了</span><br><span class="line">1) &quot;baidu.com&quot;</span><br><span class="line">2) &quot;1&quot;</span><br><span class="line">3) &quot;google.com&quot;</span><br><span class="line">4) &quot;2&quot;</span><br><span class="line">5) &quot;360.com&quot;</span><br><span class="line">6) &quot;3&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrange myzset 0 -1              //只列出myzset的元素</span><br><span class="line">1) &quot;baidu.com&quot;</span><br><span class="line">2) &quot;google.com&quot;</span><br><span class="line">3) &quot;360.com&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="哈希（hashes）"><a href="#哈希（hashes）" class="headerlink" title="哈希（hashes）"></a>哈希（hashes）</h2><p>hashes存的是字符串和字符串值之间的映射，比如一个用户要存储其全名、姓氏、年龄等等，就很适合使用哈希</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; HMSET user:001 username antirez password P1pp0 age 34   //建立哈希，并赋值</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; HGETALL user:001    //列出哈希的内容</span><br><span class="line">1) &quot;username&quot;</span><br><span class="line">2) &quot;antirez&quot;</span><br><span class="line">3) &quot;password&quot;</span><br><span class="line">4) &quot;P1pp0&quot;</span><br><span class="line">5) &quot;age&quot;</span><br><span class="line">6) &quot;34&quot;</span><br><span class="line">127.0.0.1:6379&gt; HSET user:001 password 12345  //更改哈希中的某一个值</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; HGETALL user:001        //再次列出哈希的内容</span><br><span class="line">1) &quot;username&quot;</span><br><span class="line">2) &quot;antirez&quot;</span><br><span class="line">3) &quot;password&quot;</span><br><span class="line">4) &quot;12345&quot;</span><br><span class="line">5) &quot;age&quot;</span><br><span class="line">6) &quot;34&quot;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"># redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/02/27/Redis-1/" rel="prev" title="Redis(1)：简介和安装">
+      <i class="fa fa-chevron-left"></i> Redis(1)：简介和安装
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/28/Redis-3/" rel="next" title="Redis(3)：配置">
+      Redis(3)：配置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#key"><span class="nav-text">key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#value"><span class="nav-text">value</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%88strings%EF%BC%89"><span class="nav-text">字符串（strings）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%97%E8%A1%A8%EF%BC%88lists%EF%BC%89"><span class="nav-text">字符串列表（lists）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%9B%86%E5%90%88%EF%BC%88sets%EF%BC%89"><span class="nav-text">字符串集合（sets）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%9B%86%E5%90%88%EF%BC%88sorted-sets%EF%BC%89"><span class="nav-text">有序字符串集合（sorted sets）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%EF%BC%88hashes%EF%BC%89"><span class="nav-text">哈希（hashes）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
