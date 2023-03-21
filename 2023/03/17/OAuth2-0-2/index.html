@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OAuth 2.0 是一种授权机制，核心就是向第三方应用颁发令牌。OAuth 2.0 规定了四种获得令牌的流程， 可以选择最适合自己的那一种，向第三方应用颁发令牌。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OAuth2.0（2）：四种授权方式">
+<meta property="og:url" content="http://example.com/2023/03/17/OAuth2-0-2/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="OAuth 2.0 是一种授权机制，核心就是向第三方应用颁发令牌。OAuth 2.0 规定了四种获得令牌的流程， 可以选择最适合自己的那一种，向第三方应用颁发令牌。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/17/OAuth2-0-2/1.jpg">
+<meta property="og:image" content="http://example.com/2023/03/17/OAuth2-0-2/2.jpg">
+<meta property="article:published_time" content="2023-03-17T08:57:21.689Z">
+<meta property="article:modified_time" content="2023-03-20T23:54:23.861Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="OAuth2.0">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/17/OAuth2-0-2/1.jpg">
+
+<link rel="canonical" href="http://example.com/2023/03/17/OAuth2-0-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OAuth2.0（2）：四种授权方式 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/17/OAuth2-0-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OAuth2.0（2）：四种授权方式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-17 16:57:21" itemprop="dateCreated datePublished" datetime="2023-03-17T16:57:21+08:00">2023-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-21 07:54:23" itemprop="dateModified" datetime="2023-03-21T07:54:23+08:00">2023-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E8%80%85%E6%89%8B%E5%86%8C/" itemprop="url" rel="index"><span itemprop="name">开发者手册</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>OAuth 2.0 是一种授权机制，核心就是向第三方应用颁发令牌。<br>OAuth 2.0 规定了四种获得令牌的流程， 可以选择最适合自己的那一种，向第三方应用颁发令牌。</p>
+<span id="more"></span>
+<h1 id="RFC-6749"><a href="#RFC-6749" class="headerlink" title="RFC 6749"></a>RFC 6749</h1><p>OAuth 2.0 的标准是<a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc6749">RFC 6749</a> 文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">OAuth 引入了一个授权层，用来分离两种不同的角色：客户端和资源所有者。</span><br><span class="line">资源所有者同意以后，资源服务器可以向客户端颁发令牌。客户端通过令牌，去请求数据。</span><br><span class="line">本标准定义了获得令牌的四种授权方式(authorization grant):</span><br><span class="line">1.授权码（authorization-code）</span><br><span class="line">2.隐藏式（implicit）</span><br><span class="line">3.密码式（password）</span><br><span class="line">4.客户端凭证（client credentials）</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不管哪种授权方式，第三方应用申请令牌前，都必须先到系统备案，说明身份，然后才能拿到身份识别码（client ID + client secret）;<br>为了防止令牌滥用，没有备案过的第三方应用，是拿不到令牌的；</p>
+</blockquote>
+<h1 id="授权码（authorization-code）"><a href="#授权码（authorization-code）" class="headerlink" title="授权码（authorization code）"></a>授权码（authorization code）</h1><blockquote>
+<p>第三方应用先申请一个授权码，然后用该码获取令牌;<br>这是最常用的流程，安全性也最高，适用于有后端的Web应用;<br>授权码通过前端传送，令牌存储在后端，所有与资源服务器的通信都在后端完成;<br>这样前后端分离，可以避免令牌泄露。</p>
+</blockquote>
+<p><img src="/2023/03/17/OAuth2-0-2/1.jpg" alt="1"><br>1.A网站提供链接，用户点击会跳转到B网站，授权用户数据给A网站使用；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://b.com/oauth/authorize?</span><br><span class="line">  response_type=code&amp;</span><br><span class="line">  client_id=CLIENT_ID&amp;</span><br><span class="line">  redirect_uri=CALLBACK_URL&amp;</span><br><span class="line">  scope=read</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>response_type 参数表示要求返回授权码（code）<br>client_id 参数表明身份；<br>redirect_uri 参数是B接受或拒绝请求后的跳转网址；<br>scope 参数表示要求的授权范围；</p>
+</blockquote>
+<p>2.用户跳转后，B网站会要求用户登录，询问是否同意给予A网站授权。用户同意就会跳回redirect_uri参数指定的网址。跳转时，会传回授权码；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://a.com/callback?code=&#123;AUTHORIZATION_CODE&#125;</span><br></pre></td></tr></table></figure>
+<p>3.A网站拿到授权码后，在后端向B网站请求令牌；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">https://b.com/oauth/token?</span><br><span class="line"> client_id=CLIENT_ID&amp;</span><br><span class="line"> client_secret=CLIENT_SECRET&amp;</span><br><span class="line"> grant_type=authorization_code&amp;</span><br><span class="line"> code=AUTHORIZATION_CODE&amp;</span><br><span class="line"> redirect_uri=CALLBACK_URL</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>client_id：客户端ID；<br>client_secret：客户端密钥，存储在后端，只能后端发起请求；<br>grant_type：授权方式，AUTHORIZATION_CODE；<br>code：上一步拿到的授权码；<br>redirect_uri：令牌颁发后的回调网址；</p>
+</blockquote>
+<p>4.B网站收到请求以后，就会颁发令牌。具体做法是向redirect_uri指定的网址，发送一段 JSON 数据；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;    </span><br><span class="line">  &quot;access_token&quot;:&quot;ACCESS_TOKEN&quot;,</span><br><span class="line">  &quot;token_type&quot;:&quot;bearer&quot;,</span><br><span class="line">  &quot;expires_in&quot;:2592000,</span><br><span class="line">  &quot;refresh_token&quot;:&quot;REFRESH_TOKEN&quot;,</span><br><span class="line">  &quot;scope&quot;:&quot;read&quot;,</span><br><span class="line">  &quot;uid&quot;:100101,</span><br><span class="line">  &quot;info&quot;:&#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="隐藏式（implicit）"><a href="#隐藏式（implicit）" class="headerlink" title="隐藏式（implicit）"></a>隐藏式（implicit）</h1><blockquote>
+<p>有些Web应用是纯前端应用，必须将令牌存储在前端；<br>RFC 6749规定，允许直接向前端颁发令牌，没有授权码这个中间步骤，称为（授权码）“隐藏式”；<br>适用于安全要求不高的场合，令牌一般有效期非常短，通常是会话期间有效，浏览器关闭失效；</p>
+</blockquote>
+<p><img src="/2023/03/17/OAuth2-0-2/2.jpg" alt="2"><br>1.A网站提供链接，要求用户跳转B网站，授权用户数据给A网站使用；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://b.com/oauth/authorize?</span><br><span class="line">  response_type=token&amp;</span><br><span class="line">  client_id=CLIENT_ID&amp;</span><br><span class="line">  redirect_uri=CALLBACK_URL&amp;</span><br><span class="line">  scope=read</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>response_type 参数表示直接返回令牌；</p>
+</blockquote>
+<p>2.用户跳转到B网站，登录后同意给A网站授权，B网站跳回redirect_uri指定网址；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://a.com/callback#token=ACCESS_TOKEN</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>token 参数，能让A网站直接在前端拿到令牌；<br>令牌的位置是 URL 锚点（fragment），而不是查询字符串（querystring），原因是OAuth 2.0允许跳转网址是HTTP协议，因此存在“中间人攻击”的风险，而浏览器跳转时，锚点不会发到服务器，就减少了泄漏令牌的风险；</p>
+</blockquote>
+<h1 id="密码式（password）"><a href="#密码式（password）" class="headerlink" title="密码式（password）"></a>密码式（password）</h1><blockquote>
+<p>RFC 6749 允许用户把用户名和密码，直接告诉该应用，该应用使用你的密码，申请令牌；<br>适用于高度信任某个应用的场景；</p>
+</blockquote>
+<p>1.A网站要求用户提供B网站的用户名和密码，拿到以后，A就直接向B请求令牌；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://oauth.b.com/token?</span><br><span class="line">  grant_type=password&amp;</span><br><span class="line">  username=USERNAME&amp;</span><br><span class="line">  password=PASSWORD&amp;</span><br><span class="line">  client_id=CLIENT_ID</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>username 和 password 是B的用户名和密码；<br>2.B网站验证身份通过后，直接给出令牌，此时，不需要跳转，而是把令牌放在JSON数据里，作为HTTP回应，A因此拿到令牌；</p>
+</blockquote>
+<h1 id="凭证式（client-credentials）"><a href="#凭证式（client-credentials）" class="headerlink" title="凭证式（client credentials）"></a>凭证式（client credentials）</h1><blockquote>
+<p>适用于没有前端的命令行应用，在命令行下请求令牌；<br>这种方式给出的令牌，是针对第三方应用的，而不是针对用户的，即可能多个用户共享一个令牌；</p>
+</blockquote>
+<p>1.A 应用在命令行向 B 发出请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">https://oauth.b.com/token?</span><br><span class="line">  grant_type=client_credentials&amp;</span><br><span class="line">  client_id=CLIENT_ID&amp;</span><br><span class="line">  client_secret=CLIENT_SECRET</span><br></pre></td></tr></table></figure>
+<p>2.B 网站验证通过后，直接返回令牌;</p>
+<h1 id="令牌使用"><a href="#令牌使用" class="headerlink" title="令牌使用"></a>令牌使用</h1><blockquote>
+<p>每个发到 API 的请求，都必须带有令牌；<br>具体做法是在请求的头信息，加上一个Authorization字段，令牌就放在这个字段里面；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -H &quot;Authorization: Bearer &#123;ACCESS_TOKEN&#125;&quot; \</span><br><span class="line">&quot;https://api.b.com&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="更新令牌"><a href="#更新令牌" class="headerlink" title="更新令牌"></a>更新令牌</h1><blockquote>
+<p>令牌到期，如果让用户重走流程申请新令牌，很可能体验不好，而且也没有必要；<br>OAuth 2.0 允许用户自动更新令牌，B网站颁发令牌时，一次性颁发两个，一个用于获取数据，一个用于刷新令牌；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://b.com/oauth/token?</span><br><span class="line">  grant_type=refresh_token&amp;</span><br><span class="line">  client_id=CLIENT_ID&amp;</span><br><span class="line">  client_secret=CLIENT_SECRET&amp;</span><br><span class="line">  refresh_token=REFRESH_TOKEN</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>grant_type 参数为 refresh_token 表示要求更新令牌；<br>client_id 参数和 client_secret 参数用于确认身份；<br>refresh_token 参数就是用于更新令牌的令牌；<br>令牌到期前，用户使用 refresh token 发一个请求，B网站验证通过后，就颁发新令牌；</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/OAuth2-0/" rel="tag"># OAuth2.0</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/17/OAuth2-0-1/" rel="prev" title="OAuth2.0（1）：简介">
+      <i class="fa fa-chevron-left"></i> OAuth2.0（1）：简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/21/OAuth2-0-3/" rel="next" title="OAuth2.0（3）：网站应用微信扫码授权登录">
+      OAuth2.0（3）：网站应用微信扫码授权登录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RFC-6749"><span class="nav-text">RFC 6749</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%88%E6%9D%83%E7%A0%81%EF%BC%88authorization-code%EF%BC%89"><span class="nav-text">授权码（authorization code）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%90%E8%97%8F%E5%BC%8F%EF%BC%88implicit%EF%BC%89"><span class="nav-text">隐藏式（implicit）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%BC%8F%EF%BC%88password%EF%BC%89"><span class="nav-text">密码式（password）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%AD%E8%AF%81%E5%BC%8F%EF%BC%88client-credentials%EF%BC%89"><span class="nav-text">凭证式（client credentials）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A4%E7%89%8C%E4%BD%BF%E7%94%A8"><span class="nav-text">令牌使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E4%BB%A4%E7%89%8C"><span class="nav-text">更新令牌</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
