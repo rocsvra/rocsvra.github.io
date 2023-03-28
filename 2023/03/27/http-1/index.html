@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="概述 Web 是建立在何种技术之上，以及 HTTP 协议是如何诞生并发展的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http（1）：了解Web及网络基础">
+<meta property="og:url" content="http://example.com/2023/03/27/http-1/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="概述 Web 是建立在何种技术之上，以及 HTTP 协议是如何诞生并发展的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/1.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/2.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/3.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/4.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/5.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/6.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/7.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/8.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/9.png">
+<meta property="og:image" content="http://example.com/2023/03/27/http-1/10.png">
+<meta property="article:published_time" content="2023-03-27T07:54:24.000Z">
+<meta property="article:modified_time" content="2023-03-28T00:37:16.843Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/27/http-1/1.png">
+
+<link rel="canonical" href="http://example.com/2023/03/27/http-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>http（1）：了解Web及网络基础 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/27/http-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          http（1）：了解Web及网络基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-27 15:54:24" itemprop="dateCreated datePublished" datetime="2023-03-27T15:54:24+08:00">2023-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-28 08:37:16" itemprop="dateModified" datetime="2023-03-28T08:37:16+08:00">2023-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>概述 Web 是建立在何种技术之上，以及 HTTP 协议是如何诞生并发展的。</p>
+<span id="more"></span>
+<p><img src="/2023/03/27/http-1/1.png" alt="1"></p>
+<blockquote>
+<p>根据地址栏中指定的URL，Web浏览器从Web服务器端获取文件资源（resource）等信息，从而显示出Web页面；<br>这种通过发送请求获取服务器资源的Web浏览器等，称为客户端（client）；</p>
+</blockquote>
+<p><img src="/2023/03/27/http-1/2.png" alt="2"></p>
+<blockquote>
+<p>Web使用HTTP协议（HyperText Transfer Protocol，超文本传输协议）作为规范，完成从客户端到服务器端等一系列运作流程，Web是建立在HTTP协议上通信的;</p>
+</blockquote>
+<h1 id="网络基础TCP-IP"><a href="#网络基础TCP-IP" class="headerlink" title="网络基础TCP/IP"></a>网络基础TCP/IP</h1><p>通常使用的网络（包括互联网）是在TCP/IP协议族的基础上运作的，HTTP属于它内部的一个子集。</p>
+<h2 id="TCP-IP协议族"><a href="#TCP-IP协议族" class="headerlink" title="TCP/IP协议族"></a>TCP/IP协议族</h2><p><img src="/2023/03/27/http-1/3.png" alt="3"></p>
+<blockquote>
+<p>计算机与网络设备要相互通信，双方就必须基于相同的方法。比如，如何探测到通信目标、由哪一边先发起通信、使用哪种语言进行通信、怎样结束通信等规则都需要事先确定。不同的硬件、操作系统之间的通信，所有的这一切都需要一种规则。我们就把这种规则称为协议（protocol）;<br>协议中存在各种内容。从电缆的规格到IP地址的选定方法、寻找异地用户的方法、双方建立通信的顺序，以及Web页面显示需要处理的步骤，等等；<br>TCP/IP 是互联网相关的各类协议族的总称（也有说法认为，TCP/IP 是指TCP和IP这两种协议）；</p>
+</blockquote>
+<h2 id="TCP-IP的分层管理"><a href="#TCP-IP的分层管理" class="headerlink" title="TCP/IP的分层管理"></a>TCP/IP的分层管理</h2><p>TCP/IP协议族按层次分为以下4层：</p>
+<blockquote>
+<p>应用层<br>传输层<br>网络层<br>数据链路层</p>
+</blockquote>
+<p>层次化优点：</p>
+<blockquote>
+<p>如果互联网只由一个协议统筹，某个地方需要改变设计时，就必须把所有部分整体替换掉。分层之后只需替换变动的层。把各层之间的接口部分规划好后，每个层次内部的设计就能够自由改动了；<br>层次化后，设计也变得相对简单，处于应用层上的应用可以只考虑分派给自己的任务，而不需要弄清对方在地球上哪个地方、对方的传输路线是怎样的、是否能确保传输送达等问题;</p>
+</blockquote>
+<h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><blockquote>
+<p>应用层决定了向用户提供应用服务时通信的活动，HTTP 协议也处于该层；<br>TCP/IP协议族内预存了各类通用的应用服务，比如，FTP（File Transfer Protocol，文件传输协议）和 DNS（Domain Name System，域名系统）服务就是其中两类；</p>
+</blockquote>
+<h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><blockquote>
+<p>传输层对上层应用层，提供处于网络连接中的两台计算机之间的数据传输；<br>传输层有两个协议：TCP（Transmission Control Protocol，传输控制协议）和UDP（User Data Protocol，用户数据报协议）</p>
+</blockquote>
+<h3 id="网络层（网络互连层）"><a href="#网络层（网络互连层）" class="headerlink" title="网络层（网络互连层）"></a>网络层（网络互连层）</h3><blockquote>
+<p>网络层用来处理在网络上流动的数据包，数据包是网络传输的最小数据单位；<br>规定了通过怎样的路径（传输路线）到达对方计算机，并把数据包传送给对方；<br>与对方计算机之间通过多台计算机或网络设备进行传输时，网络层所起的作用就是在众多的选项内选择一条传输路线。</p>
+</blockquote>
+<h3 id="链路层（数据链路层、网络接口层）"><a href="#链路层（数据链路层、网络接口层）" class="headerlink" title="链路层（数据链路层、网络接口层）"></a>链路层（数据链路层、网络接口层）</h3><blockquote>
+<p>处理连接网络的硬件部分，硬件上的范畴均在链路层的作用范围之内；<br>包括控制操作系统、硬件的设备驱动、NIC（Network Interface Card，网络适配器，即网卡），及光纤等物理可见部分（还包括连接器等一切传输媒介）;</p>
+</blockquote>
+<h2 id="TCP-IP通信传输流"><a href="#TCP-IP通信传输流" class="headerlink" title="TCP/IP通信传输流"></a>TCP/IP通信传输流</h2><p>以http为例：<br><img src="/2023/03/27/http-1/4.png" alt="4"></p>
+<blockquote>
+<p>客户端在应用层（http协议）发出一个Web页面的HTTP请求；<br>传输层（TCP 协议）把收到的数据（HTTP 请求报文）进行分割，并在各报文上打上标记序号及端口号后转发给网络层；<br>网络层（IP 协议），增加作为通信目的地的 MAC 地址后转发给链路层；<br>服务器在链路层接收到数据，按序往上层发送，一直到应用层；</p>
+</blockquote>
+<p><img src="/2023/03/27/http-1/5.png" alt="5"></p>
+<blockquote>
+<p>发送端传输数据，每经过一层时必定会被打上一个该层所属的首部信息；<br>接收端传输数据，每经过一层时会把对应的首部消去；<br>这种把数据信息包装起来的做法称为封装（encapsulate）;</p>
+</blockquote>
+<h2 id="负责传输的IP协议"><a href="#负责传输的IP协议" class="headerlink" title="负责传输的IP协议"></a>负责传输的IP协议</h2><p>IP（Internet Protocol）网际协议位于网络层，几乎所有使用网络的系统都用到IP协议，TCP/IP协议族中的IP指的就是网际协议；<br>IP协议的作用是把各种数据包传送给对方；<br>保证确实传送到对方那里，需要满足各类条件，其中两个重要条件是IP地址和MAC地址（Media Access Control Address）；</p>
+<blockquote>
+<p>IP地址指明了节点被分配到的地址；<br>MAC地址是指网卡所属的固定地址；<br>IP地址可以和MAC地址进行配对；<br>IP地址可变换，但MAC地址基本不会更改；<br>IP 间的通信依赖MAC地址，网络上，通信双方在同一局域网（LAN）内的情况很少，通常需要经过多台计算机和网络设备中转才能连接到对方，中转时，会利用下一站中转设备的MAC地址来搜索下一个中转目标；</p>
+</blockquote>
+<h3 id="ARP协议（Address-Resolution-Protocol）"><a href="#ARP协议（Address-Resolution-Protocol）" class="headerlink" title="ARP协议（Address Resolution Protocol）"></a>ARP协议（Address Resolution Protocol）</h3><p>ARP 是一种解析地址的协议，根据通信方的IP地址可以反查出对应的MAC地址；<br><img src="/2023/03/27/http-1/6.png" alt="6"></p>
+<blockquote>
+<p>没人能够全面掌握互联网中的传输状况；<br>到达通信目标前的中转过程中，那些计算机和路由器等网络设备只能获悉很粗略的传输路线，这种机制称为路由选择（routing）；</p>
+</blockquote>
+<h2 id="确保可靠性的-TCP-协议"><a href="#确保可靠性的-TCP-协议" class="headerlink" title="确保可靠性的 TCP 协议"></a>确保可靠性的 TCP 协议</h2><blockquote>
+<p>TCP 位于传输层，提供可靠的字节流服务（Byte Stream Service），能够把数据准确可靠地传给对方；<br>字节流服务是指为了方便传输，将大块数据分割成以报文段（segment）为单位的数据包进行管理；</p>
+</blockquote>
+<p><img src="/2023/03/27/http-1/7.png" alt="7"></p>
+<blockquote>
+<p>为了准确无误地将数据送达目标处，TCP 协议采用了三次握手（three-way handshaking）策略；<br>握手过程中使用了TCP的标志（flag）：SYN（synchronize）和ACK（acknowledgement）;<br>握手过程中某个阶段莫名中断，TCP 协议会再次以相同的顺序发送相同的数据包；<br>除了三次握手,TCP 协议还有其他各种手段来保证通信的可靠性;</p>
+</blockquote>
+<h2 id="负责域名解析的DNS服务"><a href="#负责域名解析的DNS服务" class="headerlink" title="负责域名解析的DNS服务"></a>负责域名解析的DNS服务</h2><p>DNS（Domain Name System）服务位于应用层，提供域名到IP地址之间的解析服务。<br><img src="/2023/03/27/http-1/8.png" alt="8"></p>
+<h2 id="各协议与HTTP协议的协作关系"><a href="#各协议与HTTP协议的协作关系" class="headerlink" title="各协议与HTTP协议的协作关系"></a>各协议与HTTP协议的协作关系</h2><p><img src="/2023/03/27/http-1/9.png" alt="9"></p>
+<h1 id="URI和URL"><a href="#URI和URL" class="headerlink" title="URI和URL"></a>URI和URL</h1><p>例举几种URI：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ftp://ftp.is.co.za/rfc/rfc1808.txt</span><br><span class="line">http://www.ietf.org/rfc/rfc2396.txt</span><br><span class="line">ldap://[2001:db8::7]/c=GB?objectClass?one</span><br><span class="line">mailto:John.Doe@example.com</span><br><span class="line">news:comp.infosystems.www.servers.unix</span><br><span class="line">tel:+1-816-555-1212</span><br><span class="line">telnet://192.0.2.16:80/</span><br><span class="line">urn:oasis:names:specification:docbook:dtd:xml:4.1.2</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>URI（Uniform Resource Identifier，统一资源标识符）；<br>URL（Uniform Resource Locator，统一资源定位符），即网址<br>URI用字符串标识某一互联网资源，而URL表示资源的地点；<br>URL 是URI的子集；</p>
+</blockquote>
+<h2 id="URI定义"><a href="#URI定义" class="headerlink" title="URI定义"></a>URI定义</h2><blockquote>
+<p>某个协议方案表示的资源的定位标识符；<br>协议方案是指访问资源所使用的协议类型名称（http、 ftp、mailto、telnet、file等）；</p>
+</blockquote>
+<p>Uniform：</p>
+<blockquote>
+<p>规定统一的格式；<br>可方便处理多种不同类型的资源，而不用根据上下文环境来识别资源指定的访问方式；<br>另外，加入新增的协议方案（如http: 或 ftp:）也更容易；</p>
+</blockquote>
+<p>Resource：</p>
+<blockquote>
+<p>资源，可标识的任何东西；<br>除文档、图像或服务（例如天气预报）等能够区别于其他类型的，都可作为资源；<br>资源不仅可以是单一的，也可以是集合体；</p>
+</blockquote>
+<p>Identifier：</p>
+<blockquote>
+<p>标识符，表示可标识的对象；</p>
+</blockquote>
+<h2 id="URI格式"><a href="#URI格式" class="headerlink" title="URI格式"></a>URI格式</h2><p><img src="/2023/03/27/http-1/10.png" alt="10"></p>
+<blockquote>
+<p>绝对 URI 的格式，涵盖全部必要信息</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/image/logo.gif</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>相对URL</p>
+</blockquote>
+<p>协议方案：</p>
+<blockquote>
+<p>http: 或 https: 等协议方案名获取访问资源时要指定协议类型；<br>data: 或 javascript: 这类协议方案名指定数据或脚本程序；</p>
+</blockquote>
+<p>登录信息（认证）：</p>
+<blockquote>
+<p>可选项，指定用户名和密码；</p>
+</blockquote>
+<p>服务器地址：</p>
+<blockquote>
+<p>域名（hackr.jp）,DNS可解析；<br>IPv4 地址（192.168.1.1）；<br>IPv6 地址名（[0:0:0:0:0:0:0:1]）；</p>
+</blockquote>
+<p>服务器端口号：</p>
+<blockquote>
+<p>可选项，用户省略则自动使用默认端口号；</p>
+</blockquote>
+<p>带层次的文件路径：</p>
+<blockquote>
+<p>服务器上的文件路径来定位特指的资源；</p>
+</blockquote>
+<p>查询字符串：</p>
+<blockquote>
+<p>可选项，针对指定文件路径内的资源，可以使用查询字符串传入任意参数；</p>
+</blockquote>
+<p>片段标识符：</p>
+<blockquote>
+<p>可选项，标记出已获取资源中的子资源（文档内的某个位置）</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/27/rabbit-1-kafuka/" rel="prev" title="RabbitMQ和Kafka的差异">
+      <i class="fa fa-chevron-left"></i> RabbitMQ和Kafka的差异
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/28/http-2/" rel="next" title="http（2）：简单的 HTTP 协议">
+      http（2）：简单的 HTTP 协议 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80TCP-IP"><span class="nav-text">网络基础TCP&#x2F;IP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP%E5%8D%8F%E8%AE%AE%E6%97%8F"><span class="nav-text">TCP&#x2F;IP协议族</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP%E7%9A%84%E5%88%86%E5%B1%82%E7%AE%A1%E7%90%86"><span class="nav-text">TCP&#x2F;IP的分层管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82"><span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="nav-text">传输层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82%EF%BC%88%E7%BD%91%E7%BB%9C%E4%BA%92%E8%BF%9E%E5%B1%82%EF%BC%89"><span class="nav-text">网络层（网络互连层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E5%B1%82%EF%BC%88%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E3%80%81%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3%E5%B1%82%EF%BC%89"><span class="nav-text">链路层（数据链路层、网络接口层）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP%E9%80%9A%E4%BF%A1%E4%BC%A0%E8%BE%93%E6%B5%81"><span class="nav-text">TCP&#x2F;IP通信传输流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%B4%A3%E4%BC%A0%E8%BE%93%E7%9A%84IP%E5%8D%8F%E8%AE%AE"><span class="nav-text">负责传输的IP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARP%E5%8D%8F%E8%AE%AE%EF%BC%88Address-Resolution-Protocol%EF%BC%89"><span class="nav-text">ARP协议（Address Resolution Protocol）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E4%BF%9D%E5%8F%AF%E9%9D%A0%E6%80%A7%E7%9A%84-TCP-%E5%8D%8F%E8%AE%AE"><span class="nav-text">确保可靠性的 TCP 协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%B4%A3%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E7%9A%84DNS%E6%9C%8D%E5%8A%A1"><span class="nav-text">负责域名解析的DNS服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E5%8D%8F%E8%AE%AE%E4%B8%8EHTTP%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8D%8F%E4%BD%9C%E5%85%B3%E7%B3%BB"><span class="nav-text">各协议与HTTP协议的协作关系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URI%E5%92%8CURL"><span class="nav-text">URI和URL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#URI%E5%AE%9A%E4%B9%89"><span class="nav-text">URI定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#URI%E6%A0%BC%E5%BC%8F"><span class="nav-text">URI格式</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
