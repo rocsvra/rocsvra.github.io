@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一台Web服务器可搭建多个独立域名的Web网站，也可作为通信路径上的中转服务器提升传输效率。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http（5）：Web 服务器">
+<meta property="og:url" content="http://example.com/2023/03/29/http-5/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="一台Web服务器可搭建多个独立域名的Web网站，也可作为通信路径上的中转服务器提升传输效率。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/1.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/2.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/3.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/4.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/5.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/6.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/7.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/8.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/9.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/10.png">
+<meta property="og:image" content="http://example.com/2023/03/29/http-5/11.png">
+<meta property="article:published_time" content="2023-03-29T06:20:47.000Z">
+<meta property="article:modified_time" content="2023-03-30T00:20:02.553Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/29/http-5/1.png">
+
+<link rel="canonical" href="http://example.com/2023/03/29/http-5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>http（5）：Web 服务器 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/29/http-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          http（5）：Web 服务器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-29 14:20:47" itemprop="dateCreated datePublished" datetime="2023-03-29T14:20:47+08:00">2023-03-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-30 08:20:02" itemprop="dateModified" datetime="2023-03-30T08:20:02+08:00">2023-03-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一台Web服务器可搭建多个独立域名的Web网站，也可作为通信路径上的中转服务器提升传输效率。</p>
+<span id="more"></span>
+<p><img src="/2023/03/29/http-5/1.png" alt="1"></p>
+<blockquote>
+<p>HTTP/1.1 规范允许一台HTTP服务器搭建多个Web站点，利用虚拟主机（Virtual Host）功能就可以实现；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/2.png" alt="2"></p>
+<blockquote>
+<p>域名通过DNS服务域名解析后访问目标网站，当请求发送到服务器时，已经是以IP地址形式访问了；<br>由于虚拟主机可以寄存多个不同主机名和域名的Web网站，发送HTTP请求时，必须在Host首部内完整指定主机名或域名的URI；</p>
+</blockquote>
+<h1 id="通信数据转发程序"><a href="#通信数据转发程序" class="headerlink" title="通信数据转发程序"></a>通信数据转发程序</h1><blockquote>
+<p>HTTP通信时，除了客户端和服务器，还有用于通信数据转发的应用程序（例如：代理、网关、隧道），可以配合服务器工作；<br>可以将请求转发给通信线路上的下一站服务器，并且能接收那台服务器的响应再转发给客户端；</p>
+</blockquote>
+<h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><p><img src="/2023/03/29/http-5/3.png" alt="3"></p>
+<blockquote>
+<p>代理服务器的基本行为就是接收客户端发送的请求后转发给其他服务器；<br>代理不改变请求URI，会直接发送给前方持有资源的目标服务器；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/4.png" alt="4"></p>
+<blockquote>
+<p>每次通过代理服务器转发请求或响应时，会追加写入Via首部信息；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/5.png" alt="5"></p>
+<blockquote>
+<p>代理有多种使用方法：<br>1.利用缓存技术减少网络带宽的流量；<br>2.组织内部针对特定网站的访问控制；<br>3.获取访问日志；</p>
+</blockquote>
+<h2 id="网关"><a href="#网关" class="headerlink" title="网关"></a>网关</h2><p><img src="/2023/03/29/http-5/6.png" alt="6"></p>
+<blockquote>
+<p>利用网关可以由 HTTP 请求转化为其他协议通信；<br>可以在客户端与网关之间的通信线路上加密以确保连接的安全，从而提高通信的安全性；</p>
+</blockquote>
+<h2 id="隧道"><a href="#隧道" class="headerlink" title="隧道"></a>隧道</h2><p><img src="/2023/03/29/http-5/7.png" alt="7"></p>
+<blockquote>
+<p>通过隧道的传输，可以和远距离的服务器安全通信；<br>隧道本身是透明的，客户端不用在意隧道的存在；<br>隧道可按要求建立起一条与其他服务器的通信线路，届时使用 SSL 等加密手段进行通信；<br>隧道的目的是确保客户端能与服务器进行安全的通信;</p>
+</blockquote>
+<h1 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h1><blockquote>
+<p>缓存是指代理服务器或客户端本地磁盘内保存的资源副本；<br>缓存可减少对源服务器的访问，也就节省了通信流量和通信时间；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/8.png" alt="8"></p>
+<blockquote>
+<p>缓存服务器是代理服务器的一种，当代理转发从服务器返回的响应时，会保存一份资源的副本；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/9.png" alt="9"></p>
+<blockquote>
+<p>利用缓存可避免多次从源服务器转发资源，客户端可就近从缓存服务器上获取资源；<br>源服务器也不必多次处理相同的请求；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/10.png" alt="10"></p>
+<blockquote>
+<p>因为客户端的要求、缓存的有效期等因素，缓存服务器会向源服务器确认资源的有效性；<br>缓存失效，缓存服务器会再次从源服务器上获取“新”资源；</p>
+</blockquote>
+<p><img src="/2023/03/29/http-5/11.png" alt="11"></p>
+<blockquote>
+<p>缓存不仅可以存在于缓存服务器内，还可以存在客户端浏览器中；<br>以IE为例，如果客户端缓存（Temporary Internet File，临时网络文件）有效，就不必向服务器请求资源，直接从本地磁盘读取；<br>缓存过期后，会向源服务器确认资源的有效性，若失效，则请求新资源；</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/29/http-4/" rel="prev" title="http（4）：HTTP状态码">
+      <i class="fa fa-chevron-left"></i> http（4）：HTTP状态码
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/30/http-6/" rel="next" title="http（6）：HTTP 首部">
+      http（6）：HTTP 首部 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E6%95%B0%E6%8D%AE%E8%BD%AC%E5%8F%91%E7%A8%8B%E5%BA%8F"><span class="nav-text">通信数据转发程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86"><span class="nav-text">代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%85%B3"><span class="nav-text">网关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%A7%E9%81%93"><span class="nav-text">隧道</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-text">缓存</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

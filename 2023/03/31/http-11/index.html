@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Cookie 的工作机制是用户识别及状态管理；Web 网站为了管理用户的状态会通过 Web 浏览器，把一些数据临时写入用户的计算机内；当用户访问该Web网站时，可通过通信方式取回之前发放的Cookie；由于可校验Cookie的有效期，以及发送方的域、路径、协议等信息，正规发布的Cookie内的数据不会因来自其他Web 点和攻击者的攻击而泄露；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http（11）：为Cookie服务的首部字段及其他首部字段">
+<meta property="og:url" content="http://example.com/2023/03/31/http-11/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="Cookie 的工作机制是用户识别及状态管理；Web 网站为了管理用户的状态会通过 Web 浏览器，把一些数据临时写入用户的计算机内；当用户访问该Web网站时，可通过通信方式取回之前发放的Cookie；由于可校验Cookie的有效期，以及发送方的域、路径、协议等信息，正规发布的Cookie内的数据不会因来自其他Web 点和攻击者的攻击而泄露；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/31/http-11/1.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-11/2.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-11/3.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-11/4.png">
+<meta property="article:published_time" content="2023-03-31T03:02:09.000Z">
+<meta property="article:modified_time" content="2023-03-31T06:18:48.228Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/31/http-11/1.png">
+
+<link rel="canonical" href="http://example.com/2023/03/31/http-11/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>http（11）：为Cookie服务的首部字段及其他首部字段 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/31/http-11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          http（11）：为Cookie服务的首部字段及其他首部字段
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-31 11:02:09 / 修改时间：14:18:48" itemprop="dateCreated datePublished" datetime="2023-03-31T11:02:09+08:00">2023-03-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>Cookie 的工作机制是用户识别及状态管理；<br>Web 网站为了管理用户的状态会通过 Web 浏览器，把一些数据临时写入用户的计算机内；<br>当用户访问该Web网站时，可通过通信方式取回之前发放的Cookie；<br>由于可校验Cookie的有效期，以及发送方的域、路径、协议等信息，正规发布的Cookie内的数据不会因来自其他Web 点和攻击者的攻击而泄露；</p>
+</blockquote>
+<span id="more"></span>
+<p><img src="/2023/03/31/http-11/1.png" alt="1"><br><img src="/2023/03/31/http-11/2.png" alt="2"></p>
+<h1 id="Set-Cookie"><a href="#Set-Cookie" class="headerlink" title="Set-Cookie"></a>Set-Cookie</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: status=enable; expires=Tue, 05 Jul 2011 07:26:31 GMT; path=/; domain=.hackr.jp;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/03/31/http-11/3.png" alt="3"></p>
+<h2 id="expires"><a href="#expires" class="headerlink" title="expires"></a>expires</h2><blockquote>
+<p>指定浏览器可发送Cookie的有效期；<br>省略expires属性时，其有效期仅限于维持浏览器会话（Session）时间段内；<br>Cookie 从服务器端发送至客户端，服务器端无法显式删除 Cookie；<br>但可通过覆盖已过期的 Cookie，实现对客户端 Cookie 的实质性删除操作；</p>
+</blockquote>
+<h2 id="path"><a href="#path" class="headerlink" title="path"></a>path</h2><blockquote>
+<p>用于限制指定 Cookie 的发送范围的文件目录；</p>
+</blockquote>
+<h2 id="domain"><a href="#domain" class="headerlink" title="domain"></a>domain</h2><blockquote>
+<p>Cookie 适用对象的域名；<br>除了针对具体指定的多个域名发送 Cookie 之外，不指定domain属性显得更安全；</p>
+</blockquote>
+<h2 id="secure"><a href="#secure" class="headerlink" title="secure"></a>secure</h2><blockquote>
+<p>限制Web页面仅在HTTPS安全连接时，才可以发送Cookie；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: name=value; secure</span><br></pre></td></tr></table></figure>
+<h2 id="HttpOnly"><a href="#HttpOnly" class="headerlink" title="HttpOnly"></a>HttpOnly</h2><blockquote>
+<p>使 JavaScript 脚本无法获得 Cookie；<br>主要目的为防止跨站脚本攻击（Cross-sitescripting，XSS）对 Cookie 的信息窃取；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: name=value; HttpOnly</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>JavaScript的document.cookie就无法读取附加HttpOnly属性后的Cookie的内容；<br>无法在XSS中利用JavaScript劫持Cookie；</p>
+</blockquote>
+<h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: status=enable</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>告知服务器Cookie值；</p>
+</blockquote>
+<h1 id="其他首部字段"><a href="#其他首部字段" class="headerlink" title="其他首部字段"></a>其他首部字段</h1><p>HTTP首部字段是可以自行扩展的，Web服务器和浏览器的应用上，会出现各种非标准的首部字段。</p>
+<h2 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X-Frame-Options: DENY   # 1.DENY 拒绝；2.SAMEORIGIN 仅同源域名下的页面匹配时许可；</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>属于HTTP响应首部，用于控制网站内容在其他Web网站的Frame标签内的显示问题；<br>主要目的是为了防止点击劫持（clickjacking）攻击；<br>Web 服务器端预先设定好 X-Frame-Options 字段值是最理想的状态；</p>
+</blockquote>
+<h2 id="X-XSS-Protection"><a href="#X-XSS-Protection" class="headerlink" title="X-XSS-Protection"></a>X-XSS-Protection</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X-XSS-Protection: 1   # 0 将 XSS 过滤设置成无效状态；1 将 XSS 过滤设置成有效状态</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> HTTP 响应首部，针对跨站脚本攻击（XSS）的一种对策，用于控制浏览器XSS防护机制的开关；</p>
+</blockquote>
+<h2 id="DNT（Do-Not-Track）"><a href="#DNT（Do-Not-Track）" class="headerlink" title="DNT（Do Not Track）"></a>DNT（Do Not Track）</h2><p><img src="/2023/03/31/http-11/4.png" alt="4"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DNT: 1    # 0 同意被追踪；1 拒绝被追踪；</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>属于HTTP请求首部，拒绝个人信息被收集，表示拒绝被精准广告追踪的一种方法；<br>Web 服务器需要对 DNT 做对应的支持；</p>
+</blockquote>
+<h1 id="P3P"><a href="#P3P" class="headerlink" title="P3P"></a>P3P</h1><p>The Platform for Privacy Preferences，在线隐私偏好平台</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">P3P: CP=&quot;CAO DSP LAW CURa ADMa DEVa TAIa PSAa PSDa IVAa IVDa OUR BUS IND UNI COM NAV INT&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>属于HTTP响应首部，通过P3P技术，让Web网站上的个人隐私变成一种仅供程序可理解的形式；<br>目的是保护用户隐私；</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/31/http-10/" rel="prev" title="http（10）：实体首部字段">
+      <i class="fa fa-chevron-left"></i> http（10）：实体首部字段
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/31/http-12/" rel="next" title="http（12）：HTTPS">
+      http（12）：HTTPS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Set-Cookie"><span class="nav-text">Set-Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#expires"><span class="nav-text">expires</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#path"><span class="nav-text">path</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#domain"><span class="nav-text">domain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#secure"><span class="nav-text">secure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HttpOnly"><span class="nav-text">HttpOnly</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cookie"><span class="nav-text">Cookie</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%A6%96%E9%83%A8%E5%AD%97%E6%AE%B5"><span class="nav-text">其他首部字段</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#X-Frame-Options"><span class="nav-text">X-Frame-Options</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-XSS-Protection"><span class="nav-text">X-XSS-Protection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNT%EF%BC%88Do-Not-Track%EF%BC%89"><span class="nav-text">DNT（Do Not Track）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#P3P"><span class="nav-text">P3P</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

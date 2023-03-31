@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="用于补充响应的附加信息、服务器信息，以及对客户端的附加要求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http（9）：响应首部字段">
+<meta property="og:url" content="http://example.com/2023/03/31/http-9/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="用于补充响应的附加信息、服务器信息，以及对客户端的附加要求。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/1.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/2.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/3.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/4.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/5.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/6.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/7.png">
+<meta property="og:image" content="http://example.com/2023/03/31/http-9/8.png">
+<meta property="article:published_time" content="2023-03-31T01:42:09.000Z">
+<meta property="article:modified_time" content="2023-03-31T02:22:04.464Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/31/http-9/1.png">
+
+<link rel="canonical" href="http://example.com/2023/03/31/http-9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>http（9）：响应首部字段 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/31/http-9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          http（9）：响应首部字段
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-31 09:42:09 / 修改时间：10:22:04" itemprop="dateCreated datePublished" datetime="2023-03-31T09:42:09+08:00">2023-03-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>用于补充响应的附加信息、服务器信息，以及对客户端的附加要求。</p>
+<span id="more"></span>
+<h1 id="Accept-Ranges"><a href="#Accept-Ranges" class="headerlink" title="Accept-Ranges"></a>Accept-Ranges</h1><p><img src="/2023/03/31/http-9/1.png" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Accept-Ranges: bytes  #可处理范围请求</span><br><span class="line">Accept-Ranges: none   #不能处理范围请求</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>告知客户端服务器是否能处理范围请求，以指定获取服务器端某个部分的资源；</p>
+</blockquote>
+<h1 id="Age"><a href="#Age" class="headerlink" title="Age"></a>Age</h1><p><img src="/2023/03/31/http-9/2.png" alt="2"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Age: 600  #单位：秒</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>告知客户端，源服务器在多久前创建了响应；<br>若创建该响应的服务器是缓存服务器，Age值是指缓存后的响应再次发起认证到认证完成的时间值；<br>代理创建响应时必须加上首部字段Age；</p>
+</blockquote>
+<h1 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a>ETag</h1><p><img src="/2023/03/31/http-9/3.png" alt="3"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ETag: &quot;82e22293907ce725faf67773957acd12&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>告知客户端实体标识；<br>将资源以字符串形式做唯一性的标识；</p>
+</blockquote>
+<p><img src="/2023/03/31/http-9/4.png" alt="4"></p>
+<blockquote>
+<p>当资源更新时，ETag 值也需要更新；<br>生成 ETag 值时，并没有统一的算法规则，仅仅由服务器来分配；<br>若在下载过程中出现连接中断、再连接的情况，会依照 ETag 值来指定资源；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ETag: &quot;usagi-1234&quot;    #强ETag值，不论实体发生多么细微的变化都会改变其值</span><br><span class="line">ETag: W/&quot;usagi-1234&quot;  #弱ETag值，只用于提示资源是否相同，只有资源发生根本改变，产生差异时才会改变ETag值</span><br></pre></td></tr></table></figure>
+
+<h1 id="Location"><a href="#Location" class="headerlink" title="Location"></a>Location</h1><p><img src="/2023/03/31/http-9/5.png" alt="5"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Location: http://www.usagidesign.jp/sample.html</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>将响应接收方引导至某个与请求URI位置不同的资源；<br>会配合3xx：Redirection 的响应，提供重定向的URI；<br>几乎所有的浏览器都会强制性地尝试对已提示的重定向资源的访问；</p>
+</blockquote>
+<h1 id="Proxy-Authenticate"><a href="#Proxy-Authenticate" class="headerlink" title="Proxy-Authenticate"></a>Proxy-Authenticate</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Proxy-Authenticate: Basic realm=&quot;Usagidesign Auth&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>会把由代理服务器所要求的认证信息发送给客户端；<br>认证行为是在客户端与代理之间进行的；</p>
+</blockquote>
+<h1 id="Retry-After"><a href="#Retry-After" class="headerlink" title="Retry-After"></a>Retry-After</h1><p><img src="/2023/03/31/http-9/6.png" alt="6"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Retry-After: 120    #单位：秒</span><br><span class="line">Retry-After: Wed, 04 Jul 2012 06：34：24 GMT    #具体时间</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>告知客户端应该在多久之后再次发送请求；<br>配合状态码503 Service Unavailable / 3xx Redirect，一起使用；</p>
+</blockquote>
+<h1 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h1><p><img src="/2023/03/31/http-9/7.png" alt="7"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Server: Apache/2.2.17 (Unix)</span><br><span class="line">Server: Apache/2.2.6 (Unix) PHP/5.2.5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>告知客户端当前服务器上安装的 HTTP 服务器应用程序的信息；</p>
+</blockquote>
+<h1 id="Vary"><a href="#Vary" class="headerlink" title="Vary"></a>Vary</h1><p><img src="/2023/03/31/http-9/8.png" alt="8"></p>
+<blockquote>
+<p>如果使用的 Accept-Language 字段的值相同，那么就直接从缓存返回响应；<br>否则，需要先从源服务器端获取资源后才能作为响应返回；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vary: Accept-Language</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>首部字段 Vary 可对缓存进行控制，源服务器会向代理服务器传达关于本地缓存使用方法的命令；<br>从代理服务器接收到源服务器返回包含 Vary 指定项的响应后，若再要进行缓存，仅对请求中含有相同 Vary 指定首部字段的请求返回缓存；<br>对相同资源发起请求，但由于 Vary 指定的首部字段不相同，也必须要从源服务器重新获取资源；</p>
+</blockquote>
+<h1 id="WWW-Authenticate"><a href="#WWW-Authenticate" class="headerlink" title="WWW-Authenticate"></a>WWW-Authenticate</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WWW-Authenticate: Basic realm=&quot;Usagidesign Auth&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>用于 HTTP 访问认证；<br>告知客户端适用于访问请求URI所指定资源的认证方案（Basic 或是 Digest）和带参数提示的质询（challenge）；<br>状态码 401 Unauthorized 响应中，肯定带有首部字段 WWW-Authenticate；</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/30/http-8/" rel="prev" title="http（8）：请求首部字段">
+      <i class="fa fa-chevron-left"></i> http（8）：请求首部字段
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/31/http-10/" rel="next" title="http（10）：实体首部字段">
+      http（10）：实体首部字段 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Accept-Ranges"><span class="nav-text">Accept-Ranges</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Age"><span class="nav-text">Age</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ETag"><span class="nav-text">ETag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Location"><span class="nav-text">Location</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Proxy-Authenticate"><span class="nav-text">Proxy-Authenticate</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Retry-After"><span class="nav-text">Retry-After</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Server"><span class="nav-text">Server</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vary"><span class="nav-text">Vary</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WWW-Authenticate"><span class="nav-text">WWW-Authenticate</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
