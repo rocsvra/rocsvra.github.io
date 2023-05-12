@@ -26,11 +26,20 @@
 <meta property="og:site_name" content="Hello Friend">
 <meta property="og:description" content="WPF是专门的用户界面技术，布局功能是它的核心功能之一。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/1.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/2.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/3.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/4.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/5.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/6.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/7.png">
+<meta property="og:image" content="http://example.com/2023/04/18/wpf-5/8.png">
 <meta property="article:published_time" content="2023-04-18T02:11:19.000Z">
-<meta property="article:modified_time" content="2023-04-18T02:14:34.682Z">
+<meta property="article:modified_time" content="2023-05-05T00:45:02.133Z">
 <meta property="article:author" content="姜海鹏">
 <meta property="article:tag" content="WPF">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/04/18/wpf-5/1.png">
 
 <link rel="canonical" href="http://example.com/2023/04/18/wpf-5/">
 
@@ -187,10 +196,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-04-18 10:11:19 / 修改时间：10:14:34" itemprop="dateCreated datePublished" datetime="2023-04-18T10:11:19+08:00">2023-04-18</time>
+              <time title="创建时间：2023-04-18 10:11:19" itemprop="dateCreated datePublished" datetime="2023-04-18T10:11:19+08:00">2023-04-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-05 08:45:02" itemprop="dateModified" datetime="2023-05-05T08:45:02+08:00">2023-05-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -214,6 +229,85 @@
       
         <p>WPF是专门的用户界面技术，布局功能是它的核心功能之一。</p>
 <span id="more"></span>
+<p>WPF的布局理念就是把一个布局元素作为ContentControl或HeaderedContentControl族控件的Content，再在布局元素里添加要被布局的子级控件，如果UI局部需要更复杂的布局，那就在这个区域放置一个子级的布局元素，形成布局元素的嵌套。</p>
+<table>
+<thead>
+<tr>
+<th align="left">布局元素</th>
+<th align="left">名称</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Grid</td>
+<td align="left">网格</td>
+<td align="left">类似于HTML中的Table</td>
+</tr>
+<tr>
+<td align="left">StackPanel</td>
+<td align="left">栈式面板</td>
+<td align="left">包含的元素在竖直或水平方向上排成一条直线，移除一个元素后，后面的元素会自动前移填充空缺</td>
+</tr>
+<tr>
+<td align="left">Canvas</td>
+<td align="left">画布</td>
+<td align="left">内部元素可以使用以像素为单位的绝对坐标进行定位</td>
+</tr>
+<tr>
+<td align="left">DockPanel</td>
+<td align="left">泊靠式面板</td>
+<td align="left">内部元素可以选择泊靠方向</td>
+</tr>
+<tr>
+<td align="left">WrapPanel</td>
+<td align="left">自动折行面板</td>
+<td align="left">内部元素在排满一行后能够自动折行，类似于HTML中的流式布局</td>
+</tr>
+</tbody></table>
+<h1 id="Grid"><a href="#Grid" class="headerlink" title="Grid"></a>Grid</h1><p>适用场合：</p>
+<blockquote>
+<p>大框架设计；<br>大量UI元素需要成行或成列对齐；<br>UI整体尺寸改变，元素要保持固有的宽高比例；<br>UI后续需要调整和扩展；</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;gridMain&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Grid.ColumnDefinitions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ColumnDefinition</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ColumnDefinition</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Grid.ColumnDefinitions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Grid.RowDefinitions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">RowDefinition</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">RowDefinition</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Grid.RowDefinitions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Window_Loaded</span>(<span class="params"><span class="built_in">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">this</span>.gridMain.ColumnDefinitions.Add(<span class="keyword">new</span> ColumnDefinition());</span><br><span class="line">    <span class="keyword">this</span>.gridMain.ColumnDefinitions.Add(<span class="keyword">new</span> ColumnDefinition());</span><br><span class="line">    <span class="keyword">this</span>.gridMain.RowDefinitions.Add(<span class="keyword">new</span> RowDefinition());</span><br><span class="line">    <span class="keyword">this</span>.gridMain.ShowGridLines = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/18/wpf-5/1.png" alt="1"></p>
+<p>Grid可接受的宽高单位：<br><img src="/2023/04/18/wpf-5/2.png" alt="2"></p>
+<p>Grid的行高和列宽值：</p>
+<blockquote>
+<p>绝对值：数值+单位后缀；<br>比例值：数值+“*”，1 * 简写为 *<br>自动值：Auto</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextBlock</span> <span class="attr">Text</span>=<span class="string">&quot;天王盖地虎&quot;</span> <span class="attr">Grid.Column</span>=<span class="string">&quot;0&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;0&quot;</span> <span class="attr">VerticalAlignment</span>=<span class="string">&quot;Center&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ComboBox</span> <span class="attr">Grid.Column</span>=<span class="string">&quot;1&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;0&quot;</span> <span class="attr">Grid.ColumnSpan</span>=<span class="string">&quot;4&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>行和列从0开始计数；<br>若编号为0，可省略该Attribute；<br>跨行/列，Grid.ColumnSpan=”列数”，Grid.RowSpan=”列数”；</p>
+</blockquote>
+<h1 id="StackPanel"><a href="#StackPanel" class="headerlink" title="StackPanel"></a>StackPanel</h1><p>适合场景：</p>
+<blockquote>
+<p>同类元素紧凑排列；<br>移除元素后，能够自动补缺的布局或动画；</p>
+</blockquote>
+<p>StackPanel属性：<br><img src="/2023/04/18/wpf-5/3.png" alt="3"></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;gridMain&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">GroupBox</span> <span class="attr">Header</span>=<span class="string">&quot;三巨头&quot;</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Black&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">StackPanel</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">CheckBox</span> <span class="attr">Content</span>=<span class="string">&quot;费德勒&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">CheckBox</span> <span class="attr">Content</span>=<span class="string">&quot;纳达尔&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">CheckBox</span> <span class="attr">Content</span>=<span class="string">&quot;德约&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">CheckBox</span> <span class="attr">Content</span>=<span class="string">&quot;阿尔卡拉斯&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">StackPanel</span> <span class="attr">Orientation</span>=<span class="string">&quot;Horizontal&quot;</span> <span class="attr">HorizontalAlignment</span>=<span class="string">&quot;Right&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">&quot;清空&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;60&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">&quot;确定&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;60&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">GroupBox</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/18/wpf-5/4.png" alt="4"></p>
+<h1 id="Canvas"><a href="#Canvas" class="headerlink" title="Canvas"></a>Canvas</h1><p>适用场景：</p>
+<blockquote>
+<p>一经设计不再改动的小型布局；<br>大量适用纵横坐标进行绝对点定位的布局；<br>依赖坐标的动画；</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Canvas</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBlock</span> <span class="attr">Text</span>=<span class="string">&quot;用户名:&quot;</span> <span class="attr">Canvas.Left</span>=<span class="string">&quot;12&quot;</span> <span class="attr">Canvas.Top</span>=<span class="string">&quot;12&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">Height</span>=<span class="string">&quot;23&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;200&quot;</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Black&quot;</span> <span class="attr">Canvas.Left</span>=<span class="string">&quot;66&quot;</span> <span class="attr">Canvas.Top</span>=<span class="string">&quot;9&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBlock</span> <span class="attr">Text</span>=<span class="string">&quot;密码:&quot;</span> <span class="attr">Canvas.Left</span>=<span class="string">&quot;12&quot;</span> <span class="attr">Canvas.Top</span>=<span class="string">&quot;40.72&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;16&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;36&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">Height</span>=<span class="string">&quot;23&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;200&quot;</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Black&quot;</span> <span class="attr">Canvas.Left</span>=<span class="string">&quot;66&quot;</span> <span class="attr">Canvas.Top</span>=<span class="string">&quot;38&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">&quot;确定&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;80&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;22&quot;</span> <span class="attr">Canvas.Left</span>=<span class="string">&quot;100&quot;</span> <span class="attr">Canvas.Top</span>=<span class="string">&quot;67&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">&quot;清除&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;80&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;22&quot;</span> <span class="attr">Canvas.Left</span>=<span class="string">&quot;186&quot;</span> <span class="attr">Canvas.Top</span>=<span class="string">&quot;67&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Canvas</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/18/wpf-5/5.png" alt="5"></p>
+<h1 id="DockPanel"><a href="#DockPanel" class="headerlink" title="DockPanel"></a>DockPanel</h1><p>重要属性：</p>
+<blockquote>
+<p>DockPanel.Dock，元素会向指定方向积累，切分DockPanel内部空间；<br>LastChildFill，默认为True，最后一个元素的DockPanel.Dock属性被忽略，填充满剩余空间；</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Grid</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">DockPanel</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">DockPanel.Dock</span>=<span class="string">&quot;Top&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;25&quot;</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Black&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">DockPanel.Dock</span>=<span class="string">&quot;Left&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;150&quot;</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Black&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Black&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">DockPanel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/18/wpf-5/6.png" alt="6"></p>
+<h1 id="WrapPanel"><a href="#WrapPanel" class="headerlink" title="WrapPanel"></a>WrapPanel</h1><blockquote>
+<p>内部采用流式布局，用Orientation属性控制方向；<br>流延伸的方向上，排不下的控件将另起一行/列；</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Grid</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">WrapPanel</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Width</span>=<span class="string">&quot;50&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">WrapPanel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/18/wpf-5/7.png" alt="7"></p>
+<p><img src="/2023/04/18/wpf-5/8.png" alt="8"></p>
+<blockquote>
+<p>改变窗体尺寸</p>
+</blockquote>
 
     </div>
 
@@ -235,7 +329,10 @@
     <a href="/2023/04/13/wpf-4/" rel="prev" title="WPF（4）：控件">
       <i class="fa fa-chevron-left"></i> WPF（4）：控件
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/04/18/wpf-6/" rel="next" title="WPF（6）：Binding">
+      WPF（6）：Binding <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -294,6 +391,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Grid"><span class="nav-text">Grid</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StackPanel"><span class="nav-text">StackPanel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Canvas"><span class="nav-text">Canvas</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DockPanel"><span class="nav-text">DockPanel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WrapPanel"><span class="nav-text">WrapPanel</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="事件系统在WPF中得到了升级，进化为路由事件（Routed Event），并在其基础上衍生出命令传递机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WPF（10）：路由事件">
+<meta property="og:url" content="http://example.com/2023/04/27/wpf-10/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="事件系统在WPF中得到了升级，进化为路由事件（Routed Event），并在其基础上衍生出命令传递机制。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/1.png">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/2.png">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/3.png">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/4.png">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/5.png">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/6.png">
+<meta property="og:image" content="http://example.com/2023/04/27/wpf-10/7.png">
+<meta property="article:published_time" content="2023-04-27T03:11:55.000Z">
+<meta property="article:modified_time" content="2023-05-12T08:23:44.687Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="WPF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/04/27/wpf-10/1.png">
+
+<link rel="canonical" href="http://example.com/2023/04/27/wpf-10/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>WPF（10）：路由事件 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/27/wpf-10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WPF（10）：路由事件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-27 11:11:55" itemprop="dateCreated datePublished" datetime="2023-04-27T11:11:55+08:00">2023-04-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-12 16:23:44" itemprop="dateModified" datetime="2023-05-12T16:23:44+08:00">2023-05-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WPF/" itemprop="url" rel="index"><span itemprop="name">WPF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>事件系统在WPF中得到了升级，进化为路由事件（Routed Event），并在其基础上衍生出命令传递机制。</p>
+<span id="more"></span>
+
+<h1 id="UI组件树"><a href="#UI组件树" class="headerlink" title="UI组件树"></a>UI组件树</h1><p>WPF事件的路由环境是UI组件树，WPF有两种树：</p>
+<blockquote>
+<p>逻辑树（Logical Tree），由布局组件和控件构成；<br>可视元素树（Visual Tree）</p>
+</blockquote>
+<p><img src="/2023/04/27/wpf-10/1.png" alt="1"></p>
+<blockquote>
+<p>将进度条改造成温度计，需要在其内部添加树形结构；<br>如果把Logical Tree 延伸至Template组件级别，得到的就是Visual Tree；</p>
+</blockquote>
+<p>在Logical Tree查找元素，可以使用LogicalTreeHelper类的静态方法：</p>
+<blockquote>
+<p>BringIntoView：选定元素带进可视区域，常用于可滚动视图；<br>FindLogicalNode：根据Name属性值查找元素，包括子级树上的元素；<br>GetChildren：获取所有直接子级元素；<br>GetParent：获取直接父级元素；</p>
+</blockquote>
+<p>在Visual Tree上导航或查找元素，可借助VisualTreeHelper类的静态方法；</p>
+<h1 id="CLR直接事件模型"><a href="#CLR直接事件模型" class="headerlink" title="CLR直接事件模型"></a>CLR直接事件模型</h1><p><img src="/2023/04/27/wpf-10/2.png" alt="2"></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.myButton.Click += <span class="keyword">new</span> System.EventHandler(<span class="keyword">this</span>.myButton_Click);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>事件实际上是一个使用event关键字修饰的委托类型成员变量，事件处理器则是一个函数；<br>CLR直接事件模型中，事件的拥有者就是消息的发送者（sender）；<br>每对消息都是“发送-响应”关系，必须建立显式的点对点订阅关系；<br>事件宿主必须能直接访问事件的响应者，不然无法建立订阅关系；</p>
+</blockquote>
+<h1 id="路由事件"><a href="#路由事件" class="headerlink" title="路由事件"></a>路由事件</h1><blockquote>
+<p>直接事件激发时，发送者直接将消息通过事件订阅交送给事件响应者，事件响应者使用事件处理器对事件作出响应；<br>路由事件的事件拥有者和事件响应者之间没有显式的订阅关系，事件拥有者只负责激发事件，事件响应者则安装有事件侦听器，对某类事件进行侦听；当事件传递至事件响应者时，事件响应者使用事件处理器响应事件，并决定是否可以继续传递；</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;gridRoot&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;Lime&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;gridA&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;Blue&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Grid.ColumnDefinitions</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ColumnDefinition</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ColumnDefinition</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Grid.ColumnDefinitions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Canvas</span> <span class="attr">x:Name</span>=<span class="string">&quot;canvasLeft&quot;</span> <span class="attr">Grid.Column</span>=<span class="string">&quot;0&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;Red&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span> &gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">x:Name</span>=<span class="string">&quot;buttonLeft&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;Left&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;40&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;100&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Canvas</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Canvas</span> <span class="attr">x:Name</span>=<span class="string">&quot;canvasRight&quot;</span> <span class="attr">Grid.Column</span>=<span class="string">&quot;1&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;Yellow&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span> &gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Button</span> <span class="attr">x:Name</span>=<span class="string">&quot;buttonRight&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;Right&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;40&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;100&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Canvas</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/27/wpf-10/3.png" alt="3"></p>
+<p>单击buttonLeft，Button.Click事件沿着 buttonLeft -&gt; canvasLeft -&gt; gridA -&gt; gridRoot -&gt; Window 这条路线向上传递；</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  InitializeComponent();</span><br><span class="line">  <span class="meta"># gridRoot安装针对Button.Click事件的侦听器</span></span><br><span class="line">  <span class="keyword">this</span>.gridRoot.AddHandler(Button.ClickEvent, <span class="keyword">new</span> RoutedEventHandler(<span class="keyword">this</span>.Button_Click));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta"># sender 是gridRoot 而不是被单击的Button</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Button_Click</span>(<span class="params"><span class="built_in">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">var</span> elementName = (e.OriginalSource <span class="keyword">as</span> FrameworkElement).Name;</span><br><span class="line">  <span class="keyword">var</span> senderName = (sender <span class="keyword">as</span> FrameworkElement).Name;</span><br><span class="line">  MessageBox.Show(elementName + <span class="string">&quot; | &quot;</span> + senderName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/27/wpf-10/4.png" alt="4"></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 等价xaml代码</span><br><span class="line"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;gridRoot&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;Lime&quot;</span> <span class="attr">Button.Click</span>=<span class="string">&quot;Button_Click&quot;</span> &gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="自定义路由事件"><a href="#自定义路由事件" class="headerlink" title="自定义路由事件"></a>自定义路由事件</h2><p>创建步骤：<br>1.声明并注册路由事件；<br>2.为路由事件添加CLR事件包装；<br>3.创建可以激发路由事件的方法；</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">ButtonBase</span> : <span class="title">ContentControl</span>, <span class="title">ICommandSource</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">//声明并注册路由事件</span></span><br><span class="line">  <span class="comment">//第一个参数：微软建议，和变量（ClickEvent）前缀 以及 CLR事件包装器名称一致；</span></span><br><span class="line">  <span class="comment">//第二个参数：路由事件策略：</span></span><br><span class="line">  <span class="comment">//  1.Bubble（冒泡），事件激发者向上级容器层层路由</span></span><br><span class="line">  <span class="comment">//  2.Tunnel（隧道），UI树根部向事件激发控件传递</span></span><br><span class="line">  <span class="comment">//  3.Direct（直达），直接将事件传递给事件处理器</span></span><br><span class="line">  <span class="comment">//第三个参数：事件处理器类型</span></span><br><span class="line">  <span class="comment">//第四个参数：事件宿主类型</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> RoutedEvent ClickEvent = EventManager.RegisterRoutedEvent(<span class="string">&quot;Click&quot;</span>,RoutingStrategy.Bubble,<span class="keyword">typeof</span>(RoutedEventHandler),<span class="keyword">typeof</span>(ButtonBase));</span><br><span class="line">  <span class="comment">//为路由事件添加CLR事件包装器</span></span><br><span class="line">  <span class="comment">//只是看上去像一个直接事件，本质上是在当前元素上调用AddHandler和RemoveHandler</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">event</span> RoutedEventHandler Click</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">add</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">this</span>.AddHandler(ClickEvent,<span class="keyword">value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">remove</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">this</span>.RemoveHandler(ClickEvent,<span class="keyword">value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//激发路由事件的方法，用户单击鼠标时会被Windows系统调用</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">OnClick</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    RoutedEventArgs newEvent = <span class="keyword">new</span> RoutedEventArgs(ButtonBase.ClickEvent,<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.RaiseEvent(newEvent);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="路由事件案例："><a href="#路由事件案例：" class="headerlink" title="路由事件案例："></a>路由事件案例：</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">ReportTimeEventArgs</span> : <span class="title">RoutedEventArgs</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ReportTimeEventArgs</span>(<span class="params">RoutedEvent routedEvent, <span class="built_in">object</span> source</span>)</span></span><br><span class="line"><span class="function">      : <span class="title">base</span>(<span class="params">routedEvent, source</span>)</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> DateTime ClickTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">TimeButton</span> : <span class="title">Button</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> RoutedEvent ReportTimeEvent = EventManager.RegisterRoutedEvent(<span class="string">&quot;ReportTime&quot;</span>, RoutingStrategy.Bubble, <span class="keyword">typeof</span>(EventHandler&lt;ReportTimeEventArgs&gt;), <span class="keyword">typeof</span>(TimeButton));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">event</span> EventHandler&lt;ReportTimeEventArgs&gt; ReportTime</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">add</span> &#123; ReportTime += <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="keyword">remove</span> &#123; ReportTime -= <span class="keyword">value</span>; &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnClick</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">base</span>.OnClick();</span><br><span class="line"></span><br><span class="line">    ReportTimeEventArgs args = <span class="keyword">new</span> ReportTimeEventArgs(ReportTimeEvent, <span class="keyword">this</span>);</span><br><span class="line">    args.ClickTime = DateTime.Now;</span><br><span class="line">    <span class="keyword">this</span>.RaiseEvent(args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ReportTimeHandler</span>(<span class="params"><span class="built_in">object</span> sender, ReportTimeEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  FrameworkElement element = sender <span class="keyword">as</span> FrameworkElement;</span><br><span class="line">  <span class="built_in">string</span> timeStr = e.ClickTime.ToLongTimeString();</span><br><span class="line">  <span class="built_in">string</span> content = <span class="built_in">string</span>.Format(<span class="string">&quot;&#123;0&#125; 到达 &#123;1&#125;&quot;</span>, timeStr, element.Name);</span><br><span class="line">  <span class="keyword">this</span>.listBox.Items.Add(content);</span><br><span class="line">  <span class="keyword">if</span> (element == <span class="keyword">this</span>.grid_2)</span><br><span class="line">  &#123;</span><br><span class="line">    e.Handled = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Window</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MainWindow&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:local</span>=<span class="string">&quot;clr-namespace:WpfApp&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">x:Name</span>=<span class="string">&quot;window_1&quot;</span> <span class="attr">Title</span>=<span class="string">&quot;MainWindow&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;240&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;300&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">local:TimeButton.ReportTime</span>=<span class="string">&quot;ReportTimeHandler&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;grid_1&quot;</span> <span class="attr">local:TimeButton.ReportTime</span>=<span class="string">&quot;ReportTimeHandler&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;grid_2&quot;</span> <span class="attr">local:TimeButton.ReportTime</span>=<span class="string">&quot;ReportTimeHandler&quot;</span> &gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;grid_3&quot;</span> <span class="attr">local:TimeButton.ReportTime</span>=<span class="string">&quot;ReportTimeHandler&quot;</span> &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">StackPanel</span> <span class="attr">x:Name</span>=<span class="string">&quot;stackPanel_1&quot;</span> <span class="attr">local:TimeButton.ReportTime</span>=<span class="string">&quot;ReportTimeHandler&quot;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">ListBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;listBox&quot;</span> /&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">local:TimeButton</span> <span class="attr">x:Name</span>=<span class="string">&quot;timeButton&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;80&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;60&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;报时&quot;</span> <span class="attr">local:TimeButton.ReportTime</span>=<span class="string">&quot;ReportTimeHandler&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Window</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/27/wpf-10/5.png" alt="5"></p>
+<blockquote>
+<p>Bubble策略，TimeButton -&gt; StackPanel -&gt; Grid -&gt; Grid -&gt; Grid -&gt; Window<br>Tunnel策略，Window -&gt; Grid -&gt; Grid -&gt; Grid -&gt; StackPanel -&gt; TimeButton<br>事件经过gird_2被处理，不再传递</p>
+</blockquote>
+<h1 id="RoutedEventArgs的Source和OriginalSource"><a href="#RoutedEventArgs的Source和OriginalSource" class="headerlink" title="RoutedEventArgs的Source和OriginalSource"></a>RoutedEventArgs的Source和OriginalSource</h1><blockquote>
+<p>Source：LogicalTree上的消息源<br>OriginalSource：VisualTree上的消息源</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">UserControl</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MyUserControl&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Border</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Orange&quot;</span> <span class="attr">BorderThickness</span>=<span class="string">&quot;3&quot;</span> <span class="attr">CornerRadius</span>=<span class="string">&quot;5&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">x:Name</span>=<span class="string">&quot;innerButton&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;80&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;60&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Border</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">UserControl</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Window</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MainWindow&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:local</span>=<span class="string">&quot;clr-namespace:WpfApp&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">Title</span>=<span class="string">&quot;MainWindow&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;240&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;300&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Grid</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">local:MyUserControl</span> <span class="attr">x:Name</span>=<span class="string">&quot;myUserControl&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Window</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  InitializeComponent();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.AddHandler(Button.ClickEvent, <span class="keyword">new</span> RoutedEventHandler(<span class="keyword">this</span>.Button_Click));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Button_Click</span>(<span class="params"><span class="built_in">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">string</span> originalSourceName = (e.OriginalSource <span class="keyword">as</span> FrameworkElement).Name;</span><br><span class="line">  <span class="built_in">string</span> originalSourceType = e.OriginalSource.GetType().Name;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">string</span> sourceName = (e.Source <span class="keyword">as</span> FrameworkElement).Name; ;</span><br><span class="line">  <span class="built_in">string</span> sourceType = e.Source.GetType().Name;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">string</span> str1 = <span class="built_in">string</span>.Format(<span class="string">&quot;VisualTree start point:&#123;0&#125;,type is &#123;1&#125;&quot;</span>, originalSourceName, originalSourceType);</span><br><span class="line">  <span class="built_in">string</span> str2 = <span class="built_in">string</span>.Format(<span class="string">&quot;LogicalTree start point:&#123;0&#125;,type is &#123;1&#125;&quot;</span>, sourceName, sourceType);</span><br><span class="line"></span><br><span class="line">  MessageBox.Show(str1 + <span class="string">&quot;\r\n&quot;</span> + str2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/27/wpf-10/6.png" alt="6"></p>
+<h1 id="附加事件"><a href="#附加事件" class="headerlink" title="附加事件"></a>附加事件</h1><p>附加事件就是路由事件，但路由事件的宿主都是些拥有可视化实体的界面元素，附加事件的宿主没有界面渲染功能。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Window</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MainWindow&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:local</span>=<span class="string">&quot;clr-namespace:WpfApp&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">Title</span>=<span class="string">&quot;MainWindow&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;200&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;200&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Grid</span> <span class="attr">x:Name</span>=<span class="string">&quot;gridMain&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">x:Name</span>=<span class="string">&quot;button1&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;OK&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;80&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;60&quot;</span> <span class="attr">Click</span>=<span class="string">&quot;Button_Click&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Window</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> RoutedEvent NameChangedEvent = EventManager.RegisterRoutedEvent(<span class="string">&quot;NameChanged&quot;</span>, RoutingStrategy.Bubble, <span class="keyword">typeof</span>(RoutedEventHandler), <span class="keyword">typeof</span>(Student));</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">int</span> Id &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  InitializeComponent();</span><br><span class="line">  <span class="keyword">this</span>.gridMain.AddHandler(Student.NameChangedEvent, <span class="keyword">new</span> RoutedEventHandler(<span class="keyword">this</span>.StudentNameChangedHandler));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">StudentNameChangedHandler</span>(<span class="params"><span class="built_in">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">var</span> student = e.OriginalSource <span class="keyword">as</span> Student;</span><br><span class="line">  MessageBox.Show(student.Id.ToString());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Button_Click</span>(<span class="params"><span class="built_in">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  Student student = <span class="keyword">new</span> Student()</span><br><span class="line">  &#123;</span><br><span class="line">    Id = <span class="number">101</span>,</span><br><span class="line">    Name = <span class="string">&quot;天王盖地虎&quot;</span></span><br><span class="line">  &#125;;</span><br><span class="line">  student.Name = <span class="string">&quot;宝塔镇河妖&quot;</span>;</span><br><span class="line">  RoutedEventArgs arg = <span class="keyword">new</span> RoutedEventArgs(Student.NameChangedEvent, student);</span><br><span class="line">  <span class="keyword">this</span>.button1.RaiseEvent(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/04/27/wpf-10/7.png" alt="7"></p>
+<p>升级版：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> RoutedEvent NameChangedEvent = EventManager.RegisterRoutedEvent(<span class="string">&quot;NameChanged&quot;</span>, RoutingStrategy.Bubble, <span class="keyword">typeof</span>(RoutedEventHandler), <span class="keyword">typeof</span>(Student));</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">int</span> Id &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//为界面元素添加路由事件侦听</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">AddNameChangedHandler</span>(<span class="params">DependencyObject d, RoutedEventHandler h</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    UIElement element = (UIElement)d;</span><br><span class="line">    <span class="keyword">if</span> (element != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        element.AddHandler(Student.NameChangedEvent, h);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">RemoveNameChangedHandler</span>(<span class="params">DependencyObject d, RoutedEventHandler h</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    UIElement element = (UIElement)d;</span><br><span class="line">    <span class="keyword">if</span> (element != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        element.RemoveHandler(Student.NameChangedEvent, h);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  InitializeComponent();</span><br><span class="line">  Student.AddNameChangedHandler(<span class="keyword">this</span>.gridMain,<span class="keyword">new</span> RoutedEventHandler(<span class="keyword">this</span>.StudentNameChangedHandler));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>附加事件宿主不是UIElement派生类，无法出现在UI结点上，附加事件的激发是借助UI元素实现的，激发事件需要附加在某个具有RaiseEvent方法的对象上；</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/WPF/" rel="tag"># WPF</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/23/wpf-9/" rel="prev" title="WPF（9）：依赖属性">
+      <i class="fa fa-chevron-left"></i> WPF（9）：依赖属性
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UI%E7%BB%84%E4%BB%B6%E6%A0%91"><span class="nav-text">UI组件树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CLR%E7%9B%B4%E6%8E%A5%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B"><span class="nav-text">CLR直接事件模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E4%BA%8B%E4%BB%B6"><span class="nav-text">路由事件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E4%BA%8B%E4%BB%B6"><span class="nav-text">自定义路由事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E4%BA%8B%E4%BB%B6%E6%A1%88%E4%BE%8B%EF%BC%9A"><span class="nav-text">路由事件案例：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RoutedEventArgs%E7%9A%84Source%E5%92%8COriginalSource"><span class="nav-text">RoutedEventArgs的Source和OriginalSource</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%8A%A0%E4%BA%8B%E4%BB%B6"><span class="nav-text">附加事件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
