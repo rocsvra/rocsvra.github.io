@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/04/10/wpf-1/1.png">
 <meta property="article:published_time" content="2023-04-10T08:09:45.000Z">
-<meta property="article:modified_time" content="2023-05-04T00:25:21.708Z">
+<meta property="article:modified_time" content="2023-05-24T01:57:33.297Z">
 <meta property="article:author" content="姜海鹏">
 <meta property="article:tag" content="WPF">
 <meta name="twitter:card" content="summary">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-05-04 08:25:21" itemprop="dateModified" datetime="2023-05-04T08:25:21+08:00">2023-05-04</time>
+                <time title="修改时间：2023-05-24 09:57:33" itemprop="dateModified" datetime="2023-05-24T09:57:33+08:00">2023-05-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -222,8 +222,8 @@
       
         <p>WPF（Windows Presentation Foundaton），一种编写程序表示层（Presentation）的技术和工具。</p>
 <span id="more"></span>
-<h1 id="数据驱动"><a href="#数据驱动" class="headerlink" title="数据驱动"></a>数据驱动</h1><p>事件驱动，事件-订阅-事件处理器，用户操作触发事件，进而执行事件处理器（一个方法，处理数据或调用其他方法），WPF出现前，Windows Forms、ASP.NET Web Forms等技术都使用“事件驱动”。数据是静态的、被动的，界面控件是主动的，事件是界面逻辑与业务逻辑之间的桥梁；<br>数据驱动，数据发生变化时，会主动通知界面控件，推动控件展示最新的数据，同时，用户对控件的操作会直接送达数据，而控件事件一般只参与界面逻辑，不再染指业务逻辑，使程序复杂度得到有效控制，数据关联 (Data Binding)是数据与界面之间的桥梁；</p>
-<h1 id="XAML（Extensible-Application-Markup-Language）"><a href="#XAML（Extensible-Application-Markup-Language）" class="headerlink" title="XAML（Extensible Application Markup Language）"></a>XAML（Extensible Application Markup Language）</h1><p>可扩展应用程序标记语言，是WPF技术中专门用于设计UI的语言，是一种单纯的声明型语言，只能用来声明UI元素、绘制UI和动画，无法在其中加入程序逻辑，让开发团队实现了UI和逻辑的分离；</p>
+<h1 id="数据驱动"><a href="#数据驱动" class="headerlink" title="数据驱动"></a>数据驱动</h1><p>WPF出现前，Windows Forms、ASP.NET Web Forms等技术都使用事件驱动——事件-订阅-事件处理器，用户操作触发事件，进而执行事件处理器（一个方法，处理数据或调用其他方法）。数据是静态的、被动的，界面控件是主动的，事件是界面逻辑与业务逻辑之间的桥梁；<br>WPF使用数据驱动，数据发生变化时，会主动通知界面控件，推动控件展示最新的数据，同时，用户对控件的操作会直接送达数据，而控件事件一般只参与界面逻辑，不再染指业务逻辑，使程序复杂度得到有效控制，数据关联 (Data Binding)是数据与界面之间的桥梁。</p>
+<h1 id="XAML（Extensible-Application-Markup-Language）"><a href="#XAML（Extensible-Application-Markup-Language）" class="headerlink" title="XAML（Extensible Application Markup Language）"></a>XAML（Extensible Application Markup Language）</h1><p>可扩展应用程序标记语言，是WPF技术中专门用于设计UI的语言，是一种单纯的声明型语言，只能用来声明UI元素、绘制UI和动画，无法在其中加入程序逻辑，让开发团队实现了UI和逻辑的分离。</p>
 <h1 id="WPF项目结构"><a href="#WPF项目结构" class="headerlink" title="WPF项目结构"></a>WPF项目结构</h1><p>新建WPF项目——<br><img src="/2023/04/10/wpf-1/1.png" alt="1"></p>
 <blockquote>
 <p>Properties：资源（图标、图片、静态字符串等）和配置信息；<br>References：引用的类库；<br>App.xaml：程序主体，Windows系统里，一个程序就是一个进程（Process），一个GUI进程需要有一个Window作为主窗体，App.xaml声明了程序的进程是谁，指定了程序的主窗体；<br>App.xaml.cs：App.xaml的后台代码；<br>MainWindow.xaml：程序的主窗体；</p>
@@ -238,18 +238,18 @@
 </blockquote>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 如果第二行名称空间加上前缀n:，需要更改<span class="tag">&lt;<span class="name">n:Window</span>&gt;</span>和<span class="tag">&lt;<span class="name">n:Grid</span>&gt;</span>，才能编译通过</span><br><span class="line"><span class="tag">&lt;<span class="name">n:Window</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MainWindow&quot;</span>   </span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:n</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:d</span>=<span class="string">&quot;http://schemas.microsoft.com/expression/blend/2008&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:mc</span>=<span class="string">&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:local</span>=<span class="string">&quot;clr-namespace:WpfApp&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">mc:Ignorable</span>=<span class="string">&quot;d&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">Title</span>=<span class="string">&quot;MainWindow&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;450&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;800&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">n:Grid</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">n:Window</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 使用System.Windows.Controls名称空间里的Button类</span><br><span class="line"># 相当于 using System.Windows.Controls</span><br><span class="line">xmlns:c=&quot;clr-namespace:SystemWindows.Controls;assembly=PresentationFramework&quot;  </span><br><span class="line"># 使用方式</span><br><span class="line"><span class="tag">&lt;<span class="name">c:Button</span>&gt;</span>...<span class="tag">&lt;/<span class="name">c:Button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 使用System.Windows.Controls名称空间里的Button类</span><br><span class="line"># 相当于 using System.Windows.Controls</span><br><span class="line">xmlns:c=&quot;clr-namespace:System.Windows.Controls;assembly=PresentationFramework&quot;  </span><br><span class="line"># 使用方式</span><br><span class="line"><span class="tag">&lt;<span class="name">c:Button</span>&gt;</span>...<span class="tag">&lt;/<span class="name">c:Button</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>这几个类似于URL的名称空间，即使在浏览器中尝试跳转也不会打开网页，只是XAML解析器的一个硬编码(hard-coding)，只要见到这些固定的字符串，就会把一系列必要的程序集(Assembly)和程序中包含的NET名称空间引用进来；</p>
 </blockquote>
-<h2 id="默认名称空间"><a href="#默认名称空间" class="headerlink" title="默认名称空间"></a>默认名称空间</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://schemas.microsoft.com/winfx/2006/xaml/presentation</span><br></pre></td></tr></table></figure>
+<h2 id="默认名称空间"><a href="#默认名称空间" class="headerlink" title="默认名称空间"></a>默认名称空间</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot; </span><br></pre></td></tr></table></figure>
 <p>以上默认名称空间对应的是与绘制UI相关的程序集，是表示层（Presentation）上的东西，对应的程序集和.NET名称空间如下：</p>
 <blockquote>
 <p>System.Windows<br>System.Windows.Automation<br>System.Windows.Controls<br>System.Windows.Controls.Primitives<br>System.Windows.Data<br>System.Windows.Documents<br>System.Windows.Forms.Integration<br>System.Windows.Ink<br>System.Windows.Input<br>System.Windows.Media<br>System.Windows.Media.Animation<br>System.Windows.Media.Effects<br>System.Windows.Media.lmaging<br>System.Windows.Media.Media3D<br>System.Windows.Media.TextFormatting<br>System.Windows.Navigation<br>System.Windows.Shapes</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://schemas.microsoft.com/winfx/2006/xaml</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>以上默认名称空间对应一些与XAML语法和编译相关的CLR名称空间，对应XAML语言解析处理相关的程序集，是语言层面上的东西；</p>
+<p>x名称空间对应一些与XAML语法和编译相关的CLR名称空间，对应XAML语言解析处理相关的程序集，是语言层面上的东西；</p>
 </blockquote>
 
     </div>

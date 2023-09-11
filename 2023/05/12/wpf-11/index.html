@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="命令可以约束代码，约束步骤逻辑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WPF（11）：命令">
+<meta property="og:url" content="http://example.com/2023/05/12/wpf-11/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="命令可以约束代码，约束步骤逻辑。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/05/12/wpf-11/1.png">
+<meta property="og:image" content="http://example.com/2023/05/12/wpf-11/2.png">
+<meta property="og:image" content="http://example.com/2023/05/12/wpf-11/3.png">
+<meta property="article:published_time" content="2023-05-12T08:37:01.000Z">
+<meta property="article:modified_time" content="2023-05-23T09:27:40.028Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="WPF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/05/12/wpf-11/1.png">
+
+<link rel="canonical" href="http://example.com/2023/05/12/wpf-11/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>WPF（11）：命令 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/12/wpf-11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WPF（11）：命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-12 16:37:01" itemprop="dateCreated datePublished" datetime="2023-05-12T16:37:01+08:00">2023-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-23 17:27:40" itemprop="dateModified" datetime="2023-05-23T17:27:40+08:00">2023-05-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WPF/" itemprop="url" rel="index"><span itemprop="name">WPF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>命令可以约束代码，约束步骤逻辑。</p>
+<span id="more"></span>
+<h1 id="命令系统的基本元素"><a href="#命令系统的基本元素" class="headerlink" title="命令系统的基本元素"></a>命令系统的基本元素</h1><table>
+<thead>
+<tr>
+<th align="left">元素</th>
+<th align="left">名称</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Command</td>
+<td align="left">命令</td>
+<td align="left">实现了ICommand接口的类，如 RoutedCommand</td>
+</tr>
+<tr>
+<td align="left">Command Source</td>
+<td align="left">命令源</td>
+<td align="left">实现了ICommandSource接口，如Button、MenuItem、ListBoxItem</td>
+</tr>
+<tr>
+<td align="left">Command Target</td>
+<td align="left">命令目标</td>
+<td align="left">实现了IInputElement接口</td>
+</tr>
+<tr>
+<td align="left">Command Binding</td>
+<td align="left">命令关联</td>
+<td align="left">负责关联外围逻辑和命令，如执行前判断、执行后的后续工作</td>
+</tr>
+</tbody></table>
+<p><img src="/2023/05/12/wpf-11/1.png" alt="1"></p>
+<h1 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h1><p>1.创建命令类，实现ICommand接口的类，如：RoutedCommand类；<br>2.声明命令实例；<br>3.指定命令源；<br>4.指定命令目标；<br>5.设置命令关联；</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Window</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MainWindow&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">Title</span>=<span class="string">&quot;MainWindow&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;175&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;260&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">StackPanel</span> <span class="attr">x:Name</span>=<span class="string">&quot;stackPanel&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">x:Name</span>=<span class="string">&quot;button1&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;Send&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;textBoxA&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5,0&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;100&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Window</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> RoutedCommand clearCmd = <span class="keyword">new</span> RoutedCommand(<span class="string">&quot;Clear&quot;</span>, <span class="keyword">typeof</span>(MainWindow));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">InitCmd</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">this</span>.button1.Command = <span class="keyword">this</span>.clearCmd;</span><br><span class="line">  <span class="keyword">this</span>.clearCmd.InputGestures.Add(<span class="keyword">new</span> KeyGesture(Key.C, ModifierKeys.Alt));   <span class="comment">//命令快捷键</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.button1.CommandTarget = <span class="keyword">this</span>.textBoxA;</span><br><span class="line"></span><br><span class="line">  CommandBinding cb = <span class="keyword">new</span> CommandBinding();</span><br><span class="line">  cb.Command = <span class="keyword">this</span>.clearCmd;</span><br><span class="line">  cb.CanExecute += <span class="keyword">new</span> CanExecuteRoutedEventHandler(cb_CanExecute);</span><br><span class="line">  cb.Executed += <span class="keyword">new</span> ExecutedRoutedEventHandler(cb_Executed);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.stackPanel.CommandBindings.Add(cb);    <span class="comment">//将命令关联安置在外围控件上</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//探测命令是否可以执行，此方法被调用</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cb_CanExecute</span>(<span class="params"><span class="built_in">object</span> sender, CanExecuteRoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  e.CanExecute = !<span class="built_in">string</span>.IsNullOrEmpty(<span class="keyword">this</span>.textBoxA.Text);</span><br><span class="line">  e.Handled = <span class="literal">true</span>;   <span class="comment">//避免继续向上传递降低程序性能</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//命令到达目标后，此方法被调用</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cb_Executed</span>(<span class="params"><span class="built_in">object</span> sender, ExecutedRoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">this</span>.textBoxA.Clear();</span><br><span class="line">  e.Handled = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  InitializeComponent();</span><br><span class="line">  InitCmd();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/05/12/wpf-11/2.png" alt="2"></p>
+<blockquote>
+<p>无须判断按钮是否可用；<br>RoutedCommand与业务逻辑无关，它的Excute方法只负责让命令目标激发Excuted，则调用cb_Executed；<br>CanExcuted事件激发频率较高，建议处理完(e.Handled = true;)，避免降低性能；<br>CommandBinding要设置在外围空间上，不然无法捕捉CanExecute和Executed等路由事件；</p>
+</blockquote>
+<h1 id="WPF命令库"><a href="#WPF命令库" class="headerlink" title="WPF命令库"></a>WPF命令库</h1><blockquote>
+<p>ApplicationCommands<br>ComponentCommands<br>NavigationCommands<br>MediaCommands<br>EditingCommands</p>
+</blockquote>
+<p>这些都是静态类，命令用这些类的静态只读属性以单例模式暴露出来；<br>如果程序中用到Open、Save、Play、Stop等标准命令，无须自己声明，可以直接使用；</p>
+<h2 id="命令参数（CommandPrameter）"><a href="#命令参数（CommandPrameter）" class="headerlink" title="命令参数（CommandPrameter）"></a>命令参数（CommandPrameter）</h2><p>命令源实现了ICommandSource，ICommandSource有一个属性是CommandPrameter。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Grid</span> <span class="attr">Margin</span>=<span class="string">&quot;6&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Grid.RowDefinitions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;24&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;4&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;24&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;4&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;24&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;4&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RowDefinition</span> <span class="attr">Height</span>=<span class="string">&quot;*&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Grid.RowDefinitions</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">TextBlock</span> <span class="attr">Text</span>=<span class="string">&quot;Name：&quot;</span> <span class="attr">VerticalAlignment</span>=<span class="string">&quot;Center&quot;</span> <span class="attr">HorizontalAlignment</span>=<span class="string">&quot;Left&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;nameTextBox&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;60,0,0,0&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">&quot;New Teacher&quot;</span> <span class="attr">Command</span>=<span class="string">&quot;New&quot;</span> <span class="attr">CommandParameter</span>=<span class="string">&quot;Teacher&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;2&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Content</span>=<span class="string">&quot;New Student&quot;</span> <span class="attr">Command</span>=<span class="string">&quot;New&quot;</span> <span class="attr">CommandParameter</span>=<span class="string">&quot;Student&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;4&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ListBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;listBoxNewItems&quot;</span> <span class="attr">Grid.Row</span>=<span class="string">&quot;6&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Grid</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Window.CommandBindings</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">CommandBinding</span> <span class="attr">Command</span>=<span class="string">&quot;New&quot;</span> <span class="attr">CanExecute</span>=<span class="string">&quot;New_CanExecute&quot;</span> <span class="attr">Executed</span>=<span class="string">&quot;New_Executed&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Window.CommandBindings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">New_CanExecute</span>(<span class="params"><span class="built_in">object</span> sender, CanExecuteRoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  e.CanExecute = !<span class="built_in">string</span>.IsNullOrEmpty(<span class="keyword">this</span>.nameTextBox.Text);</span><br><span class="line">  e.Handled = <span class="literal">true</span>;   <span class="comment">//避免继续向上传递降低程序性能</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">New_Executed</span>(<span class="params"><span class="built_in">object</span> sender, ExecutedRoutedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">string</span> name = <span class="keyword">this</span>.nameTextBox.Text;</span><br><span class="line">  <span class="built_in">string</span> cp = e.Parameter <span class="keyword">as</span> <span class="built_in">string</span>;</span><br><span class="line">  <span class="keyword">switch</span> (cp)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;Teacher&quot;</span>:</span><br><span class="line">      <span class="keyword">this</span>.listBoxNewItems.Items.Add(<span class="built_in">string</span>.Format(<span class="string">&quot;New Teacher:&#123;0&#125;,毁人不倦&quot;</span>, name));</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;Student&quot;</span>:</span><br><span class="line">      <span class="keyword">this</span>.listBoxNewItems.Items.Add(<span class="built_in">string</span>.Format(<span class="string">&quot;New Student:&#123;0&#125;,好好学习&quot;</span>, name));</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  e.Handled = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/05/12/wpf-11/3.png" alt="3"></p>
+<h2 id="命令-Binding"><a href="#命令-Binding" class="headerlink" title="命令+Binding"></a>命令+Binding</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Button</span> <span class="attr">x:Name</span>=<span class="string">&quot;cmdBtn&quot;</span> <span class="attr">Command</span>=<span class="string">&quot;&#123;Binding Path=ppp,Source=sss&#125;&quot;</span> <span class="attr">Content</span>=<span class="string">&quot;Command&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Button 关联的命令可能根据某些条件产生改变；</p>
+</blockquote>
+<h1 id="ICommand-和-RoutedCommand"><a href="#ICommand-和-RoutedCommand" class="headerlink" title="ICommand 和 RoutedCommand"></a>ICommand 和 RoutedCommand</h1><h2 id="ICommand"><a href="#ICommand" class="headerlink" title="ICommand"></a>ICommand</h2><p>只包含两个方法和一个事件</p>
+<blockquote>
+<p>Execute，命令执行；<br>CanExecute，执行前探知命令是否可执行；<br>CanExecutedChanged，命令可执行状态发生改变时，可激发此事件通知其他对象；</p>
+</blockquote>
+<h2 id="RoutedCommand"><a href="#RoutedCommand" class="headerlink" title="RoutedCommand"></a>RoutedCommand</h2><p>实现了ICommand，并未向Execute和CanExecute方法中添加任何逻辑，是通用的，和业务逻辑无关。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">ApplicationCommands</span></span><br><span class="line">&#123;            </span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> RoutedUICommand Cut =&gt; _EnsureCommand(CommandId.Cut);</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> RoutedUICommand Copy =&gt; _EnsureCommand(CommandId.Copy);</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> RoutedUICommand Paste =&gt; _EnsureCommand(CommandId.Paste);</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当一个命令到达目标后，具体执行Copy还是Cut（业务逻辑），不是由命令决定，而是外围CommandBinding捕获到命令目标，受命令激发发送路由事件后，在Executed事件处理器中完成。换而言之，CommandBinding捕捉到Copy命令执行清除操作也是可以的。</p>
+<h2 id="自定义Command"><a href="#自定义Command" class="headerlink" title="自定义Command"></a>自定义Command</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IView</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">bool</span> IsChanged &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SetBinding</span>(<span class="params"></span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Refresh</span>(<span class="params"></span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Clear</span>(<span class="params"></span>)</span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Save</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ClearCommand</span> : <span class="title">ICommand</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">event</span> EventHandler CanExecuteChanged;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">CanExecute</span>(<span class="params"><span class="built_in">object</span> parameter</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"><span class="built_in">object</span> parameter</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    IView view = parameter <span class="keyword">as</span> IView;</span><br><span class="line">    <span class="keyword">if</span> (view != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      view.Clear();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyCommandSource</span> : <span class="title">UserControl</span>, <span class="title">ICommandSource</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> ICommand Command &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">object</span> CommandParameter &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">  <span class="keyword">public</span> IInputElement CommandTarget &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnMouseLeftButtonDown</span>(<span class="params">MouseButtonEventArgs e</span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">base</span>.OnMouseLeftButtonDown(e);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.CommandTarget != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">this</span>.Command.Execute(<span class="keyword">this</span>.CommandTarget);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">UserControl</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MyUserControl&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Border</span> <span class="attr">BorderBrush</span>=<span class="string">&quot;Orange&quot;</span> <span class="attr">BorderThickness</span>=<span class="string">&quot;3&quot;</span> <span class="attr">CornerRadius</span>=<span class="string">&quot;5&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;textBox1&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;textBox2&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5,0&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;textBox3&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">TextBox</span> <span class="attr">x:Name</span>=<span class="string">&quot;textBox4&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;5,0&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Border</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">UserControl</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">MyUserControl</span> : <span class="title">UserControl</span>, <span class="title">IView</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MyUserControl</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    InitializeComponent();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="built_in">bool</span> IsChanged &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Clear</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">      <span class="keyword">this</span>.textBox1.Clear();</span><br><span class="line">      <span class="keyword">this</span>.textBox2.Clear();</span><br><span class="line">      <span class="keyword">this</span>.textBox3.Clear();</span><br><span class="line">      <span class="keyword">this</span>.textBox4.Clear();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Refresh</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Save</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetBinding</span>(<span class="params"></span>)</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Window</span> <span class="attr">x:Class</span>=<span class="string">&quot;WpfApp.MainWindow&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:x</span>=<span class="string">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:local</span>=<span class="string">&quot;clr-namespace:WpfApp&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">Title</span>=<span class="string">&quot;MainWindow&quot;</span> <span class="attr">Height</span>=<span class="string">&quot;200&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;300&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;LightBlue&quot;</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">local:MyCommandSource</span> <span class="attr">x:Name</span>=<span class="string">&quot;ctrlClear&quot;</span> <span class="attr">Margin</span>=<span class="string">&quot;10&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">TextBlock</span> <span class="attr">Text</span>=<span class="string">&quot;Clear&quot;</span> <span class="attr">FontSize</span>=<span class="string">&quot;16&quot;</span> <span class="attr">TextAlignment</span>=<span class="string">&quot;Center&quot;</span> <span class="attr">Background</span>=<span class="string">&quot;LightGreen&quot;</span> <span class="attr">Width</span>=<span class="string">&quot;80&quot;</span> /&gt;</span>            </span><br><span class="line">    <span class="tag">&lt;/<span class="name">local:MyCommandSource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">local:MyUserControl</span> <span class="attr">x:Name</span>=<span class="string">&quot;mct&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">StackPanel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Window</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">  InitializeComponent();</span><br><span class="line"></span><br><span class="line">  ClearCommand cmd = <span class="keyword">new</span> ClearCommand();</span><br><span class="line">  <span class="keyword">this</span>.ctrlClear.Command = cmd;</span><br><span class="line">  <span class="keyword">this</span>.ctrlClear.CommandTarget = <span class="keyword">this</span>.mct;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/WPF/" rel="tag"># WPF</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/04/27/wpf-10/" rel="prev" title="WPF（10）：路由事件">
+      <i class="fa fa-chevron-left"></i> WPF（10）：路由事件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/23/wpf-12/" rel="next" title="WPF（12）：资源">
+      WPF（12）：资源 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%85%83%E7%B4%A0"><span class="nav-text">命令系统的基本元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-text">使用步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WPF%E5%91%BD%E4%BB%A4%E5%BA%93"><span class="nav-text">WPF命令库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0%EF%BC%88CommandPrameter%EF%BC%89"><span class="nav-text">命令参数（CommandPrameter）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4-Binding"><span class="nav-text">命令+Binding</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ICommand-%E5%92%8C-RoutedCommand"><span class="nav-text">ICommand 和 RoutedCommand</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ICommand"><span class="nav-text">ICommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RoutedCommand"><span class="nav-text">RoutedCommand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Command"><span class="nav-text">自定义Command</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
