@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Supervisor是一款进程管理工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Supervisor简介">
+<meta property="og:url" content="http://example.com/2024/04/17/Supervisor-1/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="Supervisor是一款进程管理工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/04/17/Supervisor-1/1.jpg">
+<meta property="article:published_time" content="2024-04-17T05:16:40.000Z">
+<meta property="article:modified_time" content="2024-04-25T05:58:10.649Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="Supervisor">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/04/17/Supervisor-1/1.jpg">
+
+<link rel="canonical" href="http://example.com/2024/04/17/Supervisor-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Supervisor简介 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/04/17/Supervisor-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Supervisor简介
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-04-17 13:16:40" itemprop="dateCreated datePublished" datetime="2024-04-17T13:16:40+08:00">2024-04-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-04-25 13:58:10" itemprop="dateModified" datetime="2024-04-25T13:58:10+08:00">2024-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DevOps/" itemprop="url" rel="index"><span itemprop="name">DevOps</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Supervisor是一款进程管理工具。</p>
+<span id="more"></span>
+<h1 id="Supervisor简介"><a href="#Supervisor简介" class="headerlink" title="Supervisor简介"></a>Supervisor简介</h1><blockquote>
+<p>supervisor由Python开发，允许用户在类unix操作系统上控制多个进程；<br>supervisor能将一个普通命令行进程，变为后台daemon(守护进程)，并监控进程状态；<br>supervisor是所有相关进程的父进程，以子进程的PID来进行管理，子进程异常退出时，supervisor会收到相应的信号，进而自动重启子进程;</p>
+</blockquote>
+<p>supervisor主要包含以下四个部分:</p>
+<ol>
+<li><code>supervisord</code>：运行Supervisor时，会启动的一个进程，负责管理配置的子进程，包括重启崩溃或异常退出的子进程，同时也响应来自客户端的请求。</li>
+<li><code>supervisorctl</code>：Supervisord服务的命令管理工具，用来执行stop、start、restart 等命令，管理子进程。</li>
+<li><code>Web Server</code>：通过web界面查看和控制进程状态。</li>
+<li><code>XML-RPC Interface</code>: 服务于web UI的同一个HTTP服务器提供一个XML-RPC接口，可以用来询问和控制管理程序及其运行的程序。</li>
+</ol>
+<h1 id="Supervisor安装"><a href="#Supervisor安装" class="headerlink" title="Supervisor安装"></a>Supervisor安装</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install python-setuptools   # 安装python</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y supervisor       # 安装Supervisor</span><br><span class="line">supervisord --version           # 查看版本</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>安装成功后，/etc/会生成一个supervisord.conf文件，还有一个supervisord.d文件目录</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisord.conf    # 启动</span><br><span class="line">ps -ef|grep supervisord                 </span><br></pre></td></tr></table></figure>
+<p><img src="/2024/04/17/Supervisor-1/1.jpg" alt="1"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable supervisord          # 设置supervisor 开机启动</span><br><span class="line">systemctl is-enabled supervisord      # 检查是否是开机启动</span><br><span class="line">systemctl start supervisord           # 启动服务</span><br><span class="line">systemctl status supervisord.service  # 查看状态</span><br></pre></td></tr></table></figure>
+<h1 id="Supervisor配置"><a href="#Supervisor配置" class="headerlink" title="Supervisor配置"></a>Supervisor配置</h1><p>默认配置文件， /etc/supervisord.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]         ; HTTP 服务器，提供 web 管理界面</span><br><span class="line">port=*:9001                ; Web 管理后台运行的 IP 和端口</span><br><span class="line">username=user              ; 登录管理后台的用户名</span><br><span class="line">password=1234              ; 登录管理后台的密码</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[include]                     </span><br><span class="line">files = supervisord.d/*.ini   ;配置文件夹</span><br></pre></td></tr></table></figure>
+<p>修改以上配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl reload  # 重启</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此时可以通过 <a target="_blank" rel="noopener" href="http://ip:9001/">http://ip:9001/</a> 访问web界面</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install lsof   # 安装lsof工具</span><br><span class="line">lsof -i:9001            # 查看监听</span><br></pre></td></tr></table></figure>
+<p>目录supervisord.d下，创建一个.ini文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[program:Ball.AdminCenter]                    ; 程序名称</span><br><span class="line">command=dotnet Ball.AdminCenter.dll           ; 被监控进程启动命令</span><br><span class="line">directory=/aduntech/ball/admin-center-api     ; 目录</span><br><span class="line">environment=ASPNETCORE_ENVIRONMENT=Production ; 环境变量</span><br><span class="line">user=root                                     ; 用户</span><br><span class="line">autostart=true                                ; 随着supervisord的启动而启动</span><br><span class="line">autorestart=true                              ; 自动重启</span><br><span class="line">stopsignal=INT</span><br><span class="line">stderr_logfile=/aduntech/ball/admin-center-api/log/err.log   ;  错误日志文件</span><br><span class="line">stdout_logfile=/aduntech/ball/admin-center-api/log/out.log   ;  输出日志文件</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart supervisord   # 重启</span><br></pre></td></tr></table></figure>
+<h1 id="supervisorctl-常用命令"><a href="#supervisorctl-常用命令" class="headerlink" title="supervisorctl 常用命令"></a>supervisorctl 常用命令</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl status              # 查看任务状态</span><br><span class="line">upervisorctl start &lt;name&gt;         # 启动任务</span><br><span class="line">supervisorctl stop &lt;name&gt;         # 停止任务</span><br><span class="line">supervisorctl restart &lt;name&gt;      # 重启任务</span><br><span class="line">supervisorctl clear &lt;name&gt;        # 清除日志文件</span><br><span class="line">supervisorctl clear &lt;name&gt; &lt;name&gt; # 清除多个日志文件</span><br><span class="line">supervisorctl clear all           # 清除所有日志文件</span><br><span class="line">supervisorctl remove &lt;name&gt;       # 移除任务</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Supervisor/" rel="tag"># Supervisor</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/15/tennis-6/" rel="prev" title="网球运动中的预判">
+      <i class="fa fa-chevron-left"></i> 网球运动中的预判
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/04/24/netcore-deploy/" rel="next" title="centos 下部署 net6.0 webapi">
+      centos 下部署 net6.0 webapi <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Supervisor%E7%AE%80%E4%BB%8B"><span class="nav-text">Supervisor简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Supervisor%E5%AE%89%E8%A3%85"><span class="nav-text">Supervisor安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Supervisor%E9%85%8D%E7%BD%AE"><span class="nav-text">Supervisor配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#supervisorctl-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">supervisorctl 常用命令</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
