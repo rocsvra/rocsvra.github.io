@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16-16.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="分包指的是把一个完整的小程序项目，按照需求划分为不同的子包，在构建时打包成不同的分包，用户在使用时按需进行加载。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序(21)：分包">
+<meta property="og:url" content="http://example.com/2024/08/23/miniapps-21/index.html">
+<meta property="og:site_name" content="Hello Friend">
+<meta property="og:description" content="分包指的是把一个完整的小程序项目，按照需求划分为不同的子包，在构建时打包成不同的分包，用户在使用时按需进行加载。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/08/23/miniapps-21/1.png">
+<meta property="og:image" content="http://example.com/2024/08/23/miniapps-21/2.png">
+<meta property="og:image" content="http://example.com/2024/08/23/miniapps-21/3.png">
+<meta property="og:image" content="http://example.com/2024/08/23/miniapps-21/4.png">
+<meta property="og:image" content="http://example.com/2024/08/23/miniapps-21/5.png">
+<meta property="article:published_time" content="2024-08-23T07:45:56.000Z">
+<meta property="article:modified_time" content="2024-08-23T09:11:46.385Z">
+<meta property="article:author" content="姜海鹏">
+<meta property="article:tag" content="miniapps">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/08/23/miniapps-21/1.png">
+
+<link rel="canonical" href="http://example.com/2024/08/23/miniapps-21/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>小程序(21)：分包 | Hello Friend</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hello Friend</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>日志</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/08/23/miniapps-21/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-prey-parrot.jpg">
+      <meta itemprop="name" content="姜海鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Friend">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小程序(21)：分包
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-08-23 15:45:56 / 修改时间：17:11:46" itemprop="dateCreated datePublished" datetime="2024-08-23T15:45:56+08:00">2024-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" itemprop="url" rel="index"><span itemprop="name">小程序</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>分包指的是把一个完整的小程序项目，按照需求划分为不同的子包，在构建时打包成不同的分包，用户在使用时按需进行加载。</p>
+<span id="more"></span>
+<h1 id="分包优点"><a href="#分包优点" class="headerlink" title="分包优点"></a>分包优点</h1><ol>
+<li>可以先加载主包，也就是主页面，能优化小程序首次启动的下载时间；</li>
+<li>可以把子包分配给不同的开发人员，分别开发；</li>
+</ol>
+<p>分包前项目构成<br><img src="/2024/08/23/miniapps-21/1.png" alt="1"></p>
+<p>分包后项目构成<br><img src="/2024/08/23/miniapps-21/2.png" alt="2"></p>
+<h1 id="分包加载规则"><a href="#分包加载规则" class="headerlink" title="分包加载规则"></a>分包加载规则</h1><blockquote>
+<p>小程序启动时，默认下载主包并启动主包主页，tabBar 页面需要放到主包中；<br>用户进入分包页面，客户端会把对应分包下载下来，下载完成后再进行展示；</p>
+</blockquote>
+<h1 id="分包体积"><a href="#分包体积" class="headerlink" title="分包体积"></a>分包体积</h1><blockquote>
+<p>主包 + 所有分包 &lt;= 16M；<br>单个主包/分包 &lt;= 2M；</p>
+</blockquote>
+<h1 id="分包配置"><a href="#分包配置" class="headerlink" title="分包配置"></a>分包配置</h1><p><img src="/2024/08/23/miniapps-21/3.png" alt="3"></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;pages&quot;</span>:[</span><br><span class="line">    <span class="string">&quot;pages/index/index&quot;</span>,</span><br><span class="line">    <span class="string">&quot;pages/logs/logs&quot;</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">&quot;subpackages&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">&quot;root&quot;</span>: <span class="string">&quot;packageA&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;pages&quot;</span>:[</span><br><span class="line">        <span class="string">&quot;pages/cat/cat&quot;</span>,</span><br><span class="line">        <span class="string">&quot;pages/dog/dog &quot;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;,&#123;</span><br><span class="line">      <span class="attr">&quot;root&quot;</span>: <span class="string">&quot;packageB&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;pages&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;pages/apple/apple&quot;</span>,</span><br><span class="line">        <span class="string">&quot;pages/banana/banana&quot;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>详情</code> -&gt; <code>基本信息</code> -&gt; <code>本地代码</code>，可以查看分包大小情况。</p>
+<h1 id="打包原则"><a href="#打包原则" class="headerlink" title="打包原则"></a>打包原则</h1><blockquote>
+<p>按 <code>subpackages</code> 的配置进行分包，<code>subpackages</code> 之外的目录将被打包到主包中；<br>最外层的 <code>pages</code> 打包到主包中；<br>tabBar 页面必须在主包内；<br>分包不能互相嵌套。</p>
+</blockquote>
+<h1 id="引用原则"><a href="#引用原则" class="headerlink" title="引用原则"></a>引用原则</h1><blockquote>
+<p>主包无法引用分包内的私有资源；<br>分包之间不能相互引用私有资源；<br>分包可以引用主包内的公共资源。</p>
+</blockquote>
+<h1 id="独立分包"><a href="#独立分包" class="headerlink" title="独立分包"></a>独立分包</h1><blockquote>
+<p>一般情况下，默认先进入主包，通过主包启动小程序，启动成功后，可以从主包进入分包的页面；<br>独立分包可以在不打开主包情况下，启动小程序；<br>独立分包本质上也是分包，但它比较特殊，可以独立于主包和其他分包，单独运行；<br>一个小程序中可以有多个独立分包。</p>
+</blockquote>
+<p><img src="/2024/08/23/miniapps-21/4.png" alt="4"></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;pages&quot;</span>:[</span><br><span class="line">    <span class="string">&quot;pages/index/index&quot;</span>,</span><br><span class="line">    <span class="string">&quot;pages/logs/logs&quot;</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">&quot;subpackages&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">&quot;root&quot;</span>: <span class="string">&quot;packageA&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;pack1&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;pages&quot;</span>:[</span><br><span class="line">        <span class="string">&quot;pages/cat/cat&quot;</span>,</span><br><span class="line">        <span class="string">&quot;pages/dog/dog &quot;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;,&#123;</span><br><span class="line">      <span class="attr">&quot;root&quot;</span>: <span class="string">&quot;packageB&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;pages&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;pages/apple/apple&quot;</span></span><br><span class="line">      ],</span><br><span class="line">      <span class="attr">&quot;independent&quot;</span>: <span class="literal">true</span> </span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<blockquote>
+<p>主包无法引用独立分包内的私有资源；<br>独立分包之间，不能相互引用私有资源；<br>独立分包和普通分包之间，不能相互引用私有资源；<br>独立分包中不能引用主包内的公共资源。</p>
+</blockquote>
+<h1 id="分包预下载"><a href="#分包预下载" class="headerlink" title="分包预下载"></a>分包预下载</h1><p>进入小程序某个页面时，由框架自动预下载可能需要的分包，从而提升进入后续分包页面时的启动速度。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;preloadRule&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;pages/contact/contact&quot;</span>:&#123;</span><br><span class="line">      <span class="attr">&quot;packages&quot;</span>: [<span class="string">&quot;pack1&quot;</span>],</span><br><span class="line">      <span class="attr">&quot;network&quot;</span>: <span class="string">&quot;all&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">packages</td>
+<td align="left">可通过 <code>root</code> 或 <code>name</code> 指定预下载哪些分包</td>
+</tr>
+<tr>
+<td align="left">network</td>
+<td align="left"><code>all</code>（不限网络）和 <code>wifi</code> （仅 wifi 模式下进行预下载），默认值为 wifi</td>
+</tr>
+</tbody></table>
+<h2 id="分包预下载限制"><a href="#分包预下载限制" class="headerlink" title="分包预下载限制"></a>分包预下载限制</h2><p>共同的预下载大小限额 2M<br><img src="/2024/08/23/miniapps-21/5.png" alt="5"></p>
+<blockquote>
+<p>左边的总体积是 3M ，不允许下载</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/miniapps/" rel="tag"># miniapps</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/08/23/miniapps-20/" rel="prev" title="小程序(20)：npm包">
+      <i class="fa fa-chevron-left"></i> 小程序(20)：npm包
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/08/26/miniapps-22/" rel="next" title="小程序(22)：自定义 tabBar">
+      小程序(22)：自定义 tabBar <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          联系作者
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%85%E4%BC%98%E7%82%B9"><span class="nav-text">分包优点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%85%E5%8A%A0%E8%BD%BD%E8%A7%84%E5%88%99"><span class="nav-text">分包加载规则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%85%E4%BD%93%E7%A7%AF"><span class="nav-text">分包体积</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%85%E9%85%8D%E7%BD%AE"><span class="nav-text">分包配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%8E%9F%E5%88%99"><span class="nav-text">打包原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%8E%9F%E5%88%99"><span class="nav-text">引用原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8B%AC%E7%AB%8B%E5%88%86%E5%8C%85"><span class="nav-text">独立分包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%85%E9%A2%84%E4%B8%8B%E8%BD%BD"><span class="nav-text">分包预下载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%8C%85%E9%A2%84%E4%B8%8B%E8%BD%BD%E9%99%90%E5%88%B6"><span class="nav-text">分包预下载限制</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姜海鹏"
+      src="/images/avatar-prey-parrot.jpg">
+  <p class="site-author-name" itemprop="name">姜海鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rocsvra" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rocsvra" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:961588918@qq.com" title="E-Mail → mailto:961588918@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姜海鹏</span>
+</div>
+  <div class="powered-by">Hello Friend
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    访问量: <span id="busuanzi_value_site_pv"></span> 
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    访问人数：<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
